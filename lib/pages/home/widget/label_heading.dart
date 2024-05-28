@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 
 class LabelHeading extends StatelessWidget {
@@ -16,7 +17,7 @@ class LabelHeading extends StatelessWidget {
         ),
         Text(
           content.getString(context),
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.titleMedium,
         )
       ],
     );

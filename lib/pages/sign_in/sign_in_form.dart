@@ -10,7 +10,7 @@ import 'package:travellingo/bloc/auth_bloc/auth_state.dart';
 import 'package:travellingo/component/check_component.dart';
 import 'package:travellingo/component/oauth_button_component.dart';
 import 'package:travellingo/component/snackbar_component.dart';
-import 'package:travellingo/pages/home/home_page.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/pages/main_page.dart';
 import 'package:travellingo/pages/sign_up/signup_page.dart';
 import 'package:travellingo/pages/sign_in/widget/authentication_button.dart';
@@ -107,8 +107,7 @@ class _SignInFormState extends State<SignInForm> {
                         if (snapshot.data?.receivedToken?.isNotEmpty ?? false) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => const MainPage()),
+                                slideInFromBottom(const MainPage()),
                                 (route) => false);
                           });
                         }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:travellingo/utils/theme_data/color_scheme.dart';
 
 class HomeSearchBar extends StatelessWidget {
   const HomeSearchBar({super.key});
@@ -15,13 +16,13 @@ class HomeSearchBar extends StatelessWidget {
         hintText: "exploreSomethingFun".getString(context),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(color: Color(0xFFF5D161), width: 2)),
+            borderSide: BorderSide(color: colorScheme.primary, width: 2)),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(color: Color(0xFFF5D161), width: 2)),
+            borderSide: BorderSide(color: colorScheme.primary, width: 2)),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
-            borderSide: const BorderSide(color: Color(0xFFF5D161), width: 2)),
+            borderSide: BorderSide(color: colorScheme.primary, width: 2)),
         prefixIcon: Image.asset("assets/Search.png"),
       ),
     );

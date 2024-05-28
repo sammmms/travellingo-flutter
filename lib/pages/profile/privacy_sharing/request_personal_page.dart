@@ -12,6 +12,13 @@ class RequestPersonalPage extends StatefulWidget {
 class _RequestPersonalPageState extends State<RequestPersonalPage> {
   String? livingLocation;
   final reason = TextEditingController();
+
+  @override
+  void dispose() {
+    reason.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

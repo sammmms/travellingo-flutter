@@ -50,6 +50,15 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
   @override
+  void dispose() {
+    name.dispose();
+    email.dispose();
+    phone.dispose();
+    govId.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder<UserState>(
         stream: bloc.controller.stream,

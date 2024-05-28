@@ -85,6 +85,12 @@ const Map<String, String> idLanguage = {
   "gender": "Jenis kelamin",
   "govId": "NIK",
 
+  // Notification Settings
+  "specialTipsAndOffers": "Penawaran Spesial dan Informasi",
+  "pushNotification": "Notifikasi Pemberitahuan",
+  "activity": "Aktivitas",
+  "reminders": "Pengingat",
+
   // Flight
   "flight": "Penerbangan",
   "roundTrip": "Pulang-pergi",

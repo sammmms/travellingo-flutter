@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
+import 'package:travellingo/component/my_title.dart';
 import 'package:travellingo/component/snackbar_component.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/user.dart';
 import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
 import 'package:travellingo/pages/profile/appearance/appearance_page.dart';
+import 'package:travellingo/pages/profile/notifications/notifications_page.dart';
 import 'package:travellingo/pages/profile/personal_info_page.dart';
 import 'package:travellingo/bloc/preferences/reset_preferences.dart';
 import 'package:travellingo/pages/profile/privacy_sharing/privacy_sharing_page.dart';
@@ -97,20 +100,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            "account".getString(context).toUpperCase(),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, letterSpacing: 1),
-                            textScaler: const TextScaler.linear(0.9),
-                          ),
-                        ),
+                        const MyTitle(title: "account"),
                         TextNavigator(
                           needIcon: true,
                           onTapFunction: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => Provider<UserBloc>.value(
+                            Navigator.of(context).push(slideInFromRight(
+                                Provider<UserBloc>.value(
                                     value: bloc,
                                     child: const PersonalInfoPage())));
                           },
@@ -119,9 +114,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         TextNavigator(
                           needIcon: true,
                           onTapFunction: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const PrivacySharingPage()));
+                            Navigator.of(context).push(
+                                slideInFromRight(const PrivacySharingPage()));
                           },
                           text: "privacyNSharing",
                         ),
@@ -131,24 +125,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           indent: 20,
                           endIndent: 20,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            "settings".getString(context).toUpperCase(),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, letterSpacing: 1),
-                            textScaler: const TextScaler.linear(0.9),
-                          ),
-                        ),
+                        const MyTitle(title: "settings"),
                         TextNavigator(
-                          onTapFunction: () {},
+                          onTapFunction: () {
+                            Navigator.push(context,
+                                slideInFromRight(const NotificationPage()));
+                          },
                           text: "notification",
                           needIcon: true,
                         ),
                         TextNavigator(
                           onTapFunction: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const AppearancePage()));
+                            Navigator.of(context)
+                                .push(slideInFromRight(const AppearancePage()));
                           },
                           text: "appearance",
                           needIcon: true,
@@ -166,8 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             context.read<UserDetailProvider>().user = null;
                             ResetPreferences.removeToken();
                             Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => const SignInPage()),
+                                slideInFromBottom(const SignInPage()),
                                 (route) => false);
                           },
                           text: "logout",

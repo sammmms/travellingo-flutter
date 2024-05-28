@@ -4,25 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/component/oauth_button_component.dart';
 import 'package:travellingo/component/snackbar_component.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/pages/sign_up/setup_page.dart';
 import 'package:travellingo/pages/sign_in/signin_page.dart';
 import 'package:travellingo/pages/sign_up/widgets/text_label.dart';
-
-Route _createRoute(String userEmail) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) =>
-        SetUpPage(email: userEmail),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(position: animation.drive(tween), child: child);
-    },
-  );
-}
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -113,8 +98,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       ElevatedButton(
                           onPressed: () {
                             if (globalKey.currentState?.validate() ?? false) {
-                              Navigator.of(context)
-                                  .push(_createRoute(email.text));
+                              Navigator.push(
+                                context,
+                                slideInFromRight(
+                                  SetUpPage(email: email.text),
+                                ),
+                              );
                               isError = false;
                             } else {
                               showMySnackBar(context, "textFieldNotValid");

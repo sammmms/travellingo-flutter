@@ -12,6 +12,13 @@ class DeleteAccountPage extends StatefulWidget {
 class _DeleteAccountPageState extends State<DeleteAccountPage> {
   String? livingLocation;
   final reason = TextEditingController();
+
+  @override
+  void dispose() {
+    reason.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

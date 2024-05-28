@@ -85,6 +85,12 @@ const Map<String, String> usLanguage = {
   "gender": "Gender",
   "govId": "Government ID",
 
+  // Notification Settings
+  "specialTipsAndOffers": "Special Tips and Offers",
+  "pushNotification": "Push Notification",
+  "activity": "Activity",
+  "reminders": "Reminders",
+
   // Flight
   "flight": "Flight",
   "roundTrip": "Round-trip",
