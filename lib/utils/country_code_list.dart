@@ -1,5 +1,6 @@
 Map<String, int> listCountry = {
   "Indonesia": 62,
+  "Singapore": 65,
   "Malaysia": 60,
   "China": 86,
   "US": 1
