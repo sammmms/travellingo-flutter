@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travellingo/bloc/auth_bloc/auth_state.dart';
 import 'package:travellingo/bloc/preferences/save_preferences.dart';
+import 'package:travellingo/utils/app_error.dart';
 
 class AuthBloc {
   final StreamController<AuthState> controller = StreamController();
@@ -25,17 +26,25 @@ class AuthBloc {
             rememberMeState, email, password, token);
       }
       controller.add(AuthState(receivedToken: token));
+      return true;
     } on DioException catch (err) {
       controller.add(AuthState(
         error: true,
         errorMessage: err.response?.data,
         errorStatus: err.response?.statusCode,
       ));
+      throw AppError(
+        err.response?.data ?? "somethingWrong",
+        code: err.response?.statusCode.toString(),
+      );
     } catch (err) {
       controller.add(AuthState(
         error: true,
         errorMessage: "somethingWrong",
       ));
+      throw AppError(
+        "somethingWrong",
+      );
     }
   }
 
