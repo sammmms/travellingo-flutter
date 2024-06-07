@@ -75,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       // print(data.pictureLink);
                       return RefreshIndicator(
                         onRefresh: () async {
-                          bloc.getUser();
+                          await bloc.getUser();
                         },
                         child: SingleChildScrollView(
                           physics: const AlwaysScrollableScrollPhysics(),
