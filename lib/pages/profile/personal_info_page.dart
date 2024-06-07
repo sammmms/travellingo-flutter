@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/component/snackbar_component.dart';
@@ -9,8 +10,7 @@ import 'package:travellingo/models/user.dart';
 import 'package:travellingo/pages/profile/widget/gender_radio.dart';
 import 'package:travellingo/pages/profile/widget/text_field_personal_info.dart';
 import 'package:travellingo/pages/sign_in/signin_page.dart';
-import 'package:travellingo/provider/change_gender_provider.dart';
-import 'package:travellingo/provider/user_detail_provider.dart';
+import 'package:travellingo/utils/app_error.dart';
 
 class PersonalInfoPage extends StatefulWidget {
   const PersonalInfoPage({super.key});
@@ -20,16 +20,18 @@ class PersonalInfoPage extends StatefulWidget {
 }
 
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
+  final formKey = GlobalKey<FormState>();
   final name = TextEditingController();
   final email = TextEditingController();
   final phone = TextEditingController();
   final govId = TextEditingController();
-  late String gender;
+  final gender = BehaviorSubject<String>();
   late UserBloc bloc;
 
   @override
   void initState() {
-    final user = context.read<UserDetailProvider>().user;
+    bloc = context.read<UserBloc>();
+    final user = bloc.controller.value.receivedProfile;
 
     if (user == null) {
       showMySnackBar(context, "tokenExpired".getString(context));
@@ -39,10 +41,9 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     }
     name.text = user!.name;
     email.text = user.email;
-    gender = user.gender.toString();
+    gender.add(user.gender ?? "");
     phone.text = user.phone;
     govId.text = user.id ?? "";
-    bloc = context.read<UserBloc>();
     super.initState();
   }
 
@@ -60,55 +61,34 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<UserState>(
-        stream: bloc.controller.stream,
-        builder: (context, snapshot) {
-          if (snapshot.data?.error ?? false) {
-            showMySnackBar(
-                context, snapshot.data?.errorMessage ?? "somethingWrong");
-          }
-          if (snapshot.data?.receivedMessage != null) {
-            showMySnackBar(context, snapshot.data!.receivedMessage!);
-          }
-          return Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  "personalInfo".getString(context),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                iconTheme: const IconThemeData(),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: GestureDetector(
-                        onTap: snapshot.data?.loading ?? false
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "personalInfo".getString(context),
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          iconTheme: const IconThemeData(),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: StreamBuilder<UserState>(
+                  stream: bloc.controller,
+                  builder: (context, snapshot) {
+                    bool isLoading = snapshot.data?.loading ?? false;
+                    return GestureDetector(
+                        onTap: isLoading
                             ? null
                             : () async {
                                 if (isEditing) {
-                                  User newUpdatedProfile = User(
-                                      email: email.text,
-                                      name: name.text,
-                                      gender: gender,
-                                      id: govId.text,
-                                      phone: phone.text,
-                                      objectId: context
-                                          .read<UserDetailProvider>()
-                                          .user!
-                                          .objectId,
-                                      birthday: context
-                                          .read<UserDetailProvider>()
-                                          .user!
-                                          .birthday);
-                                  context
-                                      .read<UserDetailProvider>()
-                                      .updateUser(newUpdatedProfile);
-                                  await bloc.updateUser(newUpdatedProfile);
-                                  await bloc.getUser();
+                                  if (formKey.currentState?.validate() ??
+                                      false) {
+                                    _updatingUser();
+                                  }
                                 }
                                 isEditing = !isEditing;
                                 setState(() {});
                               },
-                        child: snapshot.data?.loading ?? false
+                        child: isLoading
                             ? const CircularProgressIndicator()
                             : Text(
                                 isEditing
@@ -117,111 +97,124 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                                 style: const TextStyle(
                                     color: Color(0xFFF5D161),
                                     fontWeight: FontWeight.bold),
-                              )),
-                  )
-                ],
-              ),
-              body: StreamBuilder(
-                  stream: null,
-                  builder: (context, snapshot) {
-                    return Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Form(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextFieldPersonalInfo(
-                                content: "name",
-                                controller: name,
-                                validator: (value) {
-                                  if (value == "") {
-                                    return "fieldmustbefilled"
-                                        .getString(context);
-                                  }
-                                  return null;
-                                },
-                                isEnabled: isEditing),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TextFieldPersonalInfo(
-                                content: "email",
-                                controller: email,
-                                validator: (value) {
-                                  if (value == "") {
-                                    return "fieldmustbefilled"
-                                        .getString(context);
-                                  }
-                                  if (!emailRegex.hasMatch(value!)) {
-                                    return "emailformatwrong"
-                                        .getString(context);
-                                  }
-                                  return null;
-                                },
-                                isEnabled: isEditing),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TextFieldPersonalInfo(
-                                content: "phoneNumber",
-                                controller: phone,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
-                                ],
-                                validator: (value) {
-                                  if (value == "") {
-                                    return "fieldmustbefilled"
-                                        .getString(context);
-                                  }
-                                  if (!RegExp(r'\d{5,}').hasMatch(value!)) {
-                                    return "phoneformatwrong"
-                                        .getString(context);
-                                  }
-                                  return null;
-                                },
-                                isEnabled: isEditing),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            TextFieldPersonalInfo(
-                                content: "govId",
-                                controller: govId,
-                                validator: (value) {
-                                  if (value == "") {
-                                    return "fieldmustbefilled"
-                                        .getString(context);
-                                  }
-                                  return null;
-                                },
-                                isEnabled: isEditing),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12.0),
-                              child: Text(
-                                "gender".getString(context).toUpperCase(),
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                            ChangeNotifierProvider<ChangeGenderProvider>(
-                              create: (context) =>
-                                  ChangeGenderProvider(currentGender: gender),
-                              child: GenderRadio(
-                                onChangeFunction: changeGender,
-                                isEditing: isEditing,
-                              ),
-                            )
-                          ],
+                              ));
+                  }),
+            )
+          ],
+        ),
+        body: StreamBuilder(
+            stream: null,
+            builder: (context, snapshot) {
+              return Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFieldPersonalInfo(
+                            content: "name",
+                            controller: name,
+                            validator: (value) {
+                              if (value == "") {
+                                return "fieldmustbefilled".getString(context);
+                              }
+                              return null;
+                            },
+                            isEnabled: isEditing),
+                        const SizedBox(
+                          height: 10,
                         ),
-                      ),
-                    );
-                  }));
-        });
+                        TextFieldPersonalInfo(
+                            content: "email",
+                            controller: email,
+                            validator: (value) {
+                              if (value == "") {
+                                return "fieldmustbefilled".getString(context);
+                              }
+                              if (!emailRegex.hasMatch(value!)) {
+                                return "emailformatwrong".getString(context);
+                              }
+                              return null;
+                            },
+                            isEnabled: isEditing),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFieldPersonalInfo(
+                            content: "phoneNumber",
+                            controller: phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            validator: (value) {
+                              if (value == "") {
+                                return "fieldmustbefilled".getString(context);
+                              }
+                              if (!RegExp(r'\d{5,}').hasMatch(value!)) {
+                                return "phoneformatwrong".getString(context);
+                              }
+                              return null;
+                            },
+                            isEnabled: isEditing),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFieldPersonalInfo(
+                            content: "govId",
+                            controller: govId,
+                            validator: (value) {
+                              if (value == "") {
+                                return "fieldmustbefilled".getString(context);
+                              }
+                              return null;
+                            },
+                            isEnabled: isEditing),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12.0),
+                          child: Text(
+                            "gender".getString(context).toUpperCase(),
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        GenderRadio(
+                          gender: gender,
+                          isEditing: isEditing,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }));
   }
 
-  void changeGender(String newGender) {
-    gender = newGender;
-    setState(() {});
+  void _updatingUser() async {
+    try {
+      User lateUser = bloc.controller.value.receivedProfile!;
+      User newUpdatedProfile = User(
+          email: email.text,
+          name: name.text,
+          gender: gender.value,
+          id: govId.text,
+          phone: phone.text,
+          objectId: lateUser.objectId,
+          birthday: lateUser.birthday);
+      var successfullyUpdated = await bloc.updateUser(newUpdatedProfile);
+
+      if (successfullyUpdated) {
+        if (!mounted) return;
+        showMySnackBar(context, "profileUpdated");
+        return;
+      }
+    } catch (err) {
+      AppError error = err as AppError? ?? AppError("somethingWrong");
+      if (!mounted) return;
+      showMySnackBar(context, error.message);
+    }
   }
 }

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:provider/provider.dart';
-import 'package:travellingo/provider/change_gender_provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 class GenderRadio extends StatefulWidget {
-  final Function(String) onChangeFunction;
+  final BehaviorSubject<String> gender;
   final bool isEditing;
-  const GenderRadio(
-      {super.key, required this.onChangeFunction, required this.isEditing});
+  const GenderRadio({super.key, required this.isEditing, required this.gender});
 
   @override
   State<GenderRadio> createState() => _GenderRadioState();
@@ -16,41 +14,57 @@ class GenderRadio extends StatefulWidget {
 class _GenderRadioState extends State<GenderRadio> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Radio(
-                value: "male",
-                groupValue: context.watch<ChangeGenderProvider>().currentGender,
-                onChanged: widget.isEditing ? onCall : null),
-            Text("male".getString(context)),
-          ],
-        ),
-        Row(
-          children: [
-            Radio(
-                value: "female",
-                groupValue: context.watch<ChangeGenderProvider>().currentGender,
-                onChanged: widget.isEditing ? onCall : null),
-            Text("female".getString(context)),
-          ],
-        ),
-        Row(
-          children: [
-            Radio(
-                value: "",
-                groupValue: context.watch<ChangeGenderProvider>().currentGender,
-                onChanged: widget.isEditing ? onCall : null),
-            Text("notSet".getString(context)),
-          ],
-        ),
-      ],
-    );
+    return StreamBuilder<String>(
+        stream: widget.gender,
+        initialData: "",
+        builder: (context, snapshot) {
+          String choosenData = snapshot.data!;
+          return Column(
+            children: [
+              GestureDetector(
+                onTap: () => onCall("male"),
+                child: Row(
+                  children: [
+                    Radio(
+                        value: "male",
+                        groupValue: choosenData,
+                        onChanged: widget.isEditing ? onCall : null),
+                    Expanded(child: Text("male".getString(context))),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () => onCall('female'),
+                child: Row(
+                  children: [
+                    Radio(
+                        value: "female",
+                        groupValue: choosenData,
+                        onChanged: widget.isEditing ? onCall : null),
+                    Expanded(child: Text("female".getString(context))),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () => onCall(''),
+                child: Row(
+                  children: [
+                    Radio(
+                        value: "",
+                        groupValue: choosenData,
+                        onChanged: widget.isEditing ? onCall : null),
+                    Expanded(child: Text("notSet".getString(context))),
+                  ],
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   void onCall(String? value) {
-    widget.onChangeFunction(value!);
-    context.read<ChangeGenderProvider>().changeGender(value);
+    if (widget.isEditing) {
+      widget.gender.add(value!);
+    }
   }
 }
