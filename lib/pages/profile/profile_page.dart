@@ -13,6 +13,7 @@ import 'package:travellingo/bloc/preferences/reset_preferences.dart';
 import 'package:travellingo/pages/profile/privacy_sharing/privacy_sharing_page.dart';
 import 'package:travellingo/pages/profile/widget/avatar.dart';
 import 'package:travellingo/pages/profile/widget/text_navigator.dart';
+import 'package:travellingo/pages/purchase_history/purchase_history_page.dart';
 import 'package:travellingo/provider/user_detail_provider.dart';
 import 'package:travellingo/pages/sign_in/signin_page.dart';
 
@@ -153,7 +154,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   needIcon: true,
                                 ),
                                 TextNavigator(
-                                  onTapFunction: () {},
+                                  onTapFunction: () {
+                                    Navigator.of(context).push(slideInFromRight(
+                                        const PurchasePage()));
+                                  },
                                   text: "purchaseHistory",
                                 ),
                                 TextNavigator(

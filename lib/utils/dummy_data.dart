@@ -124,8 +124,9 @@ final List<Map<String, dynamic>> purchases = [
     "date": "01 April 2024",
     "price": 475.22,
     "invoice": "Invoice Number INV567489240UI",
+    "brand": "Garuda Indonesia",
     "image":
-        "https://example.com/path-to-your-image.jpg", // Replace with your actual image URL
+        "https://i.pinimg.com/originals/2f/88/4b/2f884b66c1a53b93a9e4826e5f4c459d.png", // Replace with your actual image URL
   },
   {
     "status": "Payment Success",
@@ -133,8 +134,9 @@ final List<Map<String, dynamic>> purchases = [
     "date": "01 April 2024",
     "price": 475.22,
     "invoice": "Invoice Number INV567489240UI",
+    "brand": "Lion Air",
     "image":
-        "https://example.com/path-to-your-image.jpg", // Replace with your actual image URL
+        "https://download.logo.wine/logo/Lion_Air/Lion_Air-Logo.wine.png", // Replace with your actual image URL
   },
   {
     "status": "Payment Success",
@@ -142,8 +144,9 @@ final List<Map<String, dynamic>> purchases = [
     "date": "01 April 2024",
     "price": 475.22,
     "invoice": "Invoice Number INV567489240UI",
+    "brand": "Lion Air",
     "image":
-        "https://example.com/path-to-your-image.jpg", // Replace with your actual image URL
+        "https://download.logo.wine/logo/Lion_Air/Lion_Air-Logo.wine.png", // Replace with your actual image URL
   },
   // Add more purchase maps if necessary
 ];
