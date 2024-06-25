@@ -3,10 +3,13 @@ import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
+import 'package:travellingo/component/choose_image_source.dart';
+import 'package:travellingo/component/snackbar_component.dart';
 
 class BorderedAvatar extends StatefulWidget {
   final String? content;
@@ -78,9 +81,24 @@ class _BorderedAvatarState extends State<BorderedAvatar> {
   }
 
   void _pickImage() async {
-    final pickedImage = await ImagePicker().pickImage(
-        source: ImageSource.gallery, imageQuality: 50, maxWidth: 150);
+    ImageSource? source = await showModalBottomSheet(
+        backgroundColor: Colors.white,
+        useSafeArea: true,
+        context: context,
+        builder: (context) => const ChooseImageSource());
+
+    if (source == null) return;
+
+    final pickedImage = await ImagePicker()
+        .pickImage(source: source, imageQuality: 50, maxWidth: 150);
+
     if (pickedImage != null) {
+      if (await pickedImage.length() / 1024 / 1024 > 3) {
+        if (!mounted) return;
+        showMySnackBar(context, "fileSizeExceeds3MB".getString(context),
+            SnackbarStatus.failed);
+        return;
+      }
       _pickedImage.add(File(pickedImage.path));
     }
   }
