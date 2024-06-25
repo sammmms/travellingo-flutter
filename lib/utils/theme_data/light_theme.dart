@@ -21,6 +21,16 @@ ThemeData lightTheme = ThemeData(
   ),
   textTheme: textTheme,
   scaffoldBackgroundColor: Colors.white,
+  dialogTheme: const DialogTheme(
+    surfaceTintColor: Colors.white,
+  ),
+  brightness: Brightness.light,
+  cardTheme: const CardTheme(
+    color: Colors.white,
+    surfaceTintColor: Colors.white,
+  ),
+  bottomSheetTheme: const BottomSheetThemeData(surfaceTintColor: Colors.white),
+  canvasColor: Colors.white,
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
     fillColor: const Color(0xFFF6F8FB),
