@@ -28,6 +28,7 @@ class _FlightLocationChoiceState extends State<FlightLocationChoice> {
                       child: DropdownButton<String>(
                         isExpanded: true,
                         value: widget.from.value,
+                        borderRadius: BorderRadius.circular(12),
                         onChanged: (String? newValue) {
                           if (newValue == widget.to.value) {
                             widget.to.value = widget.from.value;
@@ -59,6 +60,7 @@ class _FlightLocationChoiceState extends State<FlightLocationChoice> {
                     Expanded(
                       child: DropdownButton<String>(
                         isExpanded: true,
+                        borderRadius: BorderRadius.circular(12),
                         value: widget.to.value,
                         onChanged: (String? newValue) {
                           if (newValue == widget.from.value) {
