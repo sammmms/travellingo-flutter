@@ -14,6 +14,7 @@ import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/pages/main_page.dart';
 import 'package:travellingo/pages/sign_up/signup_page.dart';
 import 'package:travellingo/pages/sign_in/widget/authentication_button.dart';
+import 'package:travellingo/utils/app_error.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({super.key});
@@ -104,21 +105,6 @@ class _SignInFormState extends State<SignInForm> {
                   StreamBuilder<AuthState>(
                       stream: bloc.controller.stream,
                       builder: (context, snapshot) {
-                        if (snapshot.data?.receivedToken?.isNotEmpty ?? false) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Navigator.of(context).pushAndRemoveUntil(
-                                slideInFromBottom(const MainPage()),
-                                (route) => false);
-                          });
-                        }
-                        if (snapshot.data?.error ?? false) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            showMySnackBar(
-                                context,
-                                snapshot.data?.errorMessage ??
-                                    "somethingWrong");
-                          });
-                        }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -246,15 +232,36 @@ class _SignInFormState extends State<SignInForm> {
                               children: [
                                 Expanded(
                                   child: OutlinedButton(
-                                      onPressed:
-                                          snapshot.data?.isSubmitting ?? false
-                                              ? null
-                                              : () async {
-                                                  await bloc.signIn(
-                                                      context,
-                                                      email.text,
-                                                      password.text);
-                                                },
+                                      onPressed: snapshot.data?.isSubmitting ??
+                                              false
+                                          ? null
+                                          : () async {
+                                              try {
+                                                var sucessfullyLoggedIn =
+                                                    await bloc.signIn(
+                                                        context,
+                                                        email.text,
+                                                        password.text);
+
+                                                if (sucessfullyLoggedIn) {
+                                                  if (!context.mounted) return;
+                                                  Navigator.of(context)
+                                                      .pushAndRemoveUntil(
+                                                          slideInFromBottom(
+                                                              const MainPage()),
+                                                          (route) => false);
+                                                  return;
+                                                }
+                                              } catch (err) {
+                                                var error = err as AppError?;
+                                                if (!context.mounted) return;
+                                                showMySnackBar(
+                                                    context,
+                                                    error?.message ??
+                                                        "somethingWrong",
+                                                    SnackbarStatus.failed);
+                                              }
+                                            },
                                       style: ButtonStyle(
                                           fixedSize:
                                               const MaterialStatePropertyAll(

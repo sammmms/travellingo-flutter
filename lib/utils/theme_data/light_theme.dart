@@ -19,35 +19,7 @@ ThemeData lightTheme = ThemeData(
         letterSpacing: 1.1,
         fontWeight: FontWeight.bold),
   ),
-  textTheme: TextTheme(
-    bodySmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
-    bodyMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
-    bodyLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
-    titleSmall: TextStyle(
-      color: colorScheme.onBackground,
-      fontSize: 14,
-      fontWeight: FontWeight.bold,
-    ),
-    titleMedium: TextStyle(
-      color: colorScheme.onBackground,
-      fontSize: 15,
-      fontWeight: FontWeight.bold,
-    ),
-    titleLarge: TextStyle(
-      color: colorScheme.onBackground,
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-    ),
-    displaySmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
-    displayMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
-    displayLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
-    headlineSmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
-    headlineMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
-    headlineLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
-    labelSmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
-    labelMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
-    labelLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
-  ).apply(fontFamily: 'Poppins'),
+  textTheme: textTheme,
   scaffoldBackgroundColor: Colors.white,
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
@@ -87,3 +59,33 @@ ThemeData lightTheme = ThemeData(
       backgroundColor: Colors.white, selectedItemColor: colorScheme.primary),
   useMaterial3: true,
 );
+
+TextTheme textTheme = TextTheme(
+  bodySmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
+  bodyMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
+  bodyLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
+  titleSmall: TextStyle(
+    color: colorScheme.onBackground,
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+  ),
+  titleMedium: TextStyle(
+    color: colorScheme.onBackground,
+    fontSize: 15,
+    fontWeight: FontWeight.bold,
+  ),
+  titleLarge: TextStyle(
+    color: colorScheme.onBackground,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  ),
+  displaySmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
+  displayMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
+  displayLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
+  headlineSmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
+  headlineMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
+  headlineLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
+  labelSmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
+  labelMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
+  labelLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
+).apply(fontFamily: 'Poppins');

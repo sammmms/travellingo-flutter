@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:travellingo/utils/theme_data/color_scheme.dart';
+import 'package:travellingo/utils/theme_data/light_theme.dart';
 
-void showMySnackBar(BuildContext context, String text) {
+enum SnackbarStatus { failed, nothing, success, warning }
+
+void showMySnackBar(BuildContext context, String text,
+    [SnackbarStatus? status]) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: const Color(0xFFF5D161),
+        backgroundColor: _getSnackBarColor(status ?? SnackbarStatus.nothing),
         duration: const Duration(milliseconds: 500),
         content: Text(
           text.getString(context),
-          style: const TextStyle(color: Colors.white),
+          style: textTheme.labelLarge,
         )));
   });
+}
+
+Color _getSnackBarColor(SnackbarStatus status) {
+  switch (status) {
+    case SnackbarStatus.failed:
+      return Colors.redAccent;
+    case SnackbarStatus.success:
+      return colorScheme.primary;
+    case SnackbarStatus.warning:
+      return Colors.orangeAccent;
+    default:
+      return colorScheme.primary;
+  }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/utils/dummy_data.dart';
 import 'widget/purchase_card.dart'; // Make sure this import points to where your PurchaseCard class is defined.
 
@@ -17,6 +17,7 @@ class PurchasePage extends StatelessWidget {
         price: purchase['price'] as double,
         invoice: purchase['invoice'] as String,
         imageUrl: purchase['image'] as String,
+        brand: purchase['brand'] as String,
       );
     }).toList();
 
@@ -28,15 +29,9 @@ class PurchasePage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Purchase History',
-          style: GoogleFonts.dmSans(
-            textStyle: const TextStyle(
-              color: Color(0xFF292F2E),
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+              "purchaseHistory".getString(context),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         child: Column(

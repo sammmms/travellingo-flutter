@@ -1,14 +1,26 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/user.dart';
+import 'package:travellingo/utils/app_error.dart';
 
 class UserBloc {
-  StreamController<UserState> controller = BehaviorSubject();
+  final controller = BehaviorSubject<UserState>();
   final dio = Dio();
+
+  void _updateStream(state) {
+    if (controller.isClosed) {
+      if (kDebugMode) {
+        print('controller is closed');
+      }
+      return;
+    }
+    controller.sink.add(state);
+  }
 
   /// To get user profile data, needs token
   Future getUser() async {
@@ -18,18 +30,20 @@ class UserBloc {
         "https://travellingo-backend.netlify.app/api/profile",
       );
       var data = response.data;
-      controller.add(UserState(receivedProfile: User.fromJson(data)));
+      _updateStream(UserState(receivedProfile: User.fromJson(data)));
+      return true;
     } on DioException catch (err) {
-      controller.add(UserState(
-        error: true,
-        errorMessage: err.response?.data,
-        errorStatus: err.response?.statusCode,
-      ));
+      _updateStream(UserState(error: true));
+
+      return AppError(err.response?.data,
+          code: err.response?.statusCode.toString());
     } catch (err) {
-      controller.add(UserState(
-        error: true,
-        errorMessage: "somethingWrong",
-      ));
+      _updateStream(UserState(error: true));
+      if (kDebugMode) {
+        print("error on get user : platform");
+        print(err);
+      }
+      return AppError("somethingWrong");
     }
   }
 
@@ -46,18 +60,62 @@ class UserBloc {
         "id": user.id ?? ""
       });
       var data = response.data;
-      controller.add(UserState(receivedMessage: data));
+
+      User receivedUser = User.fromJson(data["user"]);
+
+      _updateStream(UserState(
+          receivedMessage: data['message'], receivedProfile: receivedUser));
+      return true;
     } on DioException catch (err) {
-      controller.add(UserState(
-        error: true,
-        errorMessage: err.response?.data,
-        errorStatus: err.response?.statusCode,
-      ));
+      _updateStream(UserState(error: true));
+      if (kDebugMode) {
+        print("error on update user : dio");
+        print(err.response);
+      }
+      return AppError(err.response?.data,
+          code: err.response?.statusCode.toString());
     } catch (err) {
-      controller.add(UserState(
-        error: true,
-        errorMessage: "somethingWrong",
-      ));
+      _updateStream(UserState(error: true));
+      if (kDebugMode) {
+        print("error on update user : platform");
+        print(err);
+      }
+      return AppError("somethingWrong");
+    }
+  }
+
+  Future changePicture(String base64encode) async {
+    try {
+      dio.interceptors.add(TokenInterceptor());
+      controller.add(UserState(loading: true));
+      var response = await dio.put(
+        "https://travellingo-backend.netlify.app/api/profile/picture",
+        data: {"picture": base64encode},
+      );
+      var data = response.data;
+
+      if (kDebugMode) print("manage to update picture");
+      var user = User.fromJson(data["user"]);
+
+      controller.add(
+          UserState(receivedProfile: user, receivedMessage: data['message']));
+
+      return true;
+    } on DioException catch (err) {
+      _updateStream(UserState(error: true));
+      if (kDebugMode) {
+        print("error on change picture : dio");
+        print(err.response);
+      }
+      return AppError(err.response?.data,
+          code: err.response?.statusCode.toString());
+    } catch (err) {
+      _updateStream(UserState(error: true));
+      if (kDebugMode) {
+        print("error on change picture : platform");
+        print(err);
+      }
+      return AppError("somethingWrong");
     }
   }
 }

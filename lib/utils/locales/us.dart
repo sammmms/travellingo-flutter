@@ -84,6 +84,7 @@ const Map<String, String> usLanguage = {
   "name": "Name",
   "gender": "Gender",
   "govId": "Government ID",
+  "profileUpdated": "Profile successfully updated.",
 
   // Notification Settings
   "specialTipsAndOffers": "Special Tips and Offers",

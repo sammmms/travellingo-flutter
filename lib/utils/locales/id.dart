@@ -84,6 +84,7 @@ const Map<String, String> idLanguage = {
   "name": "Nama",
   "gender": "Jenis kelamin",
   "govId": "NIK",
+  "profileUpdated": "Profil berhasil diubah.",
 
   // Notification Settings
   "specialTipsAndOffers": "Penawaran Spesial dan Informasi",
