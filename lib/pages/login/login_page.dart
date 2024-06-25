@@ -1,7 +1,7 @@
 import "package:travellingo/component/change_language_component.dart";
 import "package:flutter/material.dart";
 import "package:flutter_localization/flutter_localization.dart";
-import "package:travellingo/pages/sign_in/sign_in_form.dart";
+import "package:travellingo/pages/login/widget/login_form.dart";
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});

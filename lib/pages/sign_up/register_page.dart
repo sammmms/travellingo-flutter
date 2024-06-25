@@ -6,7 +6,7 @@ import 'package:travellingo/component/oauth_button_component.dart';
 import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/pages/sign_up/setup_page.dart';
-import 'package:travellingo/pages/sign_in/signin_page.dart';
+import 'package:travellingo/pages/login/login_page.dart';
 import 'package:travellingo/pages/sign_up/widgets/text_label.dart';
 
 class SignUpPage extends StatefulWidget {

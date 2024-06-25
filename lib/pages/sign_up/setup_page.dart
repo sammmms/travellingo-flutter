@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/bloc/auth_bloc/auth_bloc.dart';
-import 'package:travellingo/bloc/auth_bloc/auth_state.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
+import 'package:travellingo/bloc/auth/auth_state.dart';
 import 'package:travellingo/component/snackbar_component.dart';
-import 'package:travellingo/pages/sign_in/signin_page.dart';
+import 'package:travellingo/pages/login/login_page.dart';
 import 'package:travellingo/pages/sign_up/widgets/text_label.dart';
 import 'package:travellingo/utils/country_code_list.dart';
 
