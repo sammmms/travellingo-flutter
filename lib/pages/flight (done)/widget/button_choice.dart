@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 class ButtonChoice extends StatelessWidget {
   final Widget icon;
   final String content;
-  const ButtonChoice({super.key, required this.content, required this.icon});
+  final Function()? onPressed;
+  const ButtonChoice(
+      {super.key, required this.content, required this.icon, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class ButtonChoice extends StatelessWidget {
                 side: BorderSide(color: Colors.grey.shade300, width: 1),
                 borderRadius: BorderRadius.circular(10.0),
               ))),
-          onPressed: () {},
+          onPressed: onPressed,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Row(
