@@ -2,28 +2,29 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travellingo/bloc/auth_bloc/auth_state.dart';
+import 'package:travellingo/bloc/auth/auth_state.dart';
 import 'package:travellingo/bloc/preferences/save_preferences.dart';
 import 'package:travellingo/utils/app_error.dart';
 
 class AuthBloc {
   final StreamController<AuthState> controller = StreamController();
-  final dio = Dio();
+  final dio = Dio(BaseOptions(
+    baseUrl: dotenv.env['BASE_URL']!,
+  ));
 
   Future signIn(BuildContext context, String email, String password) async {
     try {
       controller.add(AuthState(isSubmitting: true));
-      var response = await dio.post(
-          "https://travellingo-backend.netlify.app/api/login",
-          data: {"email": email, "password": password});
+      var response = await dio
+          .post("/login", data: {"email": email, "password": password});
       var token = response.data["token"];
       if (context.mounted) {
         bool rememberMeState = context.read<bool>();
-        SavePreferences.saveLoginPreferences(
-            rememberMeState, email, password, token);
+        Store.saveLoginPreferences(rememberMeState, email, password, token);
       }
       controller.add(AuthState(receivedToken: token));
       return true;
@@ -52,8 +53,7 @@ class AuthBloc {
       String password, String birthday, String phoneNumber) async {
     try {
       controller.add(AuthState(isSubmitting: true));
-      var response = await dio
-          .post("https://travellingo-backend.netlify.app/api/register", data: {
+      var response = await dio.post("/register", data: {
         "name": name,
         "email": email,
         "password": password,
