@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/component/route_animator_component.dart';
 import 'package:travellingo/pages/flight%20(done)/widget/button_choice.dart';
 import 'package:travellingo/pages/flight%20(done)/widget/location_choice.dart';
 import 'package:travellingo/pages/flight%20(done)/ticket_list/ticket_list_page.dart';
+import 'package:travellingo/utils/airplane_class_util.dart';
+import 'package:travellingo/utils/date_converter.dart';
+import 'package:travellingo/utils/theme_data/color_scheme.dart';
 
 class FlightChoice extends StatefulWidget {
   const FlightChoice({super.key});
@@ -15,6 +19,10 @@ class FlightChoice extends StatefulWidget {
 class _FlightChoiceState extends State<FlightChoice> {
   ValueNotifier<String> from = ValueNotifier<String>("Kobe");
   ValueNotifier<String> to = ValueNotifier<String>("Himeji Castle");
+  final pickedDate = BehaviorSubject<DateTime>.seeded(DateTime.now());
+  final passengerCount = BehaviorSubject<int>.seeded(1);
+  final flightClass =
+      BehaviorSubject<AirplaneClass>.seeded(AirplaneClass.economy);
 
   @override
   void initState() {
@@ -23,8 +31,6 @@ class _FlightChoiceState extends State<FlightChoice> {
 
   @override
   Widget build(BuildContext context) {
-    int passengerCount = 1;
-    String flightClass = "economy";
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -43,36 +49,49 @@ class _FlightChoiceState extends State<FlightChoice> {
         mainAxisSize: MainAxisSize.min,
         children: [
           FlightLocationChoice(from: from, to: to),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: ButtonChoice(
-                content: "Mon, 01 April",
-                icon: Image.asset("assets/flight/calendar.png"),
-              ),
-            ),
-          ),
+          StreamBuilder<DateTime>(
+              stream: pickedDate,
+              builder: (context, snapshot) {
+                DateTime date = snapshot.data ?? DateTime.now();
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ButtonChoice(
+                      onPressed: () async {
+                        DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(DateTime.now().year + 1, 12, 31),
+                        );
+
+                        if (picked != null) return;
+                        pickedDate.add(picked!);
+                      },
+                      content: DateConverter.fullReadableDate(date),
+                      icon: Image.asset("assets/flight/calendar.png"),
+                    ),
+                  ),
+                );
+              }),
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: ButtonChoice(
-                      content:
-                          "${passengerCount.toString()} ${'passenger'.getString(context)}",
-                      icon: Image.asset("assets/flight/passenger.png")),
-                ),
+                StreamBuilder<int>(
+                    stream: passengerCount,
+                    builder: (context, snapshot) =>
+                        _buildDropdownPassenger(snapshot.data ?? 1)),
                 const SizedBox(
                   width: 10,
                 ),
-                Expanded(
-                  child: ButtonChoice(
-                      content: flightClass.getString(context),
-                      icon: Image.asset("assets/flight/flight_class.png")),
-                )
+                StreamBuilder<AirplaneClass>(
+                    stream: flightClass,
+                    builder: (context, snapshot) => _buildDropdownClass(
+                        snapshot.data ?? AirplaneClass.economy)),
               ],
             ),
           ),
@@ -114,6 +133,95 @@ class _FlightChoiceState extends State<FlightChoice> {
           ),
           const SizedBox(height: 16),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDropdownPassenger(count) {
+    return Expanded(
+      child: Container(
+        height: 56,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset("assets/flight/passenger.png"),
+            DropdownButtonHideUnderline(
+              child: DropdownButton<int>(
+                value: count,
+                iconSize: 0,
+                elevation: 16,
+                borderRadius: BorderRadius.circular(10),
+                padding: EdgeInsets.zero,
+                menuMaxHeight: 300,
+                style: TextStyle(
+                    color: colorScheme.onSurface, fontFamily: 'Poppins'),
+                underline: Container(
+                  height: 2,
+                  color: Colors.deepPurpleAccent,
+                ),
+                onChanged: (int? newValue) {
+                  passengerCount.add(newValue!);
+                },
+                items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((int value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(
+                      "$value ${'passenger'.getString(context)}",
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDropdownClass(AirplaneClass chosen) {
+    return Expanded(
+      child: Container(
+        height: 56,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset("assets/flight/flight_class.png"),
+            DropdownButtonHideUnderline(
+              child: DropdownButton<AirplaneClass>(
+                value: chosen,
+                iconSize: 0,
+                elevation: 16,
+                borderRadius: BorderRadius.circular(10),
+                padding: EdgeInsets.zero,
+                menuMaxHeight: 300,
+                style: TextStyle(
+                    color: colorScheme.onSurface, fontFamily: 'Poppins'),
+                underline: Container(
+                  height: 2,
+                  color: Colors.deepPurpleAccent,
+                ),
+                onChanged: (AirplaneClass? newValue) {
+                  flightClass.add(newValue!);
+                },
+                items: AirplaneClass.values.map((AirplaneClass value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(AirplaneClassUtil.stringFromClass(value)
+                        .getString(context)),
+                  );
+                }).toList(),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
