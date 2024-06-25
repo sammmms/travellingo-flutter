@@ -3,13 +3,15 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/utils/theme_data/color_scheme.dart';
 
 class HomeSearchBar extends StatelessWidget {
-  const HomeSearchBar({super.key});
+  final Function(String)? onChanged;
+  final TextEditingController? controller;
+  const HomeSearchBar({super.key, this.onChanged, this.controller});
 
   @override
   Widget build(BuildContext context) {
-    final searchController = TextEditingController();
     return TextField(
-      controller: searchController,
+      onChanged: onChanged,
+      controller: controller,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
