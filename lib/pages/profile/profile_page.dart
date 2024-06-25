@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
+import 'package:travellingo/bloc/preferences/save_preferences.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/component/my_title.dart';
 import 'package:travellingo/component/transition_animation.dart';
@@ -9,13 +10,12 @@ import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
 import 'package:travellingo/pages/profile/appearance/appearance_page.dart';
 import 'package:travellingo/pages/profile/notifications/notifications_page.dart';
 import 'package:travellingo/pages/profile/personal_info_page.dart';
-import 'package:travellingo/bloc/preferences/reset_preferences.dart';
 import 'package:travellingo/pages/profile/privacy_sharing/privacy_sharing_page.dart';
 import 'package:travellingo/pages/profile/widget/avatar.dart';
 import 'package:travellingo/pages/profile/widget/text_navigator.dart';
 import 'package:travellingo/pages/purchase_history/purchase_history_page.dart';
 import 'package:travellingo/provider/user_detail_provider.dart';
-import 'package:travellingo/pages/sign_in/signin_page.dart';
+import 'package:travellingo/pages/login/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -136,11 +136,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 const MyTitle(title: "settings"),
                                 TextNavigator(
-                                  onTapFunction: () {
+                                  onTapFunction: () async {
+                                    Map<String, UserNotificationPreference>
+                                        result = await Store
+                                            .getNotificationPreferences();
+
                                     Navigator.push(
                                         context,
-                                        slideInFromRight(
-                                            const NotificationPage()));
+                                        slideInFromRight(NotificationPage(
+                                            specialTipsAndOffers:
+                                                result['specialTipsAndOffers']!,
+                                            activity: result['activity']!,
+                                            reminders: result['reminders']!)));
                                   },
                                   text: "notification",
                                   needIcon: true,
@@ -155,8 +162,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 TextNavigator(
                                   onTapFunction: () {
-                                    Navigator.of(context).push(slideInFromRight(
-                                        const PurchasePage()));
+                                    Navigator.of(context).push(
+                                        slideInFromRight(const PurchasePage()));
                                   },
                                   text: "purchaseHistory",
                                 ),
@@ -168,7 +175,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   onTapFunction: () {
                                     context.read<UserDetailProvider>().user =
                                         null;
-                                    ResetPreferences.removeToken();
+                                    Store.removeToken();
                                     Navigator.of(context).pushAndRemoveUntil(
                                         slideInFromBottom(const SignInPage()),
                                         (route) => false);
