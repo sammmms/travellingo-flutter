@@ -9,7 +9,7 @@ import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/models/user.dart';
 import 'package:travellingo/pages/profile/widget/gender_radio.dart';
 import 'package:travellingo/pages/profile/widget/text_field_personal_info.dart';
-import 'package:travellingo/pages/sign_in/signin_page.dart';
+import 'package:travellingo/pages/login/login_page.dart';
 import 'package:travellingo/utils/app_error.dart';
 
 class PersonalInfoPage extends StatefulWidget {
