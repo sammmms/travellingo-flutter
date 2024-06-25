@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
@@ -10,7 +11,11 @@ import 'package:travellingo/utils/app_error.dart';
 
 class UserBloc {
   final controller = BehaviorSubject<UserState>();
-  final dio = Dio();
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: dotenv.env['BASE_URL']!,
+    ),
+  );
 
   void _updateStream(state) {
     if (controller.isClosed) {
@@ -26,9 +31,7 @@ class UserBloc {
   Future getUser() async {
     try {
       dio.interceptors.add(TokenInterceptor());
-      var response = await dio.get(
-        "https://travellingo-backend.netlify.app/api/profile",
-      );
+      var response = await dio.get("/profile");
       var data = response.data;
       _updateStream(UserState(receivedProfile: User.fromJson(data)));
       return true;
@@ -51,8 +54,7 @@ class UserBloc {
     try {
       dio.interceptors.add(TokenInterceptor());
       controller.add(UserState(loading: true));
-      var response = await dio
-          .put("https://travellingo-backend.netlify.app/api/profile", data: {
+      var response = await dio.put("/profile", data: {
         "name": user.name,
         "email": user.email,
         "phoneNumber": user.phone,
@@ -88,10 +90,8 @@ class UserBloc {
     try {
       dio.interceptors.add(TokenInterceptor());
       controller.add(UserState(loading: true));
-      var response = await dio.put(
-        "https://travellingo-backend.netlify.app/api/profile/picture",
-        data: {"picture": base64encode},
-      );
+      var response =
+          await dio.put("/profile/picture", data: {"picture": base64encode});
       var data = response.data;
 
       if (kDebugMode) print("manage to update picture");
