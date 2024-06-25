@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
-import 'package:travellingo/bloc/auth_bloc/auth_bloc.dart';
-import 'package:travellingo/bloc/auth_bloc/auth_state.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
+import 'package:travellingo/bloc/auth/auth_state.dart';
 import 'package:travellingo/pages/main_page.dart';
 import 'package:travellingo/utils/locales/locale.dart';
-import 'package:travellingo/pages/sign_in/signin_page.dart';
+import 'package:travellingo/pages/login/login_page.dart';
 import 'package:travellingo/provider/user_detail_provider.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
 
-void main() {
+void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -43,9 +45,9 @@ class _MyAppState extends State<MyApp> {
     SchedulerBinding.instance.addPostFrameCallback(
       (_) async {
         await bloc.checkLogin();
+        FlutterNativeSplash.remove();
       },
     );
-    FlutterNativeSplash.remove();
 
     super.initState();
   }
