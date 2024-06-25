@@ -72,6 +72,9 @@ const Map<String, String> usLanguage = {
   "insights": "Insights",
   "readMore": "Read More",
   "person": "Person",
+  "hotel": "Hotel",
+  "restaurant": "Restaurant",
+  "attraction": "Attraction",
 
   // Personal info
   "save": "Save",
@@ -85,6 +88,9 @@ const Map<String, String> usLanguage = {
   "gender": "Gender",
   "govId": "Government ID",
   "profileUpdated": "Profile successfully updated.",
+  "camera": "Camera",
+  "gallery": "Gallery",
+  "fileSizeExceeds3MB": "File size exceeds 3MB",
 
   // Notification Settings
   "specialTipsAndOffers": "Special Tips and Offers",
@@ -97,7 +103,8 @@ const Map<String, String> usLanguage = {
   "roundTrip": "Round-trip",
   "passenger": "Passenger",
   "economy": "Economy",
-  "businness": "Businness",
+  "business": "Business",
+  "first": "First",
   "executive": "Executive",
   "search": "Search",
   "yourLastSearch": "Your Last Search",

@@ -72,6 +72,9 @@ const Map<String, String> idLanguage = {
   "insights": "Wawasan",
   "readMore": "Baca Selengkapnya",
   "person": "Orang",
+  "hotel": "Hotel",
+  "restaurant": "Restoran",
+  "attraction": "Tempat Wisata",
 
   // Personal info
   "save": "Simpan",
@@ -85,6 +88,9 @@ const Map<String, String> idLanguage = {
   "gender": "Jenis kelamin",
   "govId": "NIK",
   "profileUpdated": "Profil berhasil diubah.",
+  "camera": "Kamera",
+  "gallery": "Galeri",
+  "fileSizeExceeds3MB": "Ukuran file melebihi 3MB",
 
   // Notification Settings
   "specialTipsAndOffers": "Penawaran Spesial dan Informasi",
@@ -97,7 +103,8 @@ const Map<String, String> idLanguage = {
   "roundTrip": "Pulang-pergi",
   "passenger": "Penumpang",
   "economy": "Ekonomi",
-  "businness": "Bisnis",
+  "business": "Bisnis",
+  "first": "Pertama",
   "executive": "Eksekutif",
   "search": "Telusuri",
   "yourLastSearch": "Pencarian terakhir kamu",
