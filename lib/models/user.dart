@@ -30,4 +30,14 @@ class User {
       pictureLink: json["pictureLink"] ?? "",
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "_id": objectId,
+      "name": name,
+      "email": email,
+      "phone": phone,
+      "birthday": birthday.toIso8601String(),
+    };
+  }
 }

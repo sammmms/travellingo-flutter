@@ -5,13 +5,13 @@ import 'package:travellingo/utils/place_category_util.dart';
 class Place {
   String id;
   String name;
-  double price;
+  int price;
   String description;
   String city;
   String country;
   String pictureLink;
   PictureType pictureType;
-  PlaceCategory type;
+  PlaceCategory category;
   List<Review> reviews;
   double reviewAverage;
 
@@ -24,7 +24,7 @@ class Place {
       required this.country,
       required this.pictureLink,
       required this.pictureType,
-      required this.type,
+      required this.category,
       required this.reviews,
       required this.reviewAverage});
 
@@ -39,13 +39,13 @@ class Place {
     return Place(
       id: json["_id"],
       name: json["name"],
-      price: double.tryParse(json["price"].toString()) ?? 0,
+      price: json['price'],
       description: json["description"],
       city: json["city"],
       country: json["country"],
       pictureLink: json["pictureLink"],
       pictureType: PictureTypeUtil.typeOf(json["pictureType"]),
-      type: PlaceCategoryUtil.categoryOf(json["type"]),
+      category: PlaceCategoryUtil.categoryOf(json["type"]),
       reviews: reviews,
       reviewAverage: double.tryParse(json["reviewAverage"].toString()) ?? 0,
     );
@@ -61,7 +61,7 @@ class Place {
       "country": country,
       "pictureLink": pictureLink,
       "pictureType": PictureTypeUtil.stringOf(pictureType),
-      "type": PlaceCategoryUtil.stringOf(type),
+      "type": PlaceCategoryUtil.stringOf(category),
       if (reviews.isNotEmpty)
         "reviews": reviews.map((e) => e.toJson()).toList(),
     };
