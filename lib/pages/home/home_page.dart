@@ -1,20 +1,28 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:travellingo/bloc/cart/cart_bloc.dart';
+import 'package:travellingo/bloc/cart/cart_state.dart';
 import 'package:travellingo/bloc/place/place_bloc.dart';
+import 'package:travellingo/bloc/place/place_state.dart';
+import 'package:travellingo/component/my_shimmer.dart';
+import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/models/place.dart';
-import 'package:travellingo/pages/home/choices/all/home_all_recommendation.dart';
-import 'package:travellingo/pages/home/choices/all/home_all_nearby.dart';
+import 'package:travellingo/pages/cart/cart_page.dart';
 import 'package:travellingo/pages/home/widget/home_filter_chip.dart';
+import 'package:travellingo/pages/home/widget/home_recommendation.dart';
 import 'package:travellingo/pages/home/widget/home_search_bar.dart';
 import 'package:travellingo/pages/home/widget/label_heading.dart';
 import 'package:travellingo/pages/home/widget/see_all.dart';
 import 'package:travellingo/pages/home/widget/transport_button.dart';
-import 'package:travellingo/pages/flight%20(done)/flight_page.dart';
+import 'package:travellingo/pages/flight/flight_page.dart';
 import 'package:travellingo/utils/dummy_data.dart';
 import 'package:travellingo/utils/place_category_util.dart';
-import 'package:travellingo/utils/theme_data/color_scheme.dart';
+import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   final _filterStream =
       BehaviorSubject<PlaceCategory>.seeded(PlaceCategory.all);
   final _searchStream = BehaviorSubject<String>.seeded("");
+  final _selectedCity = BehaviorSubject<String>();
   final _searchController = TextEditingController();
   final bloc = PlaceBloc();
 
@@ -76,47 +85,7 @@ class _HomePageState extends State<HomePage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                  value: currentCity,
-                                  // isDense: true,
-                                  focusColor: Colors.transparent,
-                                  menuMaxHeight: 200,
-                                  borderRadius: BorderRadius.circular(16),
-                                  padding: const EdgeInsets.only(top: 0),
-                                  dropdownColor:
-                                      const Color.fromRGBO(255, 255, 255, 1),
-                                  elevation: 0,
-                                  items: japanCities
-                                      .map(
-                                        (entry) => DropdownMenuItem(
-                                            value: entry,
-                                            child: Text(
-                                                "${entry["city"]}, ${entry["country"]}")),
-                                      )
-                                      .toList(),
-                                  selectedItemBuilder: (context) {
-                                    return japanCities
-                                        .map(
-                                          (entry) => DropdownMenuItem(
-                                              value: entry,
-                                              child: Text(
-                                                "${entry["city"]}, ${entry["country"]}",
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromRGBO(
-                                                        27, 20, 70, 1),
-                                                    fontSize: 20),
-                                              )),
-                                        )
-                                        .toList();
-                                  },
-                                  onChanged: (value) {
-                                    setState(() {
-                                      currentCity = value!;
-                                    });
-                                  }),
-                            )
+                            _buildCityDropdown()
                           ],
                         ),
                       ),
@@ -280,21 +249,94 @@ class _HomePageState extends State<HomePage> {
               SeeAllButton(),
             ],
           ),
-          const HomeAllNearby(),
-          const SizedBox(
-            height: 15,
-          ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              LabelHeading(
-                  icon: Icon(Icons.insights,
-                      color: Color.fromRGBO(255, 145, 65, 1)),
-                  content: "insights"),
-              SeeAllButton(),
-            ],
-          ),
-          const HomeAllNearby(),
-        ]);
+  Widget _buildCityDropdown() {
+    return StreamBuilder<String>(
+        stream: _selectedCity,
+        initialData: indonesiaAirport[0]["kodeBandara"],
+        builder: (context, snapshot) {
+          return DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              borderRadius: BorderRadius.circular(10),
+              isDense: true,
+              onChanged: (String? value) {
+                _selectedCity.add(value!);
+              },
+              padding: const EdgeInsets.only(top: 5),
+              icon: const Icon(Icons.keyboard_arrow_down_rounded),
+              value: snapshot.data,
+              items: indonesiaAirport
+                  .map((e) => DropdownMenuItem(
+                      value: e["kodeBandara"], child: Text(e["kota"]!)))
+                  .toList(),
+              selectedItemBuilder: (context) {
+                return indonesiaAirport
+                    .map((e) => Center(
+                            child: Text(
+                          e["kota"]!,
+                          style: textStyle.headlineLarge,
+                        )))
+                    .toList();
+              },
+            ),
+          );
+        });
+  }
+
+  Widget _buildCartIcon() {
+    return Stack(
+      children: [
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                slideInFromRight(
+                  Provider<CartBloc>.value(
+                      value: _cartBloc, child: const CartPage()),
+                ));
+          },
+          icon: const Icon(Icons.shopping_cart_outlined),
+        ),
+        StreamBuilder<CartState>(
+            stream: _cartBloc.controller,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const SizedBox();
+              }
+              CartState state = snapshot.data!;
+              bool hasError = state.hasError;
+              bool noData = state.data == null;
+              bool noItem = state.data?.items.isEmpty ?? false;
+              bool isLoading = state.isLoading;
+
+              if (hasError || noData || noItem || isLoading) {
+                return const SizedBox();
+              }
+              List<CartItems> items = state.data!.items;
+              return Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 20,
+                    minHeight: 20,
+                  ),
+                  child: Text(
+                    items.length.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            })
+      ],
+    );
   }
 }
