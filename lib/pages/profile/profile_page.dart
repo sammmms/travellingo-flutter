@@ -87,6 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
+                                      // TODO : Change the use of badge to stack positioned
                                       BorderedAvatar(content: data.pictureLink),
                                       const SizedBox(
                                         height: 5,
