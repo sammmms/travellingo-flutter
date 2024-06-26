@@ -32,21 +32,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var currentCity = japanCities.first;
   String currentTime = "";
   final _filterStream =
       BehaviorSubject<PlaceCategory>.seeded(PlaceCategory.all);
   final _searchStream = BehaviorSubject<String>.seeded("");
   final _selectedCity = BehaviorSubject<String>();
   final _searchController = TextEditingController();
-  final bloc = PlaceBloc();
+  final _bloc = PlaceBloc();
+  final _cartBloc = CartBloc();
 
   @override
   void initState() {
     currentTime = timePicker(DateTime.now().hour);
 
-    bloc.getPlace();
+    _filterStream
+        .debounceTime(const Duration(milliseconds: 500))
+        .listen((event) {
+      _bloc.getPlace(filter: event, search: _searchStream.value);
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _filterStream.close();
+    _searchStream.close();
+    _selectedCity.close();
+    _searchController.dispose();
+    _bloc.dispose();
+    _cartBloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -205,22 +220,31 @@ class _HomePageState extends State<HomePage> {
           ),
           SizedBox(
             height: 56,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: PlaceCategory.values.length,
-              separatorBuilder: (context, index) {
-                return const SizedBox(
-                  width: 10,
-                );
-              },
-              itemBuilder: (context, index) {
-                return HomeFilterChip(
-                    controller: _filterStream,
-                    label:
-                        PlaceCategoryUtil.stringOf(PlaceCategory.values[index]),
-                    onSelected: changeFilterSelection);
-              },
-            ),
+            child: StreamBuilder<PlaceCategory>(
+                stream: _filterStream,
+                builder: (context, snapshot) {
+                  List<PlaceCategory> categories =
+                      PlaceCategory.values.toList();
+                  categories
+                      .sort((a, b) => a.toString().compareTo(b.toString()));
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: PlaceCategory.values.length,
+                    itemBuilder: (context, index) {
+                      PlaceCategory category = categories[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: HomeFilterChip(
+                          isSelected: snapshot.data == category,
+                          selection: category,
+                          onSelected: (value) {
+                            _filterStream.add(value);
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }),
           ),
           const SizedBox(
             height: 20,
