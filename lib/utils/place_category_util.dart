@@ -18,4 +18,8 @@ class PlaceCategoryUtil {
         .firstWhere((element) => element.value.toLowerCase() == placeCategory)
         .key;
   }
+
+  static String readCategory(PlaceCategory placeCategory) {
+    return _placeCategoryMap[placeCategory]!;
+  }
 }
