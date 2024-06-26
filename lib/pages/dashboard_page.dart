@@ -54,7 +54,7 @@ class _DashboardPageState extends State<DashboardPage> {
           resizeToAvoidBottomInset: false,
           bottomSheet: Container(
             decoration: BoxDecoration(
-              color: colorScheme.background,
+              color: colorScheme.surface,
               boxShadow: [
                 BoxShadow(
                     color: Colors.grey.withOpacity(0.1),
@@ -65,7 +65,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             child: Theme(
               data: Theme.of(context).copyWith(
-                canvasColor: colorScheme.background,
+                canvasColor: colorScheme.surface,
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
               ),

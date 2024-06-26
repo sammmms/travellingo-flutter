@@ -279,7 +279,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                         color: const Color(0xFF141511))),
                                 trailing: Checkbox(
                                   value: isChecked[index],
-                                  side: MaterialStateBorderSide.resolveWith(
+                                  side: WidgetStateBorderSide.resolveWith(
                                     (states) => BorderSide(
                                         width: 1.0,
                                         color: Colors.grey.withOpacity(0.7)),
@@ -360,16 +360,16 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
+                    backgroundColor: WidgetStateProperty.all<Color>(
                         const Color(0xFFF5D161)), // Button background color
-                    foregroundColor: MaterialStateProperty.all<Color>(
+                    foregroundColor: WidgetStateProperty.all<Color>(
                         const Color(0xFFFFFFFF)), // Text color
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    minimumSize: MaterialStateProperty.all<Size>(
+                    minimumSize: WidgetStateProperty.all<Size>(
                         const Size(95, 48)), // Set the button's size
                   ),
                   onPressed: () {

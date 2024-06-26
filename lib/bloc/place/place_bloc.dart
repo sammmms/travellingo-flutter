@@ -53,7 +53,9 @@ class PlaceBloc {
         }
       }
 
-      print(url);
+      if (kDebugMode) {
+        print(url);
+      }
 
       var response = await dio.get(url);
       if (kDebugMode) {

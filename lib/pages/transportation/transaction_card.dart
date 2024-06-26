@@ -117,8 +117,8 @@ class TransactionCard extends StatelessWidget {
                   }
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(buttonColor),
-                  shape: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(buttonColor),
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

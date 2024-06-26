@@ -210,9 +210,8 @@ class _SignInFormState extends State<SignInForm> {
                                     onTap: () {
                                       changeRememberMeState();
                                     },
-                                    overlayColor:
-                                        const MaterialStatePropertyAll(
-                                            Colors.transparent),
+                                    overlayColor: const WidgetStatePropertyAll(
+                                        Colors.transparent),
                                     child: Text(
                                       "rememberme".getString(context),
                                       style: const TextStyle(
@@ -264,10 +263,10 @@ class _SignInFormState extends State<SignInForm> {
                                             },
                                       style: ButtonStyle(
                                           fixedSize:
-                                              const MaterialStatePropertyAll(
+                                              const WidgetStatePropertyAll(
                                             Size.fromHeight(52),
                                           ),
-                                          shape: MaterialStatePropertyAll(
+                                          shape: WidgetStatePropertyAll(
                                               RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(16),

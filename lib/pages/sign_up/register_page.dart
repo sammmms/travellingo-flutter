@@ -110,11 +110,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             }
                           },
                           style: const ButtonStyle(
-                              minimumSize: MaterialStatePropertyAll(
+                              minimumSize: WidgetStatePropertyAll(
                                   Size(double.infinity, 52)),
                               backgroundColor:
-                                  MaterialStatePropertyAll(Color(0xFFF5D161)),
-                              shape: MaterialStatePropertyAll(
+                                  WidgetStatePropertyAll(Color(0xFFF5D161)),
+                              shape: WidgetStatePropertyAll(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(16))))),

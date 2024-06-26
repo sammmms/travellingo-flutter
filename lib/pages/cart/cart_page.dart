@@ -135,12 +135,12 @@ class _CartPageState extends State<CartPage> {
   Widget _checkoutButton() {
     return OutlinedButton(
       style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          minimumSize: MaterialStateProperty.all<Size>(const Size(171, 48))),
+          minimumSize: WidgetStateProperty.all<Size>(const Size(171, 48))),
       onPressed: () {
         Navigator.push(context, slideInFromBottom(const CheckoutPage()));
       },
