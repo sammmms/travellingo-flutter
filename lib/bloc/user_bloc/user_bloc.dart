@@ -36,12 +36,12 @@ class UserBloc {
       _updateStream(UserState(receivedProfile: User.fromJson(data)));
       return true;
     } on DioException catch (err) {
-      _updateStream(UserState(error: true));
+      _updateStream(UserState(hasError: true));
 
       return AppError(err.response?.data,
           code: err.response?.statusCode.toString());
     } catch (err) {
-      _updateStream(UserState(error: true));
+      _updateStream(UserState(hasError: true));
       if (kDebugMode) {
         print("error on get user : platform");
         print(err);
@@ -69,7 +69,7 @@ class UserBloc {
           receivedMessage: data['message'], receivedProfile: receivedUser));
       return true;
     } on DioException catch (err) {
-      _updateStream(UserState(error: true));
+      _updateStream(UserState(hasError: true));
       if (kDebugMode) {
         print("error on update user : dio");
         print(err.response);
@@ -77,7 +77,7 @@ class UserBloc {
       return AppError(err.response?.data,
           code: err.response?.statusCode.toString());
     } catch (err) {
-      _updateStream(UserState(error: true));
+      _updateStream(UserState(hasError: true));
       if (kDebugMode) {
         print("error on update user : platform");
         print(err);
@@ -102,7 +102,7 @@ class UserBloc {
 
       return true;
     } on DioException catch (err) {
-      _updateStream(UserState(error: true));
+      _updateStream(UserState(hasError: true));
       if (kDebugMode) {
         print("error on change picture : dio");
         print(err.response);
@@ -110,7 +110,7 @@ class UserBloc {
       return AppError(err.response?.data,
           code: err.response?.statusCode.toString());
     } catch (err) {
-      _updateStream(UserState(error: true));
+      _updateStream(UserState(hasError: true));
       if (kDebugMode) {
         print("error on change picture : platform");
         print(err);
