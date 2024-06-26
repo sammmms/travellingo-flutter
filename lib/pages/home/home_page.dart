@@ -14,7 +14,7 @@ import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/models/place.dart';
 import 'package:travellingo/pages/cart/cart_page.dart';
 import 'package:travellingo/pages/home/widget/home_filter_chip.dart';
-import 'package:travellingo/pages/home/widget/home_recommendation.dart';
+import 'package:travellingo/pages/home/widget/home_carousel.dart';
 import 'package:travellingo/pages/home/widget/home_search_bar.dart';
 import 'package:travellingo/pages/home/widget/label_heading.dart';
 import 'package:travellingo/pages/home/widget/see_all.dart';
@@ -284,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                   itemCount: places.length,
                   itemBuilder: (context, index, realIndex) {
                     Place place = places[index];
-                    return HomeRecommendation(
+                    return HomeCarousel(
                       place: place,
                       onTap: () {},
                     );
