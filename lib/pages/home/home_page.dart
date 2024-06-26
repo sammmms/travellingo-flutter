@@ -45,11 +45,20 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     currentTime = timePicker(DateTime.now().hour);
 
+    _searchStream
+        .debounceTime(const Duration(milliseconds: 500))
+        .listen((event) {
+      _bloc.getPlace(filter: _filterStream.value, search: event);
+    });
+
     _filterStream
         .debounceTime(const Duration(milliseconds: 500))
         .listen((event) {
       _bloc.getPlace(filter: event, search: _searchStream.value);
     });
+
+    _bloc.getPlace();
+    _cartBloc.getCart();
     super.initState();
   }
 
@@ -70,7 +79,8 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         body: RefreshIndicator(
           onRefresh: () async {
-            await bloc.getPlace(_filterStream.value);
+            await _bloc.getPlace(
+                filter: _filterStream.value, search: _searchStream.value);
           },
           color: colorScheme.primary,
           backgroundColor: colorScheme.background,
@@ -82,7 +92,8 @@ class _HomePageState extends State<HomePage> {
               SliverAppBar(
                 expandedHeight: 80,
                 flexibleSpace: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 10),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,17 +115,7 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                       ),
-                      Badge(
-                        smallSize: 10,
-                        largeSize: 10,
-                        backgroundColor: const Color.fromRGBO(255, 145, 65, 1),
-                        child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.notifications_outlined,
-                              color: Color.fromRGBO(62, 132, 168, 1),
-                            )),
-                      )
+                      _buildCartIcon(),
                     ],
                   ),
                 ),
@@ -135,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                           height: 20,
                         ),
                         StreamBuilder(
-                            stream: bloc.controller,
+                            stream: _bloc.controller,
                             builder: (context, snap) {
                               List<Place> places = snap.data?.data ?? [];
                               return StreamBuilder<String>(
@@ -177,12 +178,6 @@ class _HomePageState extends State<HomePage> {
     } else {
       return "goodNight";
     }
-  }
-
-  void changeFilterSelection(PlaceCategory value) {
-    setState(() {
-      _filterStream.add(value);
-    });
   }
 
   Widget _buildHomeBody(List<Place> places) {
@@ -259,7 +254,43 @@ class _HomePageState extends State<HomePage> {
               SeeAllButton(),
             ],
           ),
-          const HomeAllRecommendation(),
+          const SizedBox(
+            height: 10,
+          ),
+          StreamBuilder<PlaceState>(
+              stream: _bloc.controller,
+              builder: (context, snapshot) {
+                List<Place> places = snapshot.data?.data ?? [];
+                if (places.isEmpty) {
+                  return const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: MyShimmer(width: double.infinity, height: 200));
+                }
+                if (places.length > 5) {
+                  places = places.sublist(0, 5);
+                }
+                return CarouselSlider.builder(
+                  options: CarouselOptions(
+                      enableInfiniteScroll: true,
+                      viewportFraction: 0.9,
+                      enlargeCenterPage: true,
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 5),
+                      autoPlayAnimationDuration:
+                          const Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      animateToClosest: true,
+                      pageSnapping: true),
+                  itemCount: places.length,
+                  itemBuilder: (context, index, realIndex) {
+                    Place place = places[index];
+                    return HomeRecommendation(
+                      place: place,
+                      onTap: () {},
+                    );
+                  },
+                );
+              }),
           const SizedBox(
             height: 15,
           ),
@@ -273,6 +304,10 @@ class _HomePageState extends State<HomePage> {
               SeeAllButton(),
             ],
           ),
+          // TODO : MAKE THE NEARBY BY USING THE CITY, AND USE THE HOME RECOMMENDATION
+        ]);
+  }
+
   Widget _buildCityDropdown() {
     return StreamBuilder<String>(
         stream: _selectedCity,
