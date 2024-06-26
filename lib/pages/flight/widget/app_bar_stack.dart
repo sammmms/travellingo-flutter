@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/pages/flight%20(done)/widget/flight_choice.dart';
+import 'package:travellingo/pages/flight/widget/flight_choice.dart';
 
 class AppBarStack extends StatelessWidget {
   const AppBarStack({super.key});

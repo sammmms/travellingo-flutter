@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:travellingo/component/airplane_animation_component.dart';
 import 'package:travellingo/component/dotted_divider_component.dart';
-import 'package:travellingo/component/route_animator_component.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/utils/dummy_data.dart';
 import 'payment_success_page.dart';
 
@@ -373,8 +373,8 @@ class _PaymentPageState extends State<PaymentPage> {
                         const Size(95, 48)), // Set the button's size
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                        createRouteFromBottom(const PaymentSuccessPage()));
+                    Navigator.push(
+                        context, slideInFromBottom(const PaymentSuccessPage()));
                   },
                   child: Text(
                     'Pay Now',

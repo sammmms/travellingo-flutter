@@ -11,7 +11,7 @@ import 'package:travellingo/component/check_component.dart';
 import 'package:travellingo/component/oauth_button_component.dart';
 import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
-import 'package:travellingo/pages/main_page.dart';
+import 'package:travellingo/pages/dashboard_page.dart';
 import 'package:travellingo/pages/sign_up/register_page.dart';
 import 'package:travellingo/pages/login/widget/authentication_button.dart';
 import 'package:travellingo/utils/app_error.dart';
@@ -248,7 +248,7 @@ class _SignInFormState extends State<SignInForm> {
                                                   Navigator.of(context)
                                                       .pushAndRemoveUntil(
                                                           slideInFromBottom(
-                                                              const MainPage()),
+                                                              const DashboardPage()),
                                                           (route) => false);
                                                   return;
                                                 }

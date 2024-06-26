@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/component/route_animator_component.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/pages/checkout/widget/checkout_alert_card.dart';
 import 'package:travellingo/pages/checkout/widget/checkout_card.dart';
 import 'package:travellingo/pages/checkout/widget/checkout_extra_prot.dart';
@@ -172,7 +172,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ),
                   onPressed: () {
                     Navigator.push(
-                        context, createRouteFromRight(const PaymentPage()));
+                        context, slideInFromRight(const PaymentPage()));
                   },
                   child: const Text(
                     'Proceed to Payment',

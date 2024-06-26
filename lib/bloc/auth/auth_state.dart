@@ -1,7 +1,7 @@
 class AuthState {
   String? receivedToken;
   bool isSubmitting;
-  bool error;
+  bool hasError;
   String? errorMessage;
   int? errorStatus;
   String? successMessage;
@@ -11,14 +11,14 @@ class AuthState {
     this.errorMessage,
     this.errorStatus,
     this.isSubmitting = false,
-    this.error = false,
+    this.hasError = false,
     this.successMessage,
   });
 
   AuthState copyWith({
     String? receivedToken,
     bool? isSubmitting,
-    bool? error,
+    bool? hasError,
     String? errorMessage,
     int? errorStatus,
     String? successMessage,
@@ -26,7 +26,7 @@ class AuthState {
     return AuthState(
       receivedToken: receivedToken ?? this.receivedToken,
       isSubmitting: isSubmitting ?? this.isSubmitting,
-      error: error ?? this.error,
+      hasError: hasError ?? this.hasError,
       errorMessage: errorMessage ?? this.errorMessage,
       errorStatus: errorStatus ?? this.errorStatus,
       successMessage: successMessage ?? this.successMessage,

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:travellingo/component/route_animator_component.dart';
-import 'package:travellingo/pages/flight%20(done)/widget/button_choice.dart';
-import 'package:travellingo/pages/flight%20(done)/widget/location_choice.dart';
-import 'package:travellingo/pages/flight%20(done)/ticket_list/ticket_list_page.dart';
+import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/pages/flight/widget/button_choice.dart';
+import 'package:travellingo/pages/flight/widget/location_choice.dart';
+import 'package:travellingo/pages/flight/ticket_list/ticket_list_page.dart';
 import 'package:travellingo/utils/airplane_class_util.dart';
 import 'package:travellingo/utils/date_converter.dart';
-import 'package:travellingo/utils/theme_data/color_scheme.dart';
+import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class FlightChoice extends StatefulWidget {
   const FlightChoice({super.key});
@@ -115,7 +115,7 @@ class _FlightChoiceState extends State<FlightChoice> {
                 onPressed: () {
                   Navigator.push(
                       context,
-                      createRouteFromBottom(TicketListPage(
+                      slideInFromBottom(TicketListPage(
                         from: from.value,
                         to: to.value,
                       )));

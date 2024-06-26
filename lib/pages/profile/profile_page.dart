@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
-import 'package:travellingo/bloc/preferences/save_preferences.dart';
+import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/component/my_title.dart';
 import 'package:travellingo/component/transition_animation.dart';
@@ -14,7 +14,6 @@ import 'package:travellingo/pages/profile/privacy_sharing/privacy_sharing_page.d
 import 'package:travellingo/pages/profile/widget/avatar.dart';
 import 'package:travellingo/pages/profile/widget/text_navigator.dart';
 import 'package:travellingo/pages/purchase_history/purchase_history_page.dart';
-import 'package:travellingo/provider/user_detail_provider.dart';
 import 'package:travellingo/pages/login/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -59,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         return const Expanded(
                             child: Center(child: CircularProgressIndicator()));
                       }
-                      if (snapshot.data!.error) {
+                      if (snapshot.data!.hasError) {
                         return Expanded(
                           child: Center(
                               child: Text("somethingWrong".getString(context))),
@@ -141,13 +140,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                         result = await Store
                                             .getNotificationPreferences();
 
+                                    if (!context.mounted) return;
                                     Navigator.push(
                                         context,
-                                        slideInFromRight(NotificationPage(
-                                            specialTipsAndOffers:
-                                                result['specialTipsAndOffers']!,
-                                            activity: result['activity']!,
-                                            reminders: result['reminders']!)));
+                                        slideInFromRight(
+                                            NotificationPreferencesPage(
+                                                specialTipsAndOffers: result[
+                                                    'specialTipsAndOffers']!,
+                                                activity: result['activity']!,
+                                                reminders:
+                                                    result['reminders']!)));
                                   },
                                   text: "notification",
                                   needIcon: true,
@@ -173,8 +175,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 TextNavigator(
                                   onTapFunction: () {
-                                    context.read<UserDetailProvider>().user =
-                                        null;
                                     Store.removeToken();
                                     Navigator.of(context).pushAndRemoveUntil(
                                         slideInFromBottom(const SignInPage()),

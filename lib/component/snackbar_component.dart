@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/utils/theme_data/color_scheme.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 enum SnackbarStatus { failed, nothing, success, warning }
@@ -13,7 +12,7 @@ void showMySnackBar(BuildContext context, String text,
         duration: const Duration(milliseconds: 500),
         content: Text(
           text.getString(context),
-          style: textTheme.labelLarge,
+          style: textStyle.labelLarge,
         )));
   });
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/pages/flight%20(done)/widget/app_bar_stack.dart';
-import 'package:travellingo/pages/flight%20(done)/widget/flight_card.dart';
-import 'package:travellingo/pages/flight%20(done)/widget/flight_card_image.dart';
+import 'package:travellingo/pages/flight/widget/app_bar_stack.dart';
+import 'package:travellingo/pages/flight/widget/flight_card.dart';
+import 'package:travellingo/pages/flight/widget/flight_card_image.dart';
 import 'package:travellingo/pages/home/widget/label_heading.dart';
 import 'package:travellingo/pages/home/widget/see_all.dart';
 

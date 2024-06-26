@@ -3,7 +3,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:travellingo/component/dotted_divider_component.dart';
 import 'package:lottie/lottie.dart';
-import 'package:travellingo/pages/main_page.dart';
+import 'package:travellingo/pages/dashboard_page.dart';
 
 class PaymentSuccessPage extends StatelessWidget {
   const PaymentSuccessPage({super.key});
@@ -149,7 +149,8 @@ class PaymentSuccessPage extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: () {
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const MainPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const DashboardPage()),
                     (route) => false,
                   );
                 },

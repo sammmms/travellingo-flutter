@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:travellingo/component/airplane_animation_component.dart';
 import 'package:travellingo/component/dotted_divider_component.dart';
-import 'package:travellingo/component/route_animator_component.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import '../ticket_detail/ticket_detail_page.dart';
 
 class TicketListCard extends StatelessWidget {
@@ -20,7 +20,7 @@ class TicketListCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            createRouteFromRight(TicketDetailPage(data: data)),
+            slideInFromRight(TicketDetailPage(data: data)),
           );
         },
         child: Container(

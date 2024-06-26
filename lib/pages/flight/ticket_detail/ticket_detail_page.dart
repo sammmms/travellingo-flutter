@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/component/route_animator_component.dart';
-import 'package:travellingo/pages/flight%20(done)/select_seat/select_seat_page.dart';
-import 'package:travellingo/pages/flight%20(done)/ticket_detail/widget/passenger_detail_card.dart';
-import 'package:travellingo/pages/flight%20(done)/ticket_detail/widget/ticket_detail_card.dart';
+import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/pages/flight/select_seat/select_seat_page.dart';
+import 'package:travellingo/pages/flight/ticket_detail/widget/passenger_detail_card.dart';
+import 'package:travellingo/pages/flight/ticket_detail/widget/ticket_detail_card.dart';
 
 class TicketDetailPage extends StatefulWidget {
   final Map<String, dynamic>? data; // Data can be null
@@ -186,7 +186,7 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      createRouteFromBottom(
+                      slideInFromBottom(
                         const SelectSeatPage(),
                       ),
                     );

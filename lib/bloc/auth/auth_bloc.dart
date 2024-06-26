@@ -7,7 +7,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travellingo/bloc/auth/auth_state.dart';
-import 'package:travellingo/bloc/preferences/save_preferences.dart';
+import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/utils/app_error.dart';
 
 class AuthBloc {
@@ -30,7 +30,7 @@ class AuthBloc {
       return true;
     } on DioException catch (err) {
       controller.add(AuthState(
-        error: true,
+        hasError: true,
         errorMessage: err.response?.data,
         errorStatus: err.response?.statusCode,
       ));
@@ -40,7 +40,7 @@ class AuthBloc {
       );
     } catch (err) {
       controller.add(AuthState(
-        error: true,
+        hasError: true,
         errorMessage: "somethingWrong",
       ));
       throw AppError(
@@ -64,13 +64,13 @@ class AuthBloc {
       return true;
     } on DioException catch (err) {
       controller.add(AuthState(
-        error: true,
+        hasError: true,
         errorMessage: err.response?.data,
         errorStatus: err.response?.statusCode,
       ));
     } catch (err) {
       controller.add(AuthState(
-        error: true,
+        hasError: true,
         errorMessage: "somethingWrong",
       ));
     }

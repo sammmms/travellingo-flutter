@@ -3,8 +3,8 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:travellingo/component/success_dialog_component.dart';
 import 'package:travellingo/pages/checkout/widget/checkout_alert_card.dart';
-import 'package:travellingo/pages/flight%20(done)/select_seat/widget/seat_passenger_card.dart';
-import 'package:travellingo/pages/main_page.dart';
+import 'package:travellingo/pages/flight/select_seat/widget/seat_passenger_card.dart';
+import 'package:travellingo/pages/dashboard_page.dart';
 import 'package:travellingo/utils/dummy_data.dart';
 
 class SelectSeatPage extends StatefulWidget {
@@ -59,7 +59,7 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
                       onClose: () {
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                            builder: (context) => const MainPage()),
+                            builder: (context) => const DashboardPage()),
                         (route) => false);
                   });
                 },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/utils/theme_data/color_scheme.dart';
+import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class HomeSearchBar extends StatelessWidget {
   final Function(String)? onChanged;

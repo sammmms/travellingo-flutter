@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/bloc/preferences/save_preferences.dart';
+import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/component/my_title.dart';
-import 'package:travellingo/utils/theme_data/color_scheme.dart';
+import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class UserNotificationPreference {
   bool email;
@@ -26,21 +26,23 @@ class UserNotificationPreference {
   }
 }
 
-class NotificationPage extends StatefulWidget {
+class NotificationPreferencesPage extends StatefulWidget {
   final UserNotificationPreference specialTipsAndOffers;
   final UserNotificationPreference activity;
   final UserNotificationPreference reminders;
-  const NotificationPage(
+  const NotificationPreferencesPage(
       {super.key,
       required this.specialTipsAndOffers,
       required this.activity,
       required this.reminders});
 
   @override
-  State<NotificationPage> createState() => _NotificationPageState();
+  State<NotificationPreferencesPage> createState() =>
+      _NotificationPreferencesPageState();
 }
 
-class _NotificationPageState extends State<NotificationPage> {
+class _NotificationPreferencesPageState
+    extends State<NotificationPreferencesPage> {
   late UserNotificationPreference specialTipsAndOffers;
   late UserNotificationPreference activity;
   late UserNotificationPreference reminders;

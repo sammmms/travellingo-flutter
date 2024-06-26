@@ -74,7 +74,7 @@ class _SetUpPageState extends State<SetUpPage> {
                             (snapshot.data?.isSubmitting ?? false)) {
                           showMySnackBar(context, "pleaseWait");
                         }
-                        if (snapshot.data?.error ?? false) {
+                        if (snapshot.data?.hasError ?? false) {
                           showMySnackBar(context,
                               snapshot.data!.errorMessage ?? "somethingWrong");
                         }

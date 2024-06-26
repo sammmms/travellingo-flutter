@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:travellingo/utils/theme_data/color_scheme.dart';
 
 ThemeData lightTheme = ThemeData(
   fontFamily: "Poppins",
@@ -19,7 +18,7 @@ ThemeData lightTheme = ThemeData(
         letterSpacing: 1.1,
         fontWeight: FontWeight.bold),
   ),
-  textTheme: textTheme,
+  textTheme: textStyle,
   scaffoldBackgroundColor: Colors.white,
   dialogTheme: const DialogTheme(
     surfaceTintColor: Colors.white,
@@ -66,11 +65,11 @@ ThemeData lightTheme = ThemeData(
     trackColor: MaterialStatePropertyAll(colorScheme.primary),
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: Colors.white, selectedItemColor: colorScheme.primary),
+      backgroundColor: Colors.white, selectedItemColor: colorScheme.secondary),
   useMaterial3: true,
 );
 
-TextTheme textTheme = TextTheme(
+TextTheme textStyle = TextTheme(
   bodySmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
   bodyMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
   bodyLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
@@ -92,10 +91,25 @@ TextTheme textTheme = TextTheme(
   displaySmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
   displayMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
   displayLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
-  headlineSmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
-  headlineMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
-  headlineLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
+  headlineSmall: TextStyle(color: colorScheme.onSurface, fontSize: 16),
+  headlineMedium: TextStyle(color: colorScheme.onSurface, fontSize: 17),
+  headlineLarge: TextStyle(color: colorScheme.onSurface, fontSize: 18),
   labelSmall: TextStyle(color: colorScheme.onSurface, fontSize: 10),
   labelMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
   labelLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
 ).apply(fontFamily: 'Poppins');
+
+ColorScheme colorScheme = ColorScheme(
+  brightness: Brightness.light,
+  primary: const Color(0xFFF5D161),
+  onPrimary: Colors.white,
+  primaryContainer: Colors.orangeAccent.shade200,
+  secondary: Colors.yellow,
+  onSecondary: Colors.white,
+  error: Colors.redAccent.shade200,
+  onError: Colors.white,
+  background: Colors.white,
+  onBackground: const Color(0xAA1B1446),
+  surface: Colors.white,
+  onSurface: const Color.fromRGBO(27, 20, 70, 1),
+);
