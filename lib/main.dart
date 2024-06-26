@@ -5,13 +5,13 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/auth/auth_state.dart';
-import 'package:travellingo/pages/main_page.dart';
+import 'package:travellingo/pages/dashboard_page.dart';
 import 'package:travellingo/utils/locales/locale.dart';
 import 'package:travellingo/pages/login/login_page.dart';
-import 'package:travellingo/provider/user_detail_provider.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -28,7 +28,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final FlutterLocalization localization = FlutterLocalization.instance;
-  AuthBloc bloc = AuthBloc();
+  AuthBloc authBloc = AuthBloc();
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
     };
     SchedulerBinding.instance.addPostFrameCallback(
       (_) async {
-        await bloc.checkLogin();
+        await authBloc.checkLogin();
         FlutterNativeSplash.remove();
       },
     );
@@ -55,19 +55,18 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => UserDetailProvider())
-        ],
+        providers: [Provider<AuthBloc>.value(value: authBloc)],
         child: MaterialApp(
+            navigatorKey: navigatorKey,
             supportedLocales: localization.supportedLocales,
             localizationsDelegates: localization.localizationsDelegates,
             title: 'Travellingo',
             theme: lightTheme,
             home: StreamBuilder<AuthState>(
-              stream: bloc.controller.stream,
+              stream: authBloc.controller.stream,
               builder: (context, snapshot) {
                 if (snapshot.data?.receivedToken != null) {
-                  return const MainPage();
+                  return const DashboardPage();
                 }
                 return const SignInPage();
               },
