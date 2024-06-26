@@ -75,6 +75,7 @@ const Map<String, String> idLanguage = {
   "hotel": "Hotel",
   "restaurant": "Restoran",
   "attraction": "Tempat Wisata",
+  "cart": "Keranjang",
 
   // Personal info
   "save": "Simpan",
@@ -196,5 +197,12 @@ const Map<String, String> idLanguage = {
   "tokenExpired": "Token sudah berakhir, harap login kembali.",
   "successfullyDeleted": "Berhasil menghapus akun.",
   "successfullyUpdated": "Berhasil mengubah.",
-  "dataIncomplete": "Data tidak lengkap."
+  "dataIncomplete": "Data tidak lengkap.",
+
+  // Cart
+  "noCartAvailable": "Tidak ada keranjang tersedia",
+  "deleteItem": "Hapus tiket",
+  "deleteItemConfirmation": "Apakah kamu yakin ingin menghapus tiket ini?",
+  "yesDelete": "Ya, hapus",
+  "failUpdateItemQuantity": "Gagal mengubah jumlah item",
 };

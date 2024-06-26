@@ -75,6 +75,7 @@ const Map<String, String> usLanguage = {
   "hotel": "Hotel",
   "restaurant": "Restaurant",
   "attraction": "Attraction",
+  "cart": "Cart",
 
   // Personal info
   "save": "Save",
@@ -196,5 +197,12 @@ const Map<String, String> usLanguage = {
   "tokenExpired": "Token has expired, please sign-in again.",
   "successfullyDeleted": "Successfully deleted your account.",
   "successfullyUpdated": "Successfully updated.",
-  "dataIncomplete": "Data is incomplete."
+  "dataIncomplete": "Data is incomplete.",
+
+  // Cart
+  "noCartAvailable": "No cart available",
+  "deleteItem": "Delete item",
+  "deleteItemConfirmation": "Are you sure you want to delete this item?",
+  "yesDelete": "Yes, delete",
+  "failUpdateItemQuantity": "Failed to update item quantity",
 };
