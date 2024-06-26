@@ -29,27 +29,43 @@ class PlaceBloc {
     controller.sink.add(state);
   }
 
-  Future<AppError?> getPlace([PlaceCategory? filter]) async {
+  void dispose() {
+    controller.close();
+  }
+
+  Future<AppError?> getPlace({String? search, PlaceCategory? filter}) async {
     try {
       _updateStream(PlaceState(isLoading: true));
 
       String url = "/places";
 
-      if (filter != null) {
+      if (filter != null && filter != PlaceCategory.all) {
         {
-          url += PlaceCategoryUtil.stringOf(filter);
+          url += "?category=${PlaceCategoryUtil.stringOf(filter)}";
         }
       }
 
-      var response = await dio.get("/places");
-      print(response.data);
+      if (search != null && search.isNotEmpty) {
+        if (filter != null && filter != PlaceCategory.all) {
+          url += "&search=$search";
+        } else {
+          url += "?search=$search";
+        }
+      }
+
+      print(url);
+
+      var response = await dio.get(url);
+      if (kDebugMode) {
+        print(response.data);
+      }
       List data = response.data;
       List<Place> places = data.map((place) => Place.fromJson(place)).toList();
 
       _updateStream(PlaceState(data: places));
       return null;
     } catch (err) {
-      _updateStream(PlaceState(isError: true));
+      _updateStream(PlaceState(hasError: true));
       if (err is DioException) {
         if (kDebugMode) {
           print('error on get place : dio');

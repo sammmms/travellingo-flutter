@@ -3,23 +3,23 @@ import 'package:travellingo/models/place.dart';
 class PlaceState {
   final List<Place>? data;
   final bool isLoading;
-  final bool isError;
+  final bool hasError;
 
   PlaceState({
     this.data,
     this.isLoading = false,
-    this.isError = false,
+    this.hasError = false,
   });
 
   PlaceState copyWith({
     List<Place>? places,
     bool? isLoading,
-    bool? isError,
+    bool? hasError,
   }) {
     return PlaceState(
       data: places ?? data,
       isLoading: isLoading ?? this.isLoading,
-      isError: isError ?? this.isError,
+      hasError: hasError ?? this.hasError,
     );
   }
 }
