@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:travellingo/bloc/cart/cart_bloc.dart';
 import 'package:travellingo/bloc/cart/cart_state.dart';
 import 'package:travellingo/bloc/place/place_bloc.dart';
