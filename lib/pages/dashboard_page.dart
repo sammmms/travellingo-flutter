@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
+import 'package:travellingo/bloc/auth/auth_state.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/pages/home/home_page.dart';
-import 'package:travellingo/pages/insight_page.dart';
+import 'package:travellingo/pages/login/login_page.dart';
+import 'package:travellingo/pages/transportation/transaction_page.dart';
+import 'package:travellingo/pages/wishlist_page.dart';
 import 'package:travellingo/pages/notification_page.dart';
 import 'package:travellingo/pages/profile/profile_page.dart';
+import 'package:travellingo/splash_page.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -15,27 +23,30 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   int _currentPage = 0;
   late List<Map<String, dynamic>> navigationItem;
+  late AuthBloc authBloc;
   @override
   void initState() {
+    authBloc = context.read<AuthBloc>();
     navigationItem = [
+      {"title": "home", "icon": _buildIcon("home"), "page": const HomePage()},
       {
-        "title": "home",
-        "icon": const Icon(Icons.home_outlined),
-        "page": const HomePage()
+        "title": "transaction",
+        "icon": _buildIcon("transaction"),
+        "page": const TransactionPage()
       },
       {
         "title": "notification",
-        "icon": const Icon(Icons.notifications_none_outlined),
+        "icon": _buildIcon("notification"),
         "page": const NotificationPage()
       },
       {
-        "title": "insights",
-        "icon": const Icon(Icons.insights_outlined),
-        "page": const InsightsPages()
+        "title": "wishlist",
+        "icon": _buildIcon("wishlist"),
+        "page": const WishlistPages()
       },
       {
         "title": "profile",
-        "icon": const Icon(Icons.person_outline),
+        "icon": _buildIcon("profile"),
         "page": const ProfilePage()
       }
     ];
@@ -47,14 +58,23 @@ class _DashboardPageState extends State<DashboardPage> {
     return SafeArea(
       top: false,
       child: Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.only(bottom: 60),
-            child: navigationItem[_currentPage]["page"],
-          ),
+          body: StreamBuilder<AuthState>(
+              stream: authBloc.controller,
+              builder: (context, snapshot) {
+                AuthState authState = snapshot.data ?? AuthState();
+                if (!snapshot.hasData || authState.isAuthenticating) {
+                  return const SplashPage();
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 60),
+                  child: navigationItem[_currentPage]["page"],
+                );
+              }),
           resizeToAvoidBottomInset: false,
           bottomSheet: Container(
             decoration: BoxDecoration(
-              color: colorScheme.background,
+              color: colorScheme.surface,
               boxShadow: [
                 BoxShadow(
                     color: Colors.grey.withOpacity(0.1),
@@ -65,13 +85,12 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             child: Theme(
               data: Theme.of(context).copyWith(
-                canvasColor: colorScheme.background,
+                canvasColor: colorScheme.surface,
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
               ),
               child: BottomNavigationBar(
                   unselectedItemColor: Colors.grey,
-                  // selectedItemColor: Colors.teal,
                   showUnselectedLabels: false,
                   showSelectedLabels: false,
                   currentIndex: _currentPage,
@@ -79,6 +98,13 @@ class _DashboardPageState extends State<DashboardPage> {
                   backgroundColor: Colors.transparent,
                   type: BottomNavigationBarType.fixed,
                   onTap: (value) {
+                    if (value > 0 &&
+                        authBloc.controller.valueOrNull?.isAuthenticated ==
+                            false) {
+                      Navigator.push(
+                          context, slideInFromBottom(const LoginPage()));
+                      return;
+                    }
                     setState(() {
                       _currentPage = value;
                     });
@@ -92,6 +118,16 @@ class _DashboardPageState extends State<DashboardPage> {
                   }).toList()),
             ),
           )),
+    );
+  }
+
+  Widget _buildIcon(String fileName) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: SvgPicture.asset(
+        "assets/svg/${fileName}_icon.svg",
+        width: 20,
+      ),
     );
   }
 }
