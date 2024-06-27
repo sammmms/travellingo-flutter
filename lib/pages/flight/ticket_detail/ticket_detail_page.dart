@@ -171,16 +171,16 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
+                    backgroundColor: WidgetStateProperty.all<Color>(
                         const Color(0xFFF5D161)), // Button background color
-                    foregroundColor: MaterialStateProperty.all<Color>(
+                    foregroundColor: WidgetStateProperty.all<Color>(
                         const Color(0xFFFFFFFF)), // Text color
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    minimumSize: MaterialStateProperty.all<Size>(
+                    minimumSize: WidgetStateProperty.all<Size>(
                         const Size(171, 48)), // Set the button's size
                   ),
                   onPressed: () {
