@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:svg_flutter/svg.dart';
 import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
 import 'package:travellingo/component/choose_image_source.dart';
+import 'package:travellingo/component/my_confirmation_dialog.dart';
 import 'package:travellingo/component/snackbar_component.dart';
+import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class BorderedAvatar extends StatefulWidget {
   final String? content;
@@ -40,6 +42,17 @@ class _BorderedAvatarState extends State<BorderedAvatar> {
             return InkWell(
               onTap: hasImage
                   ? () async {
+                      bool? showConfirmationDialog = await showDialog(
+                        context: context,
+                        builder: (context) => MyConfirmationDialog(
+                            label: "${"saveImage".getString(context)}?",
+                            positiveLabel: "Yes",
+                            negativeLabel: "Cancel"),
+                      );
+
+                      if (showConfirmationDialog == null ||
+                          !showConfirmationDialog) return;
+
                       String base64Image =
                           base64Encode(snapshot.data!.readAsBytesSync());
                       await _bloc.changePicture(base64Image);
