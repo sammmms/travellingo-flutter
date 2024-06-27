@@ -81,8 +81,8 @@ class _NotificationPreferencesPageState
     return [
       SwitchListTile(
         title: Text("pushNotification".getString(context)),
-        inactiveTrackColor: colorScheme.onBackground,
-        trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
+        inactiveTrackColor: colorScheme.onSurface,
+        trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
         value: notification.pushNotification,
         onChanged: (_) async {
           notification.pushNotification = !notification.pushNotification;
@@ -96,8 +96,8 @@ class _NotificationPreferencesPageState
       SwitchListTile(
         title: Text("email".getString(context)),
         value: notification.email,
-        inactiveTrackColor: colorScheme.onBackground,
-        trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
+        inactiveTrackColor: colorScheme.onSurface,
+        trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
         onChanged: (_) async {
           notification.email = !notification.email;
           await Store.saveNotificationPreferences(

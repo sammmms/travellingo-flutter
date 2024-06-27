@@ -16,12 +16,12 @@ class PrivacyButton extends StatelessWidget {
     return OutlinedButton(
         onPressed: () => onClickFunction(),
         style: ButtonStyle(
-            padding: const MaterialStatePropertyAll(EdgeInsets.all(15)),
-            backgroundColor: const MaterialStatePropertyAll(Colors.white),
-            foregroundColor: const MaterialStatePropertyAll(Color(0xAA1B1446)),
-            side: MaterialStatePropertyAll(
+            padding: const WidgetStatePropertyAll(EdgeInsets.all(15)),
+            backgroundColor: const WidgetStatePropertyAll(Colors.white),
+            foregroundColor: const WidgetStatePropertyAll(Color(0xAA1B1446)),
+            side: WidgetStatePropertyAll(
                 BorderSide(color: Colors.grey.shade300, width: 1)),
-            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15)))),
         child: Padding(
           padding: const EdgeInsets.all(3.0),
