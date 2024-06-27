@@ -46,15 +46,9 @@ class _BorderedAvatarState extends State<BorderedAvatar> {
                     }
                   : _pickImage,
               borderRadius: BorderRadius.circular(90),
-              child: Badge(
-                  alignment: Alignment.bottomRight,
-                  smallSize: 34,
-                  backgroundColor: Colors.yellow,
-                  label: hasImage
-                      ? const Icon(Icons.check, color: Colors.white)
-                      : const Icon(Icons.edit, color: Colors.white),
-                  largeSize: 30,
-                  child: DottedBorder(
+              child: Stack(
+                children: [
+                  DottedBorder(
                       strokeWidth: 3,
                       color: const Color(0xFFF6F8FB),
                       dashPattern: const [9, 7],
@@ -74,7 +68,30 @@ class _BorderedAvatarState extends State<BorderedAvatar> {
                                     ? MemoryImage(base64Decode(widget.content!))
                                     : null,
                               ),
-                      ))),
+                      )),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: colorScheme.secondary),
+                        width: 30,
+                        height: 30,
+                        child: hasImage
+                            ? const Icon(
+                                Icons.check_rounded,
+                                color: Colors.white,
+                                size: 20,
+                              )
+                            : SvgPicture.asset(
+                                "assets/svg/edit_icon.svg",
+                                color: Colors.white,
+                              )),
+                  )
+                ],
+              ),
             );
           }),
     );
