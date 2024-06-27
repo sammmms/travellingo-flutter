@@ -6,6 +6,7 @@ import 'package:travellingo/bloc/cart/cart_state.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/utils/app_error.dart';
+import 'package:travellingo/utils/error_print.dart';
 
 class CartBloc {
   final dio = Dio(BaseOptions(baseUrl: dotenv.env['BASE_URL']!));
@@ -26,6 +27,19 @@ class CartBloc {
       print("update cart stream");
     }
     controller.add(state);
+  }
+
+  AppError _updateError(Object err) {
+    late AppError appError;
+    if (err is DioException) {
+      appError = AppError(
+          message: err.response?.data, statusCode: err.response?.statusCode);
+      _updateStream(CartState.hasError(error: appError));
+      return appError;
+    }
+    appError = AppError(message: "somethingWrong");
+    _updateStream(CartState.hasError(error: appError));
+    return appError;
   }
 
   void dispose() {
@@ -64,16 +78,10 @@ class CartBloc {
         return null;
       }
 
-      return AppError("failUpdateItemQuantity");
-    } catch (e) {
-      if (kDebugMode) {
-        if (e is DioException) {
-          print(e.response?.data);
-        } else {
-          print(e);
-        }
-      }
-      return AppError("failUpdateItemQuantity");
+      return _updateError(AppError(message: "somethingWrong"));
+    } catch (err) {
+      printError(err: err);
+      return _updateError(err);
     }
   }
 }
