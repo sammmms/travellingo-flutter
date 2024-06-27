@@ -26,9 +26,6 @@ void main() async {
     print('BASE_URL: ${dotenv.env['BASE_URL']}');
   }
 
-  // LOCALIZATION
-  final languageCode = await Store.getLanguage() ?? 'en';
-
   // AUTH BLOC
   final authBloc = AuthBloc();
 
@@ -42,17 +39,14 @@ void main() async {
         value: authBloc,
       ),
     ],
-    child: MyApp(
-      languageCode: languageCode,
-    ),
+    child: const MyApp(),
   );
 
   runApp(app);
 }
 
 class MyApp extends StatefulWidget {
-  final String languageCode;
-  const MyApp({super.key, required this.languageCode});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -63,20 +57,22 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    localization.init(
-      mapLocales: [
-        const MapLocale('en', AppLocale.en),
-        const MapLocale('id', AppLocale.id),
-      ],
-      initLanguageCode: widget.languageCode,
-    );
-    localization.onTranslatedLanguage = (locale) async {
-      if (kDebugMode) {
-        print('Language has been changed to $locale');
-      }
-      await Store.saveLanguage(locale!.languageCode);
-      setState(() {});
-    };
+    Store.getLanguage().then((value) {
+      localization.init(
+        mapLocales: [
+          const MapLocale('en', AppLocale.en),
+          const MapLocale('id', AppLocale.id),
+        ],
+        initLanguageCode: value ?? 'en',
+      );
+      localization.onTranslatedLanguage = (locale) async {
+        if (kDebugMode) {
+          print('Language has been changed to $locale');
+        }
+        await Store.saveLanguage(locale!.languageCode);
+        setState(() {});
+      };
+    });
     super.initState();
   }
 
