@@ -31,7 +31,7 @@ const Map<String, String> idLanguage = {
   "phoneformatwrong": "Nomor telepon harus terdiri dari setidaknya 5 digit.",
   "passwordformatwrong": "Password harus terdiri dari 8 huruf",
   "emailisdifferent": "Email dan konfirmasi email tidak sama.",
-  "termsagree": "Kamu harus menyetujui syarat dan ketentuan untuk lanjut.",
+  "termsAgree": "Kamu harus menyetujui syarat dan ketentuan untuk lanjut.",
   "textFieldNotValid": "Text field kamu tidak dalam format yang valid..",
 
   //Interface
@@ -92,6 +92,8 @@ const Map<String, String> idLanguage = {
   "camera": "Kamera",
   "gallery": "Galeri",
   "fileSizeExceeds3MB": "Ukuran file melebihi 3MB",
+  "removeImage": "Hapus gambar",
+  "saveImage": "Simpan gambar",
 
   // Notification Settings
   "specialTipsAndOffers": "Penawaran Spesial dan Informasi",

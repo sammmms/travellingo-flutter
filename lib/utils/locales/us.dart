@@ -31,7 +31,7 @@ const Map<String, String> usLanguage = {
   "phoneformatwrong": "Phone number must consist of at least 5 digits.",
   "passwordformatwrong": "Password must consist of 8 letters",
   "emailisdifferent": "Email and confirm email aren't the same.",
-  "termsagree": "You must agree to our terms and condition to proceed.",
+  "termsAgree": "You must agree to our terms and condition to proceed.",
   "textFieldNotValid": "Your textfield is not in a valid format.",
 
   //Interface
@@ -92,6 +92,8 @@ const Map<String, String> usLanguage = {
   "camera": "Camera",
   "gallery": "Gallery",
   "fileSizeExceeds3MB": "File size exceeds 3MB",
+  "removeImage": "Remove Image",
+  "saveImage": "Save Image",
 
   // Notification Settings
   "specialTipsAndOffers": "Special Tips and Offers",
