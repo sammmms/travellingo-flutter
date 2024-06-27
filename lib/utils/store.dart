@@ -4,30 +4,46 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travellingo/pages/profile/notifications/notifications_page.dart';
 
 class Store {
-  static Future saveLoginPreferences(
-      bool isTicked, String email, String password, String token) async {
+  static Future saveLoginPreferences(bool isTicked, String email) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool("isTicked", isTicked);
     prefs.setBool('haveLoggedIn', true);
-    prefs.setString('email_authenticate', email);
-    prefs.setString('password_authenticate', password);
-    saveToken(token);
-    switch (isTicked) {
-      case true:
-        prefs.setString('email', email);
-        prefs.setString('password', password);
-        prefs.setString('savedToken', token);
-      default:
-        prefs.remove('email');
-        prefs.remove('password');
-        prefs.remove('savedToken');
-    }
+    if (isTicked) prefs.setString('email', email);
   }
+
+  /// Returns a map with keys:
+  ///
+  /// - isTicked: bool
+  ///
+  /// - haveLoggedIn: bool
+  ///
+  /// - email: String
+  static Future<Map<String, dynamic>> getLoginPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? isTicked = prefs.getBool('isTicked');
+    bool? haveLoggedIn = prefs.getBool('haveLoggedIn');
+    String? email = prefs.getString('email');
+    return {'isTicked': isTicked, 'haveLoggedIn': haveLoggedIn, 'email': email};
+  }
+
+  // TOKEN
 
   static Future saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('token', token);
   }
+
+  static Future removeToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+  }
+
+  static Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  // NOTIFICATION
 
   static Future saveNotificationPreferences(
       {required UserNotificationPreference specialTipsAndOffers,
@@ -67,8 +83,14 @@ class Store {
     return result;
   }
 
-  static Future removeToken() async {
+  // LANGUAGE
+  static Future saveLanguage(String languageCode) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove('token');
+    prefs.setString('language', languageCode);
+  }
+
+  static Future<String?> getLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language');
   }
 }
