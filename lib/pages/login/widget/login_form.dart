@@ -16,15 +16,14 @@ import 'package:travellingo/pages/sign_up/register_page.dart';
 import 'package:travellingo/pages/login/widget/authentication_button.dart';
 import 'package:travellingo/utils/app_error.dart';
 
-class SignInForm extends StatefulWidget {
-  const SignInForm({super.key});
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
 
   @override
-  State<SignInForm> createState() => _SignInFormState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
-  final bloc = AuthBloc();
+class _LoginFormState extends State<LoginForm> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   final emailregex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');

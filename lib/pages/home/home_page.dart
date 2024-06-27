@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                 filter: _filterStream.value, search: _searchStream.value);
           },
           color: colorScheme.primary,
-          backgroundColor: colorScheme.background,
+          backgroundColor: colorScheme.surface,
           edgeOffset: 100,
           displacement: 10,
           child: CustomScrollView(
@@ -203,9 +203,6 @@ class _HomePageState extends State<HomePage> {
                 icon: "assets/Airplane.png",
                 label: "airplane",
                 routeTo: FlightPage(),
-              ),
-              SizedBox(
-                width: 30,
               ),
             ],
           ),

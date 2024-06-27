@@ -3,14 +3,14 @@ import "package:flutter/material.dart";
 import "package:flutter_localization/flutter_localization.dart";
 import "package:travellingo/pages/login/widget/login_form.dart";
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _LoginPageState extends State<LoginPage> {
   final FlutterLocalization localization = FlutterLocalization.instance;
 
   @override
@@ -30,7 +30,7 @@ class _SignInPageState extends State<SignInPage> {
           ),
           const SliverList(
               delegate: SliverChildListDelegate.fixed([
-            SignInForm(),
+            LoginForm(),
           ]))
         ],
       ));
