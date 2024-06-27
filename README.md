@@ -38,18 +38,18 @@ A mobile-platformed application that allows users to safely and remotely get tic
 1. Clone the repository 
 
     ```bash 
-    git clone https://github.com/sammmms/sustainify-frontend 
+    git clone https://github.com/sammmms/travellingo-flutter 
     ```
 
 2. Navigate to the desired project directory
 
     ```bash 
-    cd sustainify-frontend 
+    cd travellingo-flutter 
     ```
 
 3. Install the required dependencies
 
     ```bash
-    npm install -D
+    flutter pub get
     ```
 
