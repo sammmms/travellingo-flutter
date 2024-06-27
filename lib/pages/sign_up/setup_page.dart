@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/auth/auth_state.dart';
 import 'package:travellingo/component/snackbar_component.dart';
@@ -23,13 +24,19 @@ class _SetUpPageState extends State<SetUpPage> {
   final currentNumber = TextEditingController();
   final password = TextEditingController();
   final birthday = TextEditingController(text: "2000-01-01");
-  final authBloc = AuthBloc();
+  late AuthBloc authBloc;
   String currentCountry = "62";
   bool isObstructed = true;
   bool isAgreeing = false;
   String numberError = "";
   final globalKey = GlobalKey<FormState>();
   final emailregex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+  @override
+  void initState() {
+    authBloc = context.read<AuthBloc>();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -69,27 +76,14 @@ class _SetUpPageState extends State<SetUpPage> {
                   child: StreamBuilder<AuthState>(
                       stream: authBloc.controller.stream,
                       builder: (context, snapshot) {
-                        //Logic
-                        if (snapshot.hasData &&
-                            (snapshot.data?.isSubmitting ?? false)) {
+                        AuthState authState = snapshot.data ?? AuthState();
+                        bool isAuthenticating = authState.isAuthenticating;
+
+                        if (isAuthenticating) {
                           showMySnackBar(context, "pleaseWait");
                         }
-                        if (snapshot.data?.hasError ?? false) {
-                          showMySnackBar(context,
-                              snapshot.data!.errorMessage ?? "somethingWrong");
-                        }
-                        if (snapshot.data?.successMessage != null) {
-                          showMySnackBar(
-                              context, snapshot.data!.successMessage!);
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => const SignInPage()),
-                                (route) => false);
-                          });
-                        }
 
-                        //Interfacee
+                        //Interface
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -100,8 +94,7 @@ class _SetUpPageState extends State<SetUpPage> {
                             ),
 
                             TextFormField(
-                                enabled:
-                                    !(snapshot.data?.isSubmitting ?? false),
+                                enabled: !isAuthenticating,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 validator: (value) {
@@ -130,8 +123,7 @@ class _SetUpPageState extends State<SetUpPage> {
                             ),
 
                             TextFormField(
-                                enabled:
-                                    !(snapshot.data?.isSubmitting ?? false),
+                                enabled: !isAuthenticating,
                                 controller: lastName,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -177,8 +169,7 @@ class _SetUpPageState extends State<SetUpPage> {
                             ),
 
                             TextFormField(
-                                enabled:
-                                    !(snapshot.data?.isSubmitting ?? false),
+                                enabled: !isAuthenticating,
                                 controller: confirmEmail,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
@@ -265,9 +256,7 @@ class _SetUpPageState extends State<SetUpPage> {
                                                   ),
                                                 );
                                               }).toList(),
-                                              onChanged: snapshot
-                                                          .data?.isSubmitting ??
-                                                      false
+                                              onChanged: isAuthenticating
                                                   ? null
                                                   : (value) {
                                                       setState(() {
@@ -286,9 +275,7 @@ class _SetUpPageState extends State<SetUpPage> {
                                         minLines: null,
                                         maxLines: null,
                                         expands: true,
-                                        enabled:
-                                            !(snapshot.data?.isSubmitting ??
-                                                false),
+                                        enabled: !isAuthenticating,
                                         controller: currentNumber,
                                         autovalidateMode:
                                             AutovalidateMode.onUserInteraction,
@@ -342,7 +329,7 @@ class _SetUpPageState extends State<SetUpPage> {
                             ),
 
                             GestureDetector(
-                              onTap: snapshot.data?.isSubmitting ?? false
+                              onTap: isAuthenticating
                                   ? null
                                   : () {
                                       showDatePicker(
@@ -383,8 +370,7 @@ class _SetUpPageState extends State<SetUpPage> {
                             ),
 
                             TextFormField(
-                                enabled:
-                                    !(snapshot.data?.isSubmitting ?? false),
+                                enabled: !isAuthenticating,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 validator: (value) {
@@ -409,7 +395,7 @@ class _SetUpPageState extends State<SetUpPage> {
                                           });
                                         },
                                         overlayColor:
-                                            const MaterialStatePropertyAll(
+                                            const WidgetStatePropertyAll(
                                                 Colors.transparent),
                                         child: Padding(
                                           padding:
@@ -440,10 +426,10 @@ class _SetUpPageState extends State<SetUpPage> {
                                         });
                                       },
                                       shape: const CircleBorder(),
-                                      fillColor: const MaterialStatePropertyAll(
+                                      fillColor: const WidgetStatePropertyAll(
                                           Colors.transparent),
                                       checkColor: const Color(0xFFF5D161),
-                                      side: MaterialStateBorderSide.resolveWith(
+                                      side: WidgetStateBorderSide.resolveWith(
                                           (states) => const BorderSide(
                                               width: 2.0,
                                               color: Color.fromARGB(
@@ -491,31 +477,30 @@ class _SetUpPageState extends State<SetUpPage> {
                             SizedBox(
                               width: double.infinity,
                               child: OutlinedButton(
-                                  onPressed:
-                                      snapshot.data?.isSubmitting ?? false
-                                          ? null
-                                          : () async {
-                                              if (globalKey.currentState!
-                                                      .validate() ==
-                                                  false) {
-                                                return;
-                                              }
-                                              if (!isAgreeing) {
-                                                showMySnackBar(
-                                                    context, "termsagree");
-                                                return;
-                                              }
-                                              String fullName =
-                                                  "${firstName.text} ${lastName.text}";
-                                              await authBloc.signUp(
-                                                  context,
-                                                  fullName,
-                                                  widget.email,
-                                                  password.text,
-                                                  birthday.text,
-                                                  "$currentCountry${currentNumber.text}");
-                                            },
-                                  child: snapshot.data?.isSubmitting ?? false
+                                  onPressed: isAuthenticating
+                                      ? null
+                                      : () async {
+                                          if (globalKey.currentState!
+                                                  .validate() ==
+                                              false) {
+                                            return;
+                                          }
+                                          if (!isAgreeing) {
+                                            showMySnackBar(
+                                                context, "termsAgree");
+                                            return;
+                                          }
+                                          String fullName =
+                                              "${firstName.text} ${lastName.text}";
+                                          await authBloc.signUp(
+                                              context,
+                                              fullName,
+                                              widget.email,
+                                              password.text,
+                                              birthday.text,
+                                              "$currentCountry${currentNumber.text}");
+                                        },
+                                  child: isAuthenticating
                                       ? Text("pleaseWait".getString(context),
                                           style: const TextStyle(
                                               color: Colors.white,
