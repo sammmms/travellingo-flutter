@@ -3,8 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/place/place_state.dart';
+import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/place.dart';
 import 'package:travellingo/utils/app_error.dart';
+import 'package:travellingo/utils/error_print.dart';
 import 'package:travellingo/utils/place_category_util.dart';
 
 class PlaceBloc {
@@ -13,7 +15,11 @@ class PlaceBloc {
       baseUrl: dotenv.env['BASE_URL']!,
     ),
   );
-  final controller = BehaviorSubject<PlaceState>();
+  final controller = BehaviorSubject<PlaceState>.seeded(PlaceState.initial());
+
+  PlaceBloc() {
+    dio.interceptors.add(TokenInterceptor());
+  }
 
   void _updateStream(state) {
     if (controller.isClosed) {
@@ -27,6 +33,21 @@ class PlaceBloc {
       print('update place stream');
     }
     controller.sink.add(state);
+  }
+
+  AppError _updateError(Object err) {
+    late AppError appError;
+    if (err is DioException) {
+      appError = AppError(
+          message: err.response?.data, statusCode: err.response?.statusCode);
+
+      _updateStream(PlaceState(hasError: true, error: appError));
+
+      return appError;
+    }
+    appError = AppError(message: "somethingWrong");
+    _updateStream(PlaceState(hasError: true, error: appError));
+    return appError;
   }
 
   void dispose() {
@@ -53,7 +74,9 @@ class PlaceBloc {
         }
       }
 
-      print(url);
+      if (kDebugMode) {
+        print("${dotenv.env["BASE_URL"]}$url");
+      }
 
       var response = await dio.get(url);
       if (kDebugMode) {
@@ -65,20 +88,8 @@ class PlaceBloc {
       _updateStream(PlaceState(data: places));
       return null;
     } catch (err) {
-      _updateStream(PlaceState(hasError: true));
-      if (err is DioException) {
-        if (kDebugMode) {
-          print('error on get place : dio');
-          print(err);
-        }
-        return AppError(err.response?.data,
-            code: err.response?.statusCode.toString());
-      }
-      if (kDebugMode) {
-        print('error on get place : platform');
-        print(err);
-      }
-      return AppError("somethingWrong");
+      printError(err: err);
+      return _updateError(err);
     }
   }
 }
