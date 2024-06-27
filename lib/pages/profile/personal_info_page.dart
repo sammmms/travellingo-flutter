@@ -6,11 +6,11 @@ import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/component/snackbar_component.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/user.dart';
 import 'package:travellingo/pages/profile/widget/gender_radio.dart';
 import 'package:travellingo/pages/profile/widget/text_field_personal_info.dart';
 import 'package:travellingo/pages/login/login_page.dart';
-import 'package:travellingo/utils/app_error.dart';
 
 class PersonalInfoPage extends StatefulWidget {
   const PersonalInfoPage({super.key});
@@ -36,8 +36,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     if (user == null) {
       showMySnackBar(context, "tokenExpired".getString(context));
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const SignInPage()),
-          (route) => false);
+          slideInFromBottom(const LoginPage()), (route) => false);
     }
     name.text = user!.name;
     email.text = user.email;
@@ -74,7 +73,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
               child: StreamBuilder<UserState>(
                   stream: bloc.controller,
                   builder: (context, snapshot) {
-                    bool isLoading = snapshot.data?.loading ?? false;
+                    bool isLoading = snapshot.data?.isLoading ?? false;
                     return GestureDetector(
                         onTap: isLoading
                             ? null
@@ -194,27 +193,22 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   }
 
   void _updatingUser() async {
-    try {
-      User lateUser = bloc.controller.value.receivedProfile!;
-      User newUpdatedProfile = User(
-          email: email.text,
-          name: name.text,
-          gender: gender.value,
-          id: govId.text,
-          phone: phone.text,
-          objectId: lateUser.objectId,
-          birthday: lateUser.birthday);
-      var successfullyUpdated = await bloc.updateUser(newUpdatedProfile);
+    User lateUser = bloc.controller.value.receivedProfile!;
+    User newUpdatedProfile = lateUser.copyWith(
+        name: name.text,
+        email: email.text,
+        phone: phone.text,
+        id: govId.text,
+        gender: gender.value);
+    var error = await bloc.updateUser(newUpdatedProfile);
 
-      if (successfullyUpdated) {
-        if (!mounted) return;
-        showMySnackBar(context, "profileUpdated");
-        return;
-      }
-    } catch (err) {
-      AppError error = err as AppError? ?? AppError("somethingWrong");
-      if (!mounted) return;
-      showMySnackBar(context, error.message);
+    if (!mounted) return;
+
+    if (error == null) {
+      showMySnackBar(context, "profileUpdated");
+      return;
     }
+
+    showMySnackBar(context, error.message, SnackbarStatus.failed);
   }
 }
