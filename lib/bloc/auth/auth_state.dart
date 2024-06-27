@@ -1,35 +1,51 @@
+import 'package:travellingo/utils/app_error.dart';
+
 class AuthState {
-  String? receivedToken;
-  bool isSubmitting;
+  bool isAuthenticated;
+  bool isAuthenticating;
   bool hasError;
-  String? errorMessage;
-  int? errorStatus;
-  String? successMessage;
+  String? message;
+  AppError? error;
 
   AuthState({
-    this.receivedToken,
-    this.errorMessage,
-    this.errorStatus,
-    this.isSubmitting = false,
+    this.isAuthenticated = false,
+    this.isAuthenticating = false,
     this.hasError = false,
-    this.successMessage,
+    this.message,
+    this.error,
   });
 
-  AuthState copyWith({
-    String? receivedToken,
-    bool? isSubmitting,
-    bool? hasError,
-    String? errorMessage,
-    int? errorStatus,
-    String? successMessage,
-  }) {
+  factory AuthState.initial() {
+    return AuthState();
+  }
+
+  factory AuthState.isAuthenticated({String? message}) {
+    return AuthState(isAuthenticated: true, message: message);
+  }
+
+  factory AuthState.isAuthenticating() {
+    return AuthState(isAuthenticating: true);
+  }
+
+  factory AuthState.hasError({required AppError error}) {
     return AuthState(
-      receivedToken: receivedToken ?? this.receivedToken,
-      isSubmitting: isSubmitting ?? this.isSubmitting,
+      hasError: true,
+      error: error,
+    );
+  }
+
+  AuthState copyWith(
+      {bool? isAuthenticated,
+      bool? isAuthenticating,
+      bool? hasError,
+      String? message,
+      AppError? error}) {
+    return AuthState(
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      isAuthenticating: isAuthenticating ?? this.isAuthenticating,
       hasError: hasError ?? this.hasError,
-      errorMessage: errorMessage ?? this.errorMessage,
-      errorStatus: errorStatus ?? this.errorStatus,
-      successMessage: successMessage ?? this.successMessage,
+      message: message ?? this.message,
+      error: error ?? this.error,
     );
   }
 }
