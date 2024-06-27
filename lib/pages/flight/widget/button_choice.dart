@@ -13,12 +13,12 @@ class ButtonChoice extends StatelessWidget {
       height: 56,
       child: ElevatedButton(
           style: ButtonStyle(
-              foregroundColor: const WidgetStatePropertyAll(Colors.white),
-              backgroundColor: const WidgetStatePropertyAll(Colors.white),
-              surfaceTintColor: const WidgetStatePropertyAll(Colors.white),
-              elevation: const WidgetStatePropertyAll(0),
-              padding: const WidgetStatePropertyAll(EdgeInsets.all(0)),
-              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              foregroundColor: const MaterialStatePropertyAll(Colors.white),
+              backgroundColor: const MaterialStatePropertyAll(Colors.white),
+              surfaceTintColor: const MaterialStatePropertyAll(Colors.white),
+              elevation: const MaterialStatePropertyAll(0),
+              padding: const MaterialStatePropertyAll(EdgeInsets.all(0)),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                 side: BorderSide(color: Colors.grey.shade300, width: 1),
                 borderRadius: BorderRadius.circular(10.0),

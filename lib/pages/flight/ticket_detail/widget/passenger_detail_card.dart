@@ -45,7 +45,7 @@ class PassengerDetailCard extends StatelessWidget {
           const SizedBox(width: 16),
           OutlinedButton(
             style: const ButtonStyle(
-                padding: WidgetStatePropertyAll(
+                padding: MaterialStatePropertyAll(
                     EdgeInsets.symmetric(horizontal: 8))),
             onPressed: () {
               // Handle your onPressed event here

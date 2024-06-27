@@ -33,13 +33,13 @@ class _ChangeLanguageComponentState extends State<ChangeLanguageComponent> {
         activeThumbImage: const ResizeImage(AssetImage('assets/US.png'),
             height: 16, width: 22),
         activeTrackColor: Colors.blue[100],
-        trackOutlineColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) {
+        trackOutlineColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
             return const Color.fromARGB(255, 62, 132, 168);
           }
           return Colors.red[300];
         }),
-        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+        overlayColor: const MaterialStatePropertyAll(Colors.transparent),
         activeColor: Colors.blue[100],
         value: currentLanguage == LanguageType.en,
         onChanged: (value) {

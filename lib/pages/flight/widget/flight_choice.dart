@@ -104,9 +104,9 @@ class _FlightChoiceState extends State<FlightChoice> {
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                      WidgetStateProperty.all(const Color(0xFFF5D161)),
-                  foregroundColor: WidgetStateProperty.all(Colors.white),
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                      MaterialStateProperty.all(const Color(0xFFF5D161)),
+                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18.0),
                     ),

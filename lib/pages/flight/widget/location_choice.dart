@@ -92,8 +92,8 @@ class _FlightLocationChoiceState extends State<FlightLocationChoice> {
           IconButton(
             style: ButtonStyle(
                 backgroundColor:
-                    WidgetStateProperty.all(const Color(0xFF28527A)),
-                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    MaterialStateProperty.all(const Color(0xFF28527A)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(360),
                 ))),

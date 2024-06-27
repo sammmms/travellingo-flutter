@@ -55,8 +55,8 @@ class _FlightPageState extends State<FlightPage> {
                 OutlinedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          WidgetStatePropertyAll(Colors.grey.shade100),
-                      shape: const WidgetStatePropertyAll(CircleBorder())),
+                          MaterialStatePropertyAll(Colors.grey.shade100),
+                      shape: const MaterialStatePropertyAll(CircleBorder())),
                   onPressed: () {
                     // Tambahkan aksi untuk tombol "See all" jika diperlukan
                   },

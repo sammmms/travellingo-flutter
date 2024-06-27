@@ -51,18 +51,18 @@ ThemeData lightTheme = ThemeData(
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(
-          backgroundColor: WidgetStatePropertyAll(colorScheme.primary),
-          shape: WidgetStatePropertyAll(
+          backgroundColor: MaterialStatePropertyAll(colorScheme.primary),
+          shape: MaterialStatePropertyAll(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-          side: const WidgetStatePropertyAll(
+          side: const MaterialStatePropertyAll(
               BorderSide(color: Colors.transparent)),
-          foregroundColor: const WidgetStatePropertyAll(Colors.white))),
+          foregroundColor: const MaterialStatePropertyAll(Colors.white))),
   colorScheme: ColorScheme.fromSeed(seedColor: colorScheme.primary),
   iconTheme: IconThemeData(color: colorScheme.primary),
   primaryIconTheme: IconThemeData(color: colorScheme.primary),
   switchTheme: SwitchThemeData(
-    thumbColor: const WidgetStatePropertyAll(Colors.white),
-    trackColor: WidgetStatePropertyAll(colorScheme.primary),
+    thumbColor: const MaterialStatePropertyAll(Colors.white),
+    trackColor: MaterialStatePropertyAll(colorScheme.primary),
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: Colors.white, selectedItemColor: colorScheme.secondary),
@@ -74,17 +74,17 @@ TextTheme textStyle = TextTheme(
   bodyMedium: TextStyle(color: colorScheme.onSurface, fontSize: 12),
   bodyLarge: TextStyle(color: colorScheme.onSurface, fontSize: 14),
   titleSmall: TextStyle(
-    color: colorScheme.onSurface,
+    color: colorScheme.onBackground,
     fontSize: 14,
     fontWeight: FontWeight.bold,
   ),
   titleMedium: TextStyle(
-    color: colorScheme.onSurface,
+    color: colorScheme.onBackground,
     fontSize: 15,
     fontWeight: FontWeight.bold,
   ),
   titleLarge: TextStyle(
-    color: colorScheme.onSurface,
+    color: colorScheme.onBackground,
     fontSize: 16,
     fontWeight: FontWeight.bold,
   ),
@@ -108,7 +108,8 @@ ColorScheme colorScheme = ColorScheme(
   onSecondary: Colors.white,
   error: Colors.redAccent.shade200,
   onError: Colors.white,
-  inverseSurface: const Color(0xAA1B1446),
+  background: Colors.white,
+  onBackground: const Color(0xAA1B1446),
   surface: Colors.white,
   onSurface: const Color.fromRGBO(27, 20, 70, 1),
 );

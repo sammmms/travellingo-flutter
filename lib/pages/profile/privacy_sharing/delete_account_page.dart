@@ -158,12 +158,12 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                     child: OutlinedButton(
                         style: ButtonStyle(
                             backgroundColor:
-                                const WidgetStatePropertyAll(Colors.white),
-                            shape: WidgetStatePropertyAll(
+                                const MaterialStatePropertyAll(Colors.white),
+                            shape: MaterialStatePropertyAll(
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16)),
                             ),
-                            side: const WidgetStatePropertyAll(BorderSide(
+                            side: const MaterialStatePropertyAll(BorderSide(
                                 color: Color.fromRGBO(7, 104, 253, 0.1)))),
                         onPressed: () {},
                         child: Row(

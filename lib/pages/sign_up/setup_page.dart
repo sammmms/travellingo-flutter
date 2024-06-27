@@ -409,7 +409,7 @@ class _SetUpPageState extends State<SetUpPage> {
                                           });
                                         },
                                         overlayColor:
-                                            const WidgetStatePropertyAll(
+                                            const MaterialStatePropertyAll(
                                                 Colors.transparent),
                                         child: Padding(
                                           padding:
@@ -440,10 +440,10 @@ class _SetUpPageState extends State<SetUpPage> {
                                         });
                                       },
                                       shape: const CircleBorder(),
-                                      fillColor: const WidgetStatePropertyAll(
+                                      fillColor: const MaterialStatePropertyAll(
                                           Colors.transparent),
                                       checkColor: const Color(0xFFF5D161),
-                                      side: WidgetStateBorderSide.resolveWith(
+                                      side: MaterialStateBorderSide.resolveWith(
                                           (states) => const BorderSide(
                                               width: 2.0,
                                               color: Color.fromARGB(

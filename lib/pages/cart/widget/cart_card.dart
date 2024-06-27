@@ -91,7 +91,7 @@ class _CartCardState extends State<CartCard> {
                           Text(
                             "Rp ${NumberFormat("###,###", "id_ID").format(place.price)}",
                             style: textStyle.titleMedium!.copyWith(
-                                color: colorScheme.inversePrimary,
+                                color: colorScheme.onBackground,
                                 fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(
@@ -122,7 +122,7 @@ class _CartCardState extends State<CartCard> {
                 child: Text(
                     "Rp ${NumberFormat("###,###", "id_ID").format(place.price * snapshot.data!)}",
                     style: textStyle.titleMedium!.copyWith(
-                        color: colorScheme.inversePrimary,
+                        color: colorScheme.onBackground,
                         fontWeight: FontWeight.bold)),
               );
             })
@@ -134,7 +134,7 @@ class _CartCardState extends State<CartCard> {
     return Container(
       margin: const EdgeInsets.only(right: 5, bottom: 10),
       decoration: BoxDecoration(
-        border: Border.all(color: colorScheme.inversePrimary),
+        border: Border.all(color: colorScheme.onBackground),
         borderRadius: BorderRadius.circular(10),
       ),
       padding: EdgeInsets.zero,
@@ -188,7 +188,7 @@ class _CartCardState extends State<CartCard> {
                 return Text(
                   snapshot.data.toString(),
                   style: textStyle.labelMedium!.copyWith(
-                      color: colorScheme.inversePrimary,
+                      color: colorScheme.onBackground,
                       fontWeight: FontWeight.bold),
                 );
               }),

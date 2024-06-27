@@ -80,7 +80,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           children: [
                             Checkbox(
                               value: isChecked,
-                              side: WidgetStateBorderSide.resolveWith(
+                              side: MaterialStateBorderSide.resolveWith(
                                 (states) => BorderSide(
                                     width: 1.0,
                                     color: Colors.grey.withOpacity(0.7)),
@@ -158,16 +158,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(
+                    backgroundColor: MaterialStateProperty.all<Color>(
                         const Color(0xFFF5D161)), // Button background color
-                    foregroundColor: WidgetStateProperty.all<Color>(
+                    foregroundColor: MaterialStateProperty.all<Color>(
                         const Color(0xFFFFFFFF)), // Text color
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    minimumSize: WidgetStateProperty.all<Size>(
+                    minimumSize: MaterialStateProperty.all<Size>(
                         const Size(95, 48)), // Set the button's size
                   ),
                   onPressed: () {

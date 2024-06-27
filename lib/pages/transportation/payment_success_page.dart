@@ -111,13 +111,13 @@ class PaymentSuccessPage extends StatelessWidget {
                       const SizedBox(height: 24),
                       TextButton.icon(
                         style: ButtonStyle(
-                            shape:
-                                WidgetStateProperty.all<RoundedRectangleBorder>(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
                             ),
-                            backgroundColor: WidgetStateColor.resolveWith(
+                            backgroundColor: MaterialStateColor.resolveWith(
                                 (states) => Colors.grey.withOpacity(0.1))),
                         onPressed: () {},
                         icon: const Icon(Icons.file_download_outlined,
