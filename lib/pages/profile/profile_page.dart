@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
+import 'package:travellingo/component/refresh_component.dart';
 import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/component/my_title.dart';
@@ -54,14 +55,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     stream: bloc.controller,
                     builder: (context, snapshot) {
                       if (!snapshot.hasData ||
-                          (snapshot.data?.loading ?? false)) {
+                          (snapshot.data?.isLoading ?? false)) {
                         return const Expanded(
                             child: Center(child: CircularProgressIndicator()));
                       }
                       if (snapshot.data!.hasError) {
                         return Expanded(
-                          child: Center(
-                              child: Text("somethingWrong".getString(context))),
+                          child: RefreshComponent(onRefresh: () async {
+                            await bloc.getUser();
+                          }),
                         );
                       }
 
@@ -178,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   onTapFunction: () {
                                     Store.removeToken();
                                     Navigator.of(context).pushAndRemoveUntil(
-                                        slideInFromBottom(const SignInPage()),
+                                        slideInFromBottom(const LoginPage()),
                                         (route) => false);
                                   },
                                   text: "logout",
