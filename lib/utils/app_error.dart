@@ -1,8 +1,8 @@
 class AppError extends Error {
   final String message;
-  final String? code;
+  final int? statusCode;
 
-  AppError(this.message, {this.code});
+  AppError({required this.message, this.statusCode});
 
   @override
   String toString() {
