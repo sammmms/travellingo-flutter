@@ -8,6 +8,7 @@ import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/user.dart';
 import 'package:travellingo/utils/app_error.dart';
+import 'package:travellingo/utils/error_print.dart';
 
 class UserBloc {
   final controller = BehaviorSubject<UserState>();
@@ -16,6 +17,10 @@ class UserBloc {
       baseUrl: dotenv.env['BASE_URL']!,
     ),
   );
+
+  UserBloc() {
+    dio.interceptors.add(TokenInterceptor());
+  }
 
   void _updateStream(state) {
     if (controller.isClosed) {
@@ -27,33 +32,39 @@ class UserBloc {
     controller.sink.add(state);
   }
 
-  /// To get user profile data, needs token
-  Future getUser() async {
+  AppError _updateError(Object err) {
+    late AppError appError;
+    if (err is DioException) {
+      appError = AppError(
+          message: err.response?.data, statusCode: err.response?.statusCode);
+      _updateStream(UserState.hasError(error: appError));
+    }
+    appError = AppError(message: 'somethingWrong');
+    _updateStream(UserState.hasError(error: appError));
+    return appError;
+  }
+
+  Future<AppError?> getUser() async {
     try {
-      dio.interceptors.add(TokenInterceptor());
+      _updateStream(UserState.isLoading());
+
       var response = await dio.get("/profile");
       var data = response.data;
-      _updateStream(UserState(receivedProfile: User.fromJson(data)));
-      return true;
-    } on DioException catch (err) {
-      _updateStream(UserState(hasError: true));
 
-      return AppError(err.response?.data,
-          code: err.response?.statusCode.toString());
+      User user = User.fromJson(data);
+
+      _updateStream(UserState.updateProfile(user: user));
+      return null;
     } catch (err) {
-      _updateStream(UserState(hasError: true));
-      if (kDebugMode) {
-        print("error on get user : platform");
-        print(err);
-      }
-      return AppError("somethingWrong");
+      printError(err: err);
+      return _updateError(err);
     }
   }
 
-  Future updateUser(User user) async {
+  Future<AppError?> updateUser(User user) async {
     try {
-      dio.interceptors.add(TokenInterceptor());
-      controller.add(UserState(loading: true));
+      _updateStream(UserState.isLoading());
+
       var response = await dio.put("/profile", data: {
         "name": user.name,
         "email": user.email,
@@ -65,31 +76,24 @@ class UserBloc {
 
       User receivedUser = User.fromJson(data["user"]);
 
-      _updateStream(UserState(
-          receivedMessage: data['message'], receivedProfile: receivedUser));
-      return true;
-    } on DioException catch (err) {
-      _updateStream(UserState(hasError: true));
-      if (kDebugMode) {
-        print("error on update user : dio");
-        print(err.response);
-      }
-      return AppError(err.response?.data,
-          code: err.response?.statusCode.toString());
+      _updateStream(
+        UserState(
+          receivedMessage: data['message'],
+          receivedProfile: receivedUser,
+        ),
+      );
+
+      return null;
     } catch (err) {
-      _updateStream(UserState(hasError: true));
-      if (kDebugMode) {
-        print("error on update user : platform");
-        print(err);
-      }
-      return AppError("somethingWrong");
+      printError(err: err);
+      return _updateError(err);
     }
   }
 
-  Future changePicture(String base64encode) async {
+  Future<AppError?> changePicture(String base64encode) async {
     try {
-      dio.interceptors.add(TokenInterceptor());
-      controller.add(UserState(loading: true));
+      _updateStream(UserState.isLoading());
+
       var response =
           await dio.put("/profile/picture", data: {"picture": base64encode});
       var data = response.data;
@@ -100,22 +104,10 @@ class UserBloc {
       controller.add(
           UserState(receivedProfile: user, receivedMessage: data['message']));
 
-      return true;
-    } on DioException catch (err) {
-      _updateStream(UserState(hasError: true));
-      if (kDebugMode) {
-        print("error on change picture : dio");
-        print(err.response);
-      }
-      return AppError(err.response?.data,
-          code: err.response?.statusCode.toString());
+      return null;
     } catch (err) {
-      _updateStream(UserState(hasError: true));
-      if (kDebugMode) {
-        print("error on change picture : platform");
-        print(err);
-      }
-      return AppError("somethingWrong");
+      printError(err: err);
+      return _updateError(err);
     }
   }
 }
