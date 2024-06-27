@@ -27,6 +27,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   shimmer: ^3.0.0
   carousel_slider_plus: ^6.0.0
+  svg_flutter: ^0.0.1
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,7 @@ flutter:
     - assets/
     - assets/lottie/
     - assets/flight/
+    - assets/svg/
     - .env
 
   fonts:
