@@ -9,6 +9,8 @@ class TransactionPage extends StatefulWidget {
   State<TransactionPage> createState() => _TransactionPageState();
 }
 
+// TODO : GET DATA FROM TRANSACTION
+
 class _TransactionPageState extends State<TransactionPage> {
   @override
   Widget build(BuildContext context) {
