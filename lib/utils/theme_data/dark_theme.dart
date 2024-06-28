@@ -110,6 +110,4 @@ ColorScheme colorSchemeDark = ColorScheme(
   onError: Colors.black,
   surface: const Color(0xFF1E1E1E),
   onSurface: const Color(0xFFE0E0E0),
-  background: const Color(0xFF121212),
-  onBackground: const Color(0xFFE0E0E0),
 );
