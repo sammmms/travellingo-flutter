@@ -11,6 +11,8 @@ import 'package:travellingo/bloc/auth/auth_state.dart';
 import 'package:travellingo/component/check_component.dart';
 import 'package:travellingo/component/oauth_button_component.dart';
 import 'package:travellingo/component/snackbar_component.dart';
+import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/pages/dashboard_page.dart';
 import 'package:travellingo/pages/sign_up/register_page.dart';
 import 'package:travellingo/pages/login/widget/authentication_button.dart';
 import 'package:travellingo/utils/app_error.dart';
@@ -247,6 +249,11 @@ class _LoginFormState extends State<LoginForm> {
 
                                             Store.saveLoginPreferences(
                                                 _isTicked.value, email.text);
+
+                                            Navigator.pushReplacement(
+                                                context,
+                                                slideInFromBottom(
+                                                    const DashboardPage()));
                                           } catch (err) {
                                             var error = err as AppError?;
                                             if (!context.mounted) return;
