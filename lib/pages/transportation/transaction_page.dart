@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:travellingo/bloc/transaction/transaction_bloc.dart';
+import 'package:travellingo/bloc/transaction/transaction_state.dart';
+import 'package:travellingo/component/refresh_component.dart';
+import 'package:travellingo/models/transaction.dart';
+import 'package:travellingo/pages/transportation/transaction_card.dart';
 
 class TransactionPage extends StatefulWidget {
   const TransactionPage({super.key});
@@ -7,26 +12,52 @@ class TransactionPage extends StatefulWidget {
   State<TransactionPage> createState() => _TransactionPageState();
 }
 
-// TODO : GET DATA FROM TRANSACTION
-
 class _TransactionPageState extends State<TransactionPage> {
+  final bloc = TransactionBloc();
   @override
   void initState() {
-    // TODO: IMPLEMENT BLOC, AND STATE
+    bloc.getTransaction();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Scaffold(
-          // body: ListView.builder(
-          //   itemCount: transactions.length,
-          //   itemBuilder: (BuildContext context, int index) {
-          //     return TransactionCard(data: transactions[index]);
-          //   },
-          // ),
-          ),
+        body: StreamBuilder<TransactionState>(
+            stream: bloc.state,
+            builder: (context, snapshot) {
+              bool isLoading = snapshot.data?.isLoading ?? false;
+              if (!snapshot.hasData || isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.data!.hasError) {
+                return RefreshComponent(onRefresh: () async {
+                  bloc.getTransaction();
+                });
+              }
+
+              List<Transaction> transactions =
+                  snapshot.data!.transactions ?? [];
+              return ListView.builder(
+                itemCount: transactions.length,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  Transaction transaction = transactions[index];
+                  return ListView.builder(
+                    itemCount: transaction.items.length,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return TransactionCard(
+                          transactionData: transactions[index],
+                          item: transaction.items[index]);
+                    },
+                  );
+                },
+              );
+            }),
+      ),
     );
   }
 }
