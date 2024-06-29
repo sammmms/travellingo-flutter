@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/auth/auth_state.dart';
@@ -11,6 +12,7 @@ import 'package:travellingo/pages/wishlist_page.dart';
 import 'package:travellingo/pages/notification_page.dart';
 import 'package:travellingo/pages/profile/profile_page.dart';
 import 'package:travellingo/splash_page.dart';
+import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -21,7 +23,8 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  int _currentPage = 0;
+  final _pageController = PageController(initialPage: 0);
+  final _dashboardPage = BehaviorSubject<int>.seeded(0);
   late List<Map<String, dynamic>> navigationItem;
   late AuthBloc authBloc;
   @override
@@ -68,7 +71,16 @@ class _DashboardPageState extends State<DashboardPage> {
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 60),
-                  child: navigationItem[_currentPage]["page"],
+                  child: PageView(
+                    controller: _pageController,
+                    children: navigationItem
+                        .map((entry) =>
+                            ChangeNotifierProvider<PageController>.value(
+                              value: _pageController,
+                              child: entry["page"] as Widget,
+                            ))
+                        .toList(),
+                  ),
                 );
               }),
           resizeToAvoidBottomInset: false,
@@ -84,39 +96,44 @@ class _DashboardPageState extends State<DashboardPage> {
               ],
             ),
             child: Theme(
-              data: Theme.of(context).copyWith(
-                canvasColor: colorScheme.surface,
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-              ),
-              child: BottomNavigationBar(
-                  unselectedItemColor: Colors.grey,
-                  showUnselectedLabels: false,
-                  showSelectedLabels: false,
-                  currentIndex: _currentPage,
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  type: BottomNavigationBarType.fixed,
-                  onTap: (value) {
-                    if (value > 0 &&
-                        authBloc.controller.valueOrNull?.isAuthenticated ==
-                            false) {
-                      Navigator.push(
-                          context, slideInFromBottom(const LoginPage()));
-                      return;
-                    }
-                    setState(() {
-                      _currentPage = value;
-                    });
-                  },
-                  items: navigationItem.map((entry) {
-                    String title = entry["title"];
-                    return BottomNavigationBarItem(
-                      label: title,
-                      icon: entry["icon"],
-                    );
-                  }).toList()),
-            ),
+                data: Theme.of(context).copyWith(
+                  canvasColor: colorScheme.surface,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                ),
+                child: StreamBuilder<int>(
+                    stream: _dashboardPage,
+                    builder: (context, snapshot) {
+                      return BottomNavigationBar(
+                          unselectedItemColor: Colors.grey,
+                          showUnselectedLabels: false,
+                          showSelectedLabels: false,
+                          currentIndex: snapshot.data ?? 0,
+                          elevation: 0,
+                          backgroundColor: Colors.transparent,
+                          type: BottomNavigationBarType.fixed,
+                          onTap: (value) async {
+                            bool notAuthenticated = authBloc
+                                    .controller.valueOrNull?.isAuthenticated ==
+                                false;
+                            bool noToken = await Store.getToken() == null;
+                            if (value > 0 && (notAuthenticated || noToken)) {
+                              if (!context.mounted) return;
+                              Navigator.push(context,
+                                  slideInFromBottom(const LoginPage()));
+                              return;
+                            }
+                            _pageController.jumpToPage(value);
+                            _dashboardPage.add(value);
+                          },
+                          items: navigationItem.map((entry) {
+                            String title = entry["title"];
+                            return BottomNavigationBarItem(
+                              label: title,
+                              icon: _buildIcon(title),
+                            );
+                          }).toList());
+                    })),
           )),
     );
   }
