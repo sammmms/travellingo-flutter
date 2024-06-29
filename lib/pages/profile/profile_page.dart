@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/component/refresh_component.dart';
 import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
@@ -15,7 +16,6 @@ import 'package:travellingo/pages/profile/privacy_sharing/privacy_sharing_page.d
 import 'package:travellingo/pages/profile/widget/avatar.dart';
 import 'package:travellingo/pages/profile/widget/text_navigator.dart';
 import 'package:travellingo/pages/purchase_history/purchase_history_page.dart';
-import 'package:travellingo/pages/login/login_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -89,7 +89,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      // TODO : Change the use of badge to stack positioned
                                       BorderedAvatar(content: data.pictureLink),
                                       const SizedBox(
                                         height: 5,
@@ -177,11 +176,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                   text: "review",
                                 ),
                                 TextNavigator(
-                                  onTapFunction: () {
-                                    Store.removeToken();
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        slideInFromBottom(const LoginPage()),
-                                        (route) => false);
+                                  onTapFunction: () async {
+                                    await context.read<AuthBloc>().logout();
+                                    if (!context.mounted) return;
+                                    context
+                                        .read<PageController>()
+                                        .jumpToPage(0);
                                   },
                                   text: "logout",
                                   style: const TextStyle(color: Colors.red),

@@ -4,11 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travellingo/pages/profile/notifications/notifications_page.dart';
 
 class Store {
-  static Future saveLoginPreferences(bool isTicked, String email) async {
+  static Future saveLoginPreferences(
+      bool isTicked, String email, String password) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool("isTicked", isTicked);
     prefs.setBool('haveLoggedIn', true);
-    if (isTicked) prefs.setString('email', email);
+    if (isTicked) {
+      prefs.setString('email', email);
+      prefs.setString('password', password);
+    }
   }
 
   /// Returns a map with keys:

@@ -230,7 +230,7 @@ class _LoginFormState extends State<LoginForm> {
                                       ? null
                                       : () async {
                                           try {
-                                            await bloc.signIn(context,
+                                            await bloc.login(context,
                                                 email.text, password.text);
 
                                             String? token =
@@ -245,8 +245,12 @@ class _LoginFormState extends State<LoginForm> {
                                               return;
                                             }
 
-                                            Store.saveLoginPreferences(
-                                                _isTicked.value, email.text);
+                                            await Store.saveLoginPreferences(
+                                                _isTicked.value,
+                                                email.text,
+                                                password.text);
+                                            if (!context.mounted) return;
+                                            Navigator.pop(context);
                                           } catch (err) {
                                             var error = err as AppError?;
                                             if (!context.mounted) return;
@@ -390,8 +394,27 @@ class _LoginFormState extends State<LoginForm> {
           localizedReason: "authenticateToLogin".getString(context));
       if (didAuthenticate) {
         if (context.mounted) {
-          await bloc.signIn(context, prefs.getString('email_authenticate')!,
-              prefs.getString('password_authenticate')!);
+          await bloc.login(
+            context,
+            prefs.getString("email") ?? "",
+            prefs.getString("password") ?? "",
+          );
+
+          String? token = await Store.getToken();
+
+          if (token == null) {
+            if (!context.mounted) return;
+            showMySnackBar(context, "somethingWrongWithAuthentication");
+            return;
+          }
+
+          await Store.saveLoginPreferences(
+              _isTicked.value,
+              prefs.getString("email") ?? "",
+              prefs.getString("password") ?? "");
+
+          if (!context.mounted) return;
+          Navigator.pop(context);
         }
       }
     } on PlatformException {

@@ -491,7 +491,7 @@ class _SetUpPageState extends State<SetUpPage> {
                                           }
                                           String fullName =
                                               "${firstName.text} ${lastName.text}";
-                                          await authBloc.signUp(
+                                          await authBloc.register(
                                               context,
                                               fullName,
                                               widget.email,
