@@ -5,11 +5,14 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/auth/auth_state.dart';
+import 'package:travellingo/bloc/theme/theme_bloc.dart';
+import 'package:travellingo/bloc/theme/theme_state.dart';
 import 'package:travellingo/pages/dashboard_page.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/splash_page.dart';
 import 'package:travellingo/utils/locales/locale.dart';
 import 'package:travellingo/utils/store.dart';
+import 'package:travellingo/utils/theme_data/dark_theme.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -26,6 +29,9 @@ void main() async {
   // AUTH BLOC
   final authBloc = AuthBloc();
 
+  // THEME BLOC
+  final themeBloc = ThemeBloc();
+
   await authBloc.checkLogin();
 
   FlutterNativeSplash.remove();
@@ -34,6 +40,9 @@ void main() async {
     providers: [
       Provider<AuthBloc>.value(
         value: authBloc,
+      ),
+      Provider<ThemeBloc>.value(
+        value: themeBloc,
       ),
       Provider<String>.value(
         value: await Store.getLanguage() ?? 'en',
@@ -78,20 +87,29 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final authBloc = context.watch<AuthBloc>();
-    return MaterialApp(
-        navigatorKey: navigatorKey,
-        supportedLocales: localization.supportedLocales,
-        localizationsDelegates: localization.localizationsDelegates,
-        title: 'Travellingo',
-        theme: lightTheme,
-        home: StreamBuilder<AuthState>(
-            stream: authBloc.controller.stream,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const SplashPage();
-              }
+    final themeBloc = context.watch<ThemeBloc>();
+    return StreamBuilder(
+        stream: themeBloc.themeStream,
+        builder: (context, snapshot) {
+          return MaterialApp(
+            navigatorKey: navigatorKey,
+            supportedLocales: localization.supportedLocales,
+            localizationsDelegates: localization.localizationsDelegates,
+            title: 'Travellingo',
+            theme: snapshot.data?.themeType == ThemeType.dark
+                ? darkTheme
+                : lightTheme,
+            home: StreamBuilder<AuthState>(
+              stream: authBloc.controller.stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const SplashPage();
+                }
 
-              return const DashboardPage();
-            }));
+                return const DashboardPage();
+              },
+            ),
+          );
+        });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/pages/profile/appearance/widget/change_language_tile.dart';
+import 'package:travellingo/pages/profile/appearance/widget/change_theme_tile.dart';
 
 class AppearancePage extends StatefulWidget {
   const AppearancePage({super.key});
@@ -35,6 +36,10 @@ class _AppearancePageState extends State<AppearancePage> {
               child: ChangeLanguageSwitchTile(),
             ),
             const Divider(),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: ChangeThemeSwitchTile(),
+            ),
           ],
         ),
       ),
