@@ -49,7 +49,7 @@ class AuthBloc {
     controller.close();
   }
 
-  Future<AppError?> signIn(
+  Future<AppError?> login(
       BuildContext context, String email, String password) async {
     try {
       _updateStream(AuthState.isAuthenticating());
@@ -69,7 +69,7 @@ class AuthBloc {
     }
   }
 
-  Future<AppError?> signUp(BuildContext context, String name, String email,
+  Future<AppError?> register(BuildContext context, String name, String email,
       String password, String birthday, String phoneNumber) async {
     try {
       _updateStream(AuthState.isAuthenticating());
@@ -98,6 +98,11 @@ class AuthBloc {
         return _updateStream(AuthState.isAuthenticated());
       }
     }
+    return _updateStream(AuthState.initial());
+  }
+
+  Future logout() async {
+    await Store.removeToken();
     return _updateStream(AuthState.initial());
   }
 }
