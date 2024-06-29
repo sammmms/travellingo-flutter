@@ -1,8 +1,8 @@
-import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/cart/cart_bloc.dart';
 import 'package:travellingo/bloc/cart/cart_state.dart';
 import 'package:travellingo/bloc/place/place_bloc.dart';
@@ -19,8 +19,10 @@ import 'package:travellingo/pages/home/widget/label_heading.dart';
 import 'package:travellingo/pages/home/widget/see_all.dart';
 import 'package:travellingo/pages/home/widget/transport_button.dart';
 import 'package:travellingo/pages/flight/flight_page.dart';
+import 'package:travellingo/pages/login/login_page.dart';
 import 'package:travellingo/utils/dummy_data.dart';
 import 'package:travellingo/utils/place_category_util.dart';
+import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class HomePage extends StatefulWidget {
@@ -265,27 +267,7 @@ class _HomePageState extends State<HomePage> {
                 if (places.length > 5) {
                   places = places.sublist(0, 5);
                 }
-                return CarouselSlider.builder(
-                  options: CarouselOptions(
-                      enableInfiniteScroll: true,
-                      viewportFraction: 0.9,
-                      enlargeCenterPage: true,
-                      autoPlay: true,
-                      autoPlayInterval: const Duration(seconds: 5),
-                      autoPlayAnimationDuration:
-                          const Duration(milliseconds: 800),
-                      autoPlayCurve: Curves.fastOutSlowIn,
-                      animateToClosest: true,
-                      pageSnapping: true),
-                  itemCount: places.length,
-                  itemBuilder: (context, index, realIndex) {
-                    Place place = places[index];
-                    return HomeCarousel(
-                      place: place,
-                      onTap: () {},
-                    );
-                  },
-                );
+                return HomeCarousel(places: places);
               }),
           const SizedBox(
             height: 15,
@@ -300,7 +282,6 @@ class _HomePageState extends State<HomePage> {
               SeeAllButton(),
             ],
           ),
-          // TODO : MAKE THE NEARBY BY USING THE CITY, AND USE THE HOME RECOMMENDATION
         ]);
   }
 
@@ -341,7 +322,20 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         IconButton(
-          onPressed: () {
+          onPressed: () async {
+            bool notAuthenticated = context
+                    .read<AuthBloc>()
+                    .controller
+                    .valueOrNull
+                    ?.isAuthenticated ==
+                false;
+
+            bool noToken = await Store.getToken() == null;
+            if (!mounted) return;
+            if (noToken || notAuthenticated) {
+              Navigator.push(context, slideInFromBottom(const LoginPage()));
+              return;
+            }
             Navigator.push(
                 context,
                 slideInFromRight(

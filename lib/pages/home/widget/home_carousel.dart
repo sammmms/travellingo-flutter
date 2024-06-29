@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:travellingo/models/place.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
@@ -7,15 +8,56 @@ import 'package:travellingo/utils/place_category_util.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class HomeCarousel extends StatefulWidget {
-  final Place place;
-  final Function() onTap;
-  const HomeCarousel({super.key, required this.place, required this.onTap});
+  final List<Place> places;
+  const HomeCarousel({super.key, required this.places});
 
   @override
   State<HomeCarousel> createState() => _HomeCarouselState();
 }
 
 class _HomeCarouselState extends State<HomeCarousel> {
+  late List<Place> places;
+
+  @override
+  void initState() {
+    if (widget.places.isEmpty) {
+      places = [];
+    } else {
+      places = widget.places.length > 5
+          ? widget.places.sublist(0, 5)
+          : widget.places;
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CarouselSlider.builder(
+      options: CarouselOptions(
+          padEnds: true,
+          enableInfiniteScroll: true,
+          viewportFraction: 0.8,
+          enlargeCenterPage: true,
+          autoPlay: true,
+          autoPlayInterval: const Duration(seconds: 5),
+          autoPlayAnimationDuration: const Duration(milliseconds: 800),
+          autoPlayCurve: Curves.fastOutSlowIn,
+          animateToClosest: true,
+          pageSnapping: true),
+      itemCount: places.length,
+      itemBuilder: (context, index, realIndex) {
+        Place place = places[index];
+        return _CarouselItems(place: place, onTap: () {});
+      },
+    );
+  }
+}
+
+class _CarouselItems extends StatelessWidget {
+  final Place place;
+  final Function() onTap;
+  const _CarouselItems({super.key, required this.place, required this.onTap});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -31,14 +73,14 @@ class _HomeCarouselState extends State<HomeCarousel> {
                 SizedBox(
                   width: double.infinity,
                   height: double.infinity,
-                  child: widget.place.pictureType == PictureType.link
+                  child: place.pictureType == PictureType.link
                       ? Image.network(
-                          widget.place.pictureLink,
+                          place.pictureLink,
                           fit: BoxFit.cover,
                           width: double.infinity,
                         )
                       : Image.memory(
-                          base64Decode(widget.place.pictureLink),
+                          base64Decode(place.pictureLink),
                           fit: BoxFit.cover,
                           width: double.infinity,
                         ),
@@ -59,13 +101,13 @@ class _HomeCarouselState extends State<HomeCarousel> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    widget.place.name,
+                    place.name,
                     style: textStyle.headlineLarge!.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   Text(
-                    "${PlaceCategoryUtil.readCategory(widget.place.category)} - ${widget.place.city}",
+                    "${PlaceCategoryUtil.readCategory(place.category)} - ${place.city}",
                     style: textStyle.labelLarge!.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
