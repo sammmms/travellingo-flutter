@@ -35,6 +35,9 @@ void main() async {
       Provider<AuthBloc>.value(
         value: authBloc,
       ),
+      Provider<String>.value(
+        value: await Store.getLanguage() ?? 'en',
+      )
     ],
     child: const MyApp(),
   );
@@ -54,28 +57,26 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    Store.getLanguage().then((value) {
-      localization.init(
-        mapLocales: [
-          const MapLocale('en', AppLocale.en),
-          const MapLocale('id', AppLocale.id),
-        ],
-        initLanguageCode: value ?? 'en',
-      );
-      localization.onTranslatedLanguage = (locale) async {
-        if (kDebugMode) {
-          print('Language has been changed to $locale');
-        }
-        await Store.saveLanguage(locale!.languageCode);
-        setState(() {});
-      };
-    });
+    localization.init(
+      mapLocales: [
+        const MapLocale('en', AppLocale.en),
+        const MapLocale('id', AppLocale.id),
+      ],
+      initLanguageCode: context.read<String>(),
+    );
+    localization.onTranslatedLanguage = (locale) async {
+      if (kDebugMode) {
+        print('Language has been changed to $locale');
+      }
+      await Store.saveLanguage(locale!.languageCode);
+      setState(() {});
+    };
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final localization = FlutterLocalization.instance;
     final authBloc = context.watch<AuthBloc>();
     return MaterialApp(
         navigatorKey: navigatorKey,
