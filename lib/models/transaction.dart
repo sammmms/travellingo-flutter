@@ -71,4 +71,23 @@ class Transaction {
       'status': TransactionStatusUtil.textOf(status),
     };
   }
+
+  // COPY WITH
+  Transaction copyWith({
+    String? id,
+    List<TransactionItems>? items,
+    int? total,
+    DateTime? transactionDate,
+    DateTime? expiredAt,
+    TransactionStatus? status,
+  }) {
+    return Transaction(
+      id: id ?? this.id,
+      items: items ?? this.items,
+      total: total ?? this.total,
+      transactionDate: transactionDate ?? this.transactionDate,
+      expiredAt: expiredAt ?? this.expiredAt,
+      status: status ?? this.status,
+    );
+  }
 }
