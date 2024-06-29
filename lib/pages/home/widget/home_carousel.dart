@@ -56,7 +56,7 @@ class _HomeCarouselState extends State<HomeCarousel> {
 class _CarouselItems extends StatelessWidget {
   final Place place;
   final Function() onTap;
-  const _CarouselItems({super.key, required this.place, required this.onTap});
+  const _CarouselItems({required this.place, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

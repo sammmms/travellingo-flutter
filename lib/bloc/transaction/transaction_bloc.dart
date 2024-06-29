@@ -6,7 +6,6 @@ import 'package:travellingo/bloc/transaction/transaction_state.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/transaction.dart';
 import 'package:travellingo/utils/app_error.dart';
-import 'package:travellingo/utils/dummy_data.dart';
 import 'package:travellingo/utils/error_print.dart';
 
 class TransactionBloc {
