@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/cart/cart_bloc.dart';
 import 'package:travellingo/bloc/cart/cart_state.dart';
+import 'package:travellingo/component/my_no_data_component.dart';
 import 'package:travellingo/component/refresh_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/cart.dart';
@@ -34,7 +35,7 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
         title: Text("cart".getString(context)),
         scrolledUnderElevation: 0,
       ),
@@ -63,8 +64,10 @@ class _CartPageState extends State<CartPage> {
 
                   bool noItemAvailable = state.data?.items.isEmpty ?? true;
                   if (noItemAvailable) {
-                    return const Center(
-                      child: Text("No cart available"),
+                    return MyNoDataComponent(
+                      onRefresh: () {
+                        bloc.getCart();
+                      },
                     );
                   }
 
@@ -108,14 +111,12 @@ class _CartPageState extends State<CartPage> {
                           Text(
                             'subtotal'.getString(context).toUpperCase(),
                             style: const TextStyle(
-                              color: Color(0xFF6B7B78),
                               fontSize: 10,
                             ),
                           ),
                           Text(
                             'Rp $totals',
                             style: const TextStyle(
-                              color: Color(0xFF292F2E),
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                             ),

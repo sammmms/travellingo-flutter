@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class HomeRecommendation extends StatefulWidget {
-  const HomeRecommendation({super.key});
+class HomeNearby extends StatefulWidget {
+  const HomeNearby({super.key});
 
   @override
-  State<HomeRecommendation> createState() => _HomeRecommendationState();
+  State<HomeNearby> createState() => _HomeNearbyState();
 }
 
-class _HomeRecommendationState extends State<HomeRecommendation> {
+class _HomeNearbyState extends State<HomeNearby> {
   @override
   Widget build(BuildContext context) {
     return Container(

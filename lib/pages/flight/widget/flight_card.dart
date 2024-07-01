@@ -9,14 +9,14 @@ class FlightCard extends StatelessWidget {
       width: 300,
       margin: const EdgeInsets.only(left: 18, right: 8),
       child: Card(
-        surfaceTintColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
         borderOnForeground: true,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6),
             side: BorderSide(color: Colors.grey.shade300)),
-        color: Colors.white,
-        child: const Padding(
-          padding: EdgeInsets.all(18),
+        color: Theme.of(context).colorScheme.surfaceTint,
+        child: Padding(
+          padding: const EdgeInsets.all(18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -25,25 +25,25 @@ class FlightCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("Kobe", style: TextStyle(fontSize: 14)),
-                  SizedBox(width: 8),
+                  const Text("Kobe", style: TextStyle(fontSize: 14)),
+                  const SizedBox(width: 8),
                   Icon(
                     Icons.arrow_forward,
                     size: 18,
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
-                  SizedBox(width: 8),
-                  Text("Arima Onsen", style: TextStyle(fontSize: 14)),
-                  Spacer(),
+                  const SizedBox(width: 8),
+                  const Text("Arima Onsen", style: TextStyle(fontSize: 14)),
+                  const Spacer(),
                   Icon(
                     Icons.arrow_forward_ios,
                     size: 18,
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ],
               ),
-              SizedBox(height: 12),
-              Text("24 Feb 2023 • 1 passenger • Economy",
+              const SizedBox(height: 12),
+              const Text("24 Feb 2023 • 1 passenger • Economy",
                   style: TextStyle(color: Color(0xFF8C8D89), fontSize: 12)),
             ],
           ),

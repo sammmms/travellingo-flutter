@@ -5,7 +5,7 @@ import 'package:travellingo/pages/checkout/widget/checkout_alert_card.dart';
 import 'package:travellingo/pages/checkout/widget/checkout_card.dart';
 import 'package:travellingo/pages/checkout/widget/checkout_extra_prot.dart';
 import 'package:travellingo/pages/checkout/widget/checkout_passenger.dart';
-import '../transportation/payment_page.dart';
+import '../transaction/payment_page.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key});

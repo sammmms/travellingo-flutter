@@ -35,11 +35,11 @@ class _AppearancePageState extends State<AppearancePage> {
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: ChangeLanguageSwitchTile(),
             ),
-            const Divider(),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: ChangeThemeSwitchTile(),
             ),
+            const Divider()
           ],
         ),
       ),
