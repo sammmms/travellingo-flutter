@@ -74,10 +74,16 @@ class _CarouselItems extends StatelessWidget {
                   width: double.infinity,
                   height: double.infinity,
                   child: place.pictureType == PictureType.link
-                      ? Image.network(
-                          place.pictureLink,
+                      ? FadeInImage(
+                          image: NetworkImage(
+                            place.pictureLink,
+                          ),
+                          placeholder:
+                              const AssetImage("assets/images/placeholder.png"),
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return Image.asset("assets/images/placeholder.png");
+                          },
                           fit: BoxFit.cover,
-                          width: double.infinity,
                         )
                       : Image.memory(
                           base64Decode(place.pictureLink),
