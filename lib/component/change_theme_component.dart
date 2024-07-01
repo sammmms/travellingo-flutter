@@ -28,26 +28,25 @@ class _ChangeThemeSwitchComponentState
       builder: (context, snapshot) {
         final isDarkTheme = snapshot.data?.themeType == ThemeType.dark;
 
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Switch(
-            inactiveThumbImage: const AssetImage('assets/Sun.png'),
-            inactiveTrackColor: Colors.yellow[100],
-            inactiveThumbColor: Colors.yellow[100],
-            activeThumbImage: const AssetImage('assets/Moon.png'),
-            activeTrackColor: Colors.grey[700],
-            trackOutlineColor: WidgetStateProperty.resolveWith((states) {
-              if (states.contains(WidgetState.selected)) {
-                return const Color.fromARGB(255, 100, 100, 100);
-              }
-              return Colors.yellow[300];
-            }),
-            overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-            activeColor: Colors.grey[700],
-            value: isDarkTheme,
-            onChanged: (value) {
-              _themeBloc.toggleTheme();
-            },
+        return GestureDetector(
+          onTap: () {
+            _themeBloc.toggleTheme();
+          },
+          child: Container(
+            color: Colors.transparent,
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: !isDarkTheme
+                    ? Image.asset(
+                        "assets/images/Moon.png",
+                        height: 20,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      )
+                    : Image.asset(
+                        "assets/images/Sun.png",
+                        height: 25,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      )),
           ),
         );
       },
