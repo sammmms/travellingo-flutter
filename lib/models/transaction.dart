@@ -30,7 +30,7 @@ class Transaction {
   final List<TransactionItems> items;
   final int total;
   final DateTime transactionDate;
-  final DateTime expiredAt;
+  final DateTime? expiredAt;
   final TransactionStatus status;
 
   Transaction({
@@ -56,7 +56,8 @@ class Transaction {
       id: json['_id'],
       total: json['total'],
       transactionDate: DateTime.parse(json['transactionDate']),
-      expiredAt: DateTime.parse(json['expiredAt']),
+      expiredAt:
+          json['expiredAt'] == null ? null : DateTime.parse(json['expiredAt']),
       status: TransactionStatusUtil.fromString(json['status']),
     );
   }
@@ -67,7 +68,7 @@ class Transaction {
       'items': items.map((e) => e.toJson()).toList(),
       'total': total,
       'transactionDate': transactionDate.toIso8601String(),
-      'expiredAt': expiredAt.toIso8601String(),
+      'expiredAt': expiredAt?.toIso8601String(),
       'status': TransactionStatusUtil.textOf(status),
     };
   }
