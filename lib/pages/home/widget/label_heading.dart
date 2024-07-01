@@ -14,10 +14,8 @@ class LabelHeading extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        Text(
-          content.getString(context),
-          style: Theme.of(context).textTheme.titleMedium,
-        )
+        Text(content.getString(context),
+            style: Theme.of(context).textTheme.titleMedium)
       ],
     );
   }
