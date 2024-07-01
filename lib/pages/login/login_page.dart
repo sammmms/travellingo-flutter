@@ -17,19 +17,21 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      return Scaffold(
+      return const Scaffold(
           body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            title: Text(
-              "changeLanguage".getString(context),
-              style: const TextStyle(color: Colors.black26),
-            ),
             scrolledUnderElevation: 0,
             centerTitle: true,
-            actions: const [ChangeThemeSwitchComponent(),ChangeLanguageComponent()],
+            actions: [
+              ChangeThemeSwitchComponent(),
+              SizedBox(
+                width: 10,
+              ),
+              ChangeLanguageComponent(),
+            ],
           ),
-          const SliverList(
+          SliverList(
               delegate: SliverChildListDelegate.fixed([
             LoginForm(),
           ]))

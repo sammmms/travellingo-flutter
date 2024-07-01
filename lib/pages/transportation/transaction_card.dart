@@ -5,6 +5,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:travellingo/models/transaction.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
+import 'package:travellingo/utils/theme_data/light_theme.dart';
 import 'package:travellingo/utils/transaction_status_util.dart';
 
 class TransactionCard extends StatelessWidget {
@@ -26,15 +27,14 @@ class TransactionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "ORDER DATE : ${transactionData.transactionDate}",
-                  style:
-                      const TextStyle(color: Color(0xFFBFBFBF), fontSize: 12),
+                  "${"orderDate".getString(context).toUpperCase()} : ${DateFormat("d MMM yy hh:mm").format(transactionData.transactionDate)}",
                 ),
-                const Icon(Icons.more_vert, color: Color(0xFFBFBFBF)),
+                const Icon(Icons.more_vert),
               ],
             ),
             const SizedBox(height: 8),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width: 56,
@@ -50,7 +50,7 @@ class TransactionCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(28),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 15),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,18 +94,32 @@ class TransactionCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  NumberFormat.compactCurrency(locale: "id_ID", symbol: "Rp")
+                  NumberFormat.currency(locale: "id_ID", symbol: "Rp")
                       .format(transactionData.total),
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF1B1446),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            // TODO : BUTTON (IF NOT PAID THEN ROUTE TO PAYMENT PAGE, IF PAID ROUTE TO TRANSACTION DETAIL PAGE)
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    backgroundColor: Theme.of(context).colorScheme.primary),
+                child: Text(
+                  transactionData.status == TransactionStatus.paid
+                      ? "viewDetail".getString(context).toUpperCase()
+                      : "payNow".getString(context).toUpperCase(),
+                  style: textStyle.labelMedium,
+                  textScaler: const TextScaler.linear(1.1),
+                ),
+              ),
+            ),
           ],
         ),
       ),

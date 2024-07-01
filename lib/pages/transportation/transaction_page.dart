@@ -40,21 +40,26 @@ class _TransactionPageState extends State<TransactionPage> {
 
               List<Transaction> transactions =
                   snapshot.data!.transactions ?? [];
-              return ListView.builder(
-                itemCount: transactions.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  Transaction transaction = transactions[index];
-                  return ListView.builder(
-                    itemCount: transaction.items.length,
-                    shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      return TransactionCard(
-                          transactionData: transactions[index],
-                          item: transaction.items[index]);
-                    },
-                  );
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await bloc.getTransaction();
                 },
+                child: ListView.builder(
+                  itemCount: transactions.length,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    Transaction transaction = transactions[index];
+                    return ListView.builder(
+                      itemCount: transaction.items.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        return TransactionCard(
+                            transactionData: transactions[index],
+                            item: transaction.items[index]);
+                      },
+                    );
+                  },
+                ),
               );
             }),
       ),

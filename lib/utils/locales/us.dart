@@ -24,6 +24,7 @@ const Map<String, String> usLanguage = {
   "continue": "Continue",
   "travellingoterms": "I agree to Travellingo's Terms of Service",
   "pleaseWait": "Please wait",
+  "signupSuccess": "Sign up success",
 
   // Error setup
   "fieldmustbefilled": "This field must be filled.",
@@ -207,4 +208,10 @@ const Map<String, String> usLanguage = {
   "deleteItemConfirmation": "Are you sure you want to delete this item?",
   "yesDelete": "Yes, delete",
   "failUpdateItemQuantity": "Failed to update item quantity",
+
+  // Transaction Page
+  "ticket": "Ticket",
+  "orderDate": "Order Date",
+  "viewDetail": "View Detail",
+  "payNow": "Pay Now",
 };

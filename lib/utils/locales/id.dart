@@ -24,6 +24,7 @@ const Map<String, String> idLanguage = {
   "continue": "Lanjut",
   "travellingoterms": "Saya menyetujui syarat dan ketentuan Travellingo's",
   "pleaseWait": "Mohon tunggu",
+  "signupSuccess": "Pendaftaran berhasil",
 
   //Error setup
   "fieldmustbefilled": "Field ini harus diisi.",
@@ -207,4 +208,10 @@ const Map<String, String> idLanguage = {
   "deleteItemConfirmation": "Apakah kamu yakin ingin menghapus tiket ini?",
   "yesDelete": "Ya, hapus",
   "failUpdateItemQuantity": "Gagal mengubah jumlah item",
+
+  // Transaction Page
+  "ticket": "Tiket",
+  "orderDate": "Tanggal Pemesanan",
+  "viewDetail": "Lihat Detail",
+  "payNow": "Bayar Sekarang",
 };
