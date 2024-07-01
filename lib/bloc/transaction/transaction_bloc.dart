@@ -63,7 +63,7 @@ class TransactionBloc {
 
       _updateStream(TransactionState(transactions: transactions));
     } catch (err) {
-      printError(err: err);
+      printError(err: err, method: "getTransaction");
       _updateError(err);
     }
   }
