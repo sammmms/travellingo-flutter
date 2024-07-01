@@ -7,7 +7,9 @@ import 'package:travellingo/bloc/cart/cart_bloc.dart';
 import 'package:travellingo/bloc/cart/cart_state.dart';
 import 'package:travellingo/bloc/place/place_bloc.dart';
 import 'package:travellingo/bloc/place/place_state.dart';
+import 'package:travellingo/component/my_no_data_component.dart';
 import 'package:travellingo/component/my_shimmer.dart';
+import 'package:travellingo/component/refresh_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/models/place.dart';
@@ -137,17 +139,12 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           height: 20,
                         ),
-                        StreamBuilder(
-                            stream: _bloc.controller,
-                            builder: (context, snap) {
-                              List<Place> places = snap.data?.data ?? [];
-                              return StreamBuilder<String>(
-                                  stream: _searchStream,
-                                  builder: (context, snapshot) =>
-                                      snapshot.data?.isNotEmpty ?? false
-                                          ? const SizedBox()
-                                          : _buildHomeBody(places));
-                            })
+                        StreamBuilder<String>(
+                            stream: _searchStream,
+                            builder: (context, search) =>
+                                search.data?.isNotEmpty ?? false
+                                    ? _buildSearchBody()
+                                    : _buildHomeBody()),
                       ],
                     ),
                   ),
@@ -182,7 +179,51 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Widget _buildHomeBody(List<Place> places) {
+  Widget _buildSearchBody() {
+    return StreamBuilder<PlaceState>(
+        stream: _bloc.controller,
+        builder: (context, snapshot) {
+          bool isLoading =
+              snapshot.data?.isLoading ?? false || !snapshot.hasData;
+          if (isLoading) {
+            // Loading shimmer
+            return myListLoadingShimmer();
+          }
+
+          PlaceState state = snapshot.data!;
+          if (state.hasError) {
+            // Error data
+            return RefreshComponent(onRefresh: () {
+              _bloc.getPlace(
+                search: _searchStream.valueOrNull,
+                filter: _filterStream.valueOrNull,
+              );
+            });
+          }
+
+          List<Place> places = state.data ?? [];
+
+          if (places.isEmpty) {
+            return MyNoDataComponent(
+              onRefresh: () {
+                _bloc.getPlace(
+                    search: _searchStream.valueOrNull,
+                    filter: _filterStream.valueOrNull);
+              },
+            );
+          }
+
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: places.length,
+              itemBuilder: (context, index) => Card(
+                    color: Theme.of(context).colorScheme.surfaceTint,
+                    child: const Text("Data"),
+                  ));
+        });
+  }
+
+  Widget _buildHomeBody() {
     return ListView(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
