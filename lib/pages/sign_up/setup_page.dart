@@ -4,8 +4,13 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/auth/auth_state.dart';
+import 'package:travellingo/component/my_loading_dialog.dart';
 import 'package:travellingo/component/snackbar_component.dart';
+import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/pages/login/login_page.dart';
+import 'package:travellingo/pages/sign_up/widgets/password_text_field.dart';
 import 'package:travellingo/pages/sign_up/widgets/text_label.dart';
+import 'package:travellingo/utils/app_error.dart';
 import 'package:travellingo/utils/country_code_list.dart';
 
 class SetUpPage extends StatefulWidget {
@@ -21,7 +26,7 @@ class _SetUpPageState extends State<SetUpPage> {
   final lastName = TextEditingController();
   final confirmEmail = TextEditingController();
   final currentNumber = TextEditingController();
-  final password = TextEditingController();
+  final _passwordTEC = TextEditingController();
   final birthday = TextEditingController(text: "2000-01-01");
   late AuthBloc authBloc;
   String currentCountry = "62";
@@ -43,7 +48,7 @@ class _SetUpPageState extends State<SetUpPage> {
     lastName.dispose();
     confirmEmail.dispose();
     currentNumber.dispose();
-    password.dispose();
+    _passwordTEC.dispose();
     birthday.dispose();
     super.dispose();
   }
@@ -75,12 +80,8 @@ class _SetUpPageState extends State<SetUpPage> {
                   child: StreamBuilder<AuthState>(
                       stream: authBloc.controller.stream,
                       builder: (context, snapshot) {
-                        AuthState authState = snapshot.data ?? AuthState();
-                        bool isAuthenticating = authState.isAuthenticating;
-
-                        if (isAuthenticating) {
-                          showMySnackBar(context, "pleaseWait");
-                        }
+                        bool isAuthenticating =
+                            snapshot.data?.isAuthenticating ?? false;
 
                         //Interface
                         return Column(
@@ -369,47 +370,10 @@ class _SetUpPageState extends State<SetUpPage> {
                               height: 10,
                             ),
 
-                            TextFormField(
+                            PasswordTextField(
                                 enabled: !isAuthenticating,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "fieldmustbefilled"
-                                        .getString(context);
-                                  }
-                                  if (value.length < 8) {
-                                    return "passwordformatwrong"
-                                        .getString(context);
-                                  }
-                                  return null;
-                                },
-                                controller: password,
-                                decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: const Color(0xFFF6F8FB),
-                                    suffixIcon: InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            isObstructed = !isObstructed;
-                                          });
-                                        },
-                                        overlayColor:
-                                            const WidgetStatePropertyAll(
-                                                Colors.transparent),
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 20),
-                                          child: isObstructed
-                                              ? const Icon(Icons.visibility,
-                                                  color: Color(0xFFF5D161))
-                                              : const Icon(Icons.visibility_off,
-                                                  color: Color(0xFFF5D161)),
-                                        ))),
-                                obscureText: isObstructed,
-                                style: const TextStyle(
-                                    color: Color(0xFF1B1446),
-                                    letterSpacing: 1.1)),
+                                controller: _passwordTEC),
+
                             const SizedBox(
                               height: 20,
                             ),
@@ -474,6 +438,7 @@ class _SetUpPageState extends State<SetUpPage> {
                             // Continue button
                             SizedBox(
                               width: double.infinity,
+                              height: 56,
                               child: OutlinedButton(
                                   onPressed: isAuthenticating
                                       ? null
@@ -490,13 +455,39 @@ class _SetUpPageState extends State<SetUpPage> {
                                           }
                                           String fullName =
                                               "${firstName.text} ${lastName.text}";
-                                          await authBloc.register(
+
+                                          // Loading Dialog
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  const MyLoadingDialog());
+
+                                          AppError? error = await authBloc.register(
                                               context,
                                               fullName,
                                               widget.email,
-                                              password.text,
+                                              _passwordTEC.text,
                                               birthday.text,
                                               "$currentCountry${currentNumber.text}");
+
+                                          if (!context.mounted) return;
+                                          Navigator.pop(context);
+                                          if (error != null) {
+                                            showMySnackBar(
+                                                context,
+                                                error.message,
+                                                SnackbarStatus.failed);
+                                            return;
+                                          }
+
+                                          showMySnackBar(
+                                              context,
+                                              "signupSuccess",
+                                              SnackbarStatus.success);
+                                          Navigator.pushReplacement(
+                                              context,
+                                              slideInFromLeft(
+                                                  const LoginPage()));
                                         },
                                   child: isAuthenticating
                                       ? Text("pleaseWait".getString(context),

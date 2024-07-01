@@ -13,6 +13,8 @@ import 'package:travellingo/component/oauth_button_component.dart';
 import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/pages/sign_up/register_page.dart';
 import 'package:travellingo/pages/login/widget/authentication_button.dart';
+import 'package:travellingo/pages/sign_up/widgets/password_text_field.dart';
+import 'package:travellingo/pages/sign_up/widgets/text_label.dart';
 import 'package:travellingo/utils/app_error.dart';
 import 'package:travellingo/utils/store.dart';
 
@@ -25,9 +27,8 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  final TextEditingController _passwordTEC = TextEditingController();
   final emailregex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-  final _isObscured = BehaviorSubject<bool>.seeded(true);
   final _biometricsAvailable = BehaviorSubject<bool>.seeded(false);
   final _isTicked = BehaviorSubject<bool>.seeded(false);
   bool _haveLoggedIn = false;
@@ -62,7 +63,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   void dispose() {
     email.dispose();
-    password.dispose();
+    _passwordTEC.dispose();
     super.dispose();
   }
 
@@ -137,41 +138,9 @@ class _LoginFormState extends State<LoginForm> {
                         const SizedBox(
                           height: 10,
                         ),
-                        StreamBuilder<bool>(
-                            stream: _isObscured,
-                            initialData: false,
-                            builder: (context, snapshot) {
-                              bool isObscured = snapshot.data ?? false;
-                              return TextFormField(
-                                controller: password,
-                                style: TextStyle(
-                                    color: !isAuthenticating
-                                        ? const Color(0xFF1B1446)
-                                        : Colors.grey,
-                                    fontSize: 14,
-                                    letterSpacing: 1.1,
-                                    fontWeight: FontWeight.bold),
-                                decoration: InputDecoration(
-                                  enabled: !isAuthenticating,
-                                  prefixIcon: const Icon(
-                                    Icons.lock,
-                                    color: Color.fromARGB(255, 62, 132, 168),
-                                  ),
-                                  suffixIcon: InkWell(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: Icon(
-                                        isObscured
-                                            ? Icons.visibility
-                                            : Icons.visibility_off,
-                                        color: const Color.fromARGB(
-                                            255, 245, 209, 97),
-                                      ),
-                                      onTap: () =>
-                                          _isObscured.add(!isObscured)),
-                                ),
-                                obscureText: isObscured,
-                              );
-                            }),
+                        PasswordTextField(
+                            enabled: !isAuthenticating,
+                            controller: _passwordTEC),
                         const SizedBox(
                           height: 20,
                         ),
@@ -214,41 +183,8 @@ class _LoginFormState extends State<LoginForm> {
                           children: [
                             Expanded(
                               child: OutlinedButton(
-                                  onPressed: isAuthenticating
-                                      ? null
-                                      : () async {
-                                          try {
-                                            await bloc.login(context,
-                                                email.text, password.text);
-
-                                            String? token =
-                                                await Store.getToken();
-
-                                            if (token == null) {
-                                              if (!context.mounted) return;
-                                              showMySnackBar(
-                                                  context,
-                                                  "somethingWrongWithAuthentication",
-                                                  SnackbarStatus.failed);
-                                              return;
-                                            }
-
-                                            await Store.saveLoginPreferences(
-                                                _isTicked.value,
-                                                email.text,
-                                                password.text);
-                                            if (!context.mounted) return;
-                                            Navigator.pop(context);
-                                          } catch (err) {
-                                            var error = err as AppError?;
-                                            if (!context.mounted) return;
-                                            showMySnackBar(
-                                                context,
-                                                error?.message ??
-                                                    "somethingWrong",
-                                                SnackbarStatus.failed);
-                                          }
-                                        },
+                                  onPressed:
+                                      isAuthenticating ? null : _tryLogin,
                                   style: ButtonStyle(
                                       fixedSize: const WidgetStatePropertyAll(
                                         Size.fromHeight(52),
@@ -429,6 +365,31 @@ class _LoginFormState extends State<LoginForm> {
     } else if (isFingerprintAvailable) {
       _biometricsAvailable.add(true);
       _biometricType = BiometricType.fingerprint;
+    }
+  }
+
+  Future<void> _tryLogin() async {
+    try {
+      await bloc.login(context, email.text, _passwordTEC.text);
+
+      String? token = await Store.getToken();
+
+      if (token == null) {
+        if (!context.mounted) return;
+        showMySnackBar(
+            context, "somethingWrongWithAuthentication", SnackbarStatus.failed);
+        return;
+      }
+
+      await Store.saveLoginPreferences(
+          _isTicked.value, email.text, _passwordTEC.text);
+      if (!context.mounted) return;
+      Navigator.pop(context);
+    } catch (err) {
+      var error = err as AppError?;
+      if (!context.mounted) return;
+      showMySnackBar(
+          context, error?.message ?? "somethingWrong", SnackbarStatus.failed);
     }
   }
 }
