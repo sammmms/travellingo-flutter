@@ -30,7 +30,7 @@ void main() async {
   final authBloc = AuthBloc();
 
   // THEME BLOC
-  final themeBloc = ThemeBloc();
+  final themeBloc = ThemeBloc()..initThemeStream();
 
   await authBloc.checkLogin();
 
