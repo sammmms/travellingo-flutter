@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -32,12 +34,16 @@ class CartBloc {
   AppError _updateError(Object err) {
     late AppError appError;
     if (err is DioException) {
-      appError = AppError(
-          message: err.response?.data, statusCode: err.response?.statusCode);
-      _updateStream(CartState.hasError(error: appError));
-      return appError;
+      if (err is SocketException) {
+        appError = AppError(message: "noInternetConnect", statusCode: 400);
+      } else {
+        appError = AppError(
+            message: err.response?.data?.toString() ?? "somethingWrong",
+            statusCode: err.response?.statusCode);
+      }
+    } else {
+      appError = AppError(message: "somethingWrong");
     }
-    appError = AppError(message: "somethingWrong");
     _updateStream(CartState.hasError(error: appError));
     return appError;
   }
@@ -54,17 +60,15 @@ class CartBloc {
       var responseData = response.data;
 
       if (kDebugMode) {
-        print(responseData);
+        print(response);
       }
 
       var cart = Cart.fromJson(responseData);
 
       _updateStream(CartState(data: cart));
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-      _updateStream(CartState(hasError: true));
+    } catch (err) {
+      printError(err: err, method: "getCart");
+      _updateError(err);
     }
   }
 

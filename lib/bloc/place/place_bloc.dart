@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -38,15 +40,17 @@ class PlaceBloc {
   AppError _updateError(Object err) {
     late AppError appError;
     if (err is DioException) {
-      appError = AppError(
-          message: err.response?.data, statusCode: err.response?.statusCode);
-
-      _updateStream(PlaceState(hasError: true, error: appError));
-
-      return appError;
+      if (err is SocketException) {
+        appError = AppError(message: "noInternetConnect", statusCode: 400);
+      } else {
+        appError = AppError(
+            message: err.response?.data?.toString() ?? "somethingWrong",
+            statusCode: err.response?.statusCode);
+      }
+    } else {
+      appError = AppError(message: "somethingWrong");
     }
-    appError = AppError(message: "somethingWrong");
-    _updateStream(PlaceState(hasError: true, error: appError));
+    _updateStream(PlaceState.hasError(error: appError));
     return appError;
   }
 
@@ -88,7 +92,7 @@ class PlaceBloc {
       _updateStream(PlaceState(data: places));
       return null;
     } catch (err) {
-      printError(err: err);
+      printError(err: err, method: "getPlace");
       return _updateError(err);
     }
   }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -32,14 +33,23 @@ class UserBloc {
     controller.sink.add(state);
   }
 
+  void dispose() {
+    controller.close();
+  }
+
   AppError _updateError(Object err) {
     late AppError appError;
     if (err is DioException) {
-      appError = AppError(
-          message: err.response?.data, statusCode: err.response?.statusCode);
-      _updateStream(UserState.hasError(error: appError));
+      if (err is SocketException) {
+        appError = AppError(message: "noInternetConnect", statusCode: 400);
+      } else {
+        appError = AppError(
+            message: err.response?.data?.toString() ?? "somethingWrong",
+            statusCode: err.response?.statusCode);
+      }
+    } else {
+      appError = AppError(message: "somethingWrong");
     }
-    appError = AppError(message: 'somethingWrong');
     _updateStream(UserState.hasError(error: appError));
     return appError;
   }
@@ -56,7 +66,7 @@ class UserBloc {
       _updateStream(UserState.updateProfile(user: user));
       return null;
     } catch (err) {
-      printError(err: err);
+      printError(err: err, method: "getUser");
       return _updateError(err);
     }
   }
@@ -85,7 +95,7 @@ class UserBloc {
 
       return null;
     } catch (err) {
-      printError(err: err);
+      printError(err: err, method: "updateUser");
       return _updateError(err);
     }
   }
@@ -106,7 +116,7 @@ class UserBloc {
 
       return null;
     } catch (err) {
-      printError(err: err);
+      printError(err: err, method: "changePicture");
       return _updateError(err);
     }
   }

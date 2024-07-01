@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,6 +22,10 @@ class TransactionBloc {
     dio.interceptors.add(TokenInterceptor());
   }
 
+  void dispose() {
+    controller.close();
+  }
+
   void _updateStream(TransactionState state) {
     if (controller.isClosed) {
       if (kDebugMode) {
@@ -34,16 +40,20 @@ class TransactionBloc {
   }
 
   AppError _updateError(Object err) {
-    late AppError error;
+    late AppError appError;
     if (err is DioException) {
-      error = AppError(
-          message: err.response?.data, statusCode: err.response?.statusCode);
-      _updateStream(TransactionState.hasError(error: error));
-      return error;
+      if (err is SocketException) {
+        appError = AppError(message: "noInternetConnect", statusCode: 400);
+      } else {
+        appError = AppError(
+            message: err.response?.data?.toString() ?? "somethingWrong",
+            statusCode: err.response?.statusCode);
+      }
+    } else {
+      appError = AppError(message: "somethingWrong");
     }
-    error = AppError(message: "somethingWrong");
-    _updateStream(TransactionState.hasError(error: error));
-    return error;
+    _updateStream(TransactionState.hasError(error: appError));
+    return appError;
   }
 
   Future<void> getTransaction() async {
