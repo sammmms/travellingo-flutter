@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -7,7 +8,7 @@ import 'package:travellingo/bloc/auth/auth_state.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/pages/home/home_page.dart';
 import 'package:travellingo/pages/login/login_page.dart';
-import 'package:travellingo/pages/transportation/transaction_page.dart';
+import 'package:travellingo/pages/transaction/transaction_page.dart';
 import 'package:travellingo/pages/wishlist_page.dart';
 import 'package:travellingo/pages/notification_page.dart';
 import 'package:travellingo/pages/profile/profile_page.dart';
@@ -37,6 +38,11 @@ class _DashboardPageState extends State<DashboardPage> {
       {"title": "wishlist", "page": const WishlistPages()},
       {"title": "profile", "page": const ProfilePage()}
     ];
+    if (kDebugMode) {
+      print("Add listener to page controller");
+    }
+    _pageController.addListener(
+        () => _dashboardPage.add(_pageController.page?.round() ?? 0));
     super.initState();
   }
 
