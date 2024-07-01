@@ -203,7 +203,7 @@ const Map<String, String> idLanguage = {
   "dataIncomplete": "Data tidak lengkap.",
 
   // Cart
-  "noCartAvailable": "Tidak ada keranjang tersedia",
+  "noItemInCart": "Tidak ada item dalam keranjang",
   "deleteItem": "Hapus tiket",
   "deleteItemConfirmation": "Apakah kamu yakin ingin menghapus tiket ini?",
   "yesDelete": "Ya, hapus",
@@ -214,4 +214,10 @@ const Map<String, String> idLanguage = {
   "orderDate": "Tanggal Pemesanan",
   "viewDetail": "Lihat Detail",
   "payNow": "Bayar Sekarang",
+  "transactionPage": "Laman Transaksi",
+
+  // Util
+  "noData": "Tidak ada data",
+  "clickToRefresh": "Tekan untuk refresh",
+  "pleaseRefreshpage": "Harap muat ulang halaman ini"
 };

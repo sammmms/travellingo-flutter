@@ -203,7 +203,7 @@ const Map<String, String> usLanguage = {
   "dataIncomplete": "Data is incomplete.",
 
   // Cart
-  "noCartAvailable": "No cart available",
+  "noItemInCart": "No item in cart",
   "deleteItem": "Delete item",
   "deleteItemConfirmation": "Are you sure you want to delete this item?",
   "yesDelete": "Yes, delete",
@@ -214,4 +214,10 @@ const Map<String, String> usLanguage = {
   "orderDate": "Order Date",
   "viewDetail": "View Detail",
   "payNow": "Pay Now",
+  "transactionPage": "Transaction Page",
+
+  // Util
+  "noData": "No data",
+  "clickToRefresh": "Click to refresh",
+  "pleaseRefreshpage": "Please refresh this page"
 };
