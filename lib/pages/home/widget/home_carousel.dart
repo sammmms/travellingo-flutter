@@ -60,69 +60,73 @@ class _CarouselItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: double.infinity,
-      width: double.infinity,
-      child: Stack(
-        children: [
-          // THE PICTURE
-          ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            child: Stack(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: place.pictureType == PictureType.link
-                      ? FadeInImage(
-                          image: NetworkImage(
-                            place.pictureLink,
-                          ),
-                          placeholder:
-                              const AssetImage("assets/images/placeholder.png"),
-                          imageErrorBuilder: (context, error, stackTrace) {
-                            return Image.asset("assets/images/placeholder.png");
-                          },
-                          fit: BoxFit.cover,
-                        )
-                      : Image.memory(
-                          base64Decode(place.pictureLink),
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        ),
-                ),
-                Container(
-                  color: Colors.black.withOpacity(0.3),
-                )
-              ],
-            ),
-          ),
-
-          // THE TEXT
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        height: double.infinity,
+        width: double.infinity,
+        child: Stack(
+          children: [
+            // THE PICTURE
+            ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              child: Stack(
                 children: [
-                  Text(
-                    place.name,
-                    style: textStyle.headlineLarge!.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+                  SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: place.pictureType == PictureType.link
+                        ? FadeInImage(
+                            image: NetworkImage(
+                              place.pictureLink,
+                            ),
+                            placeholder: const AssetImage(
+                                "assets/images/placeholder.png"),
+                            imageErrorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                  "assets/images/placeholder.png");
+                            },
+                            fit: BoxFit.cover,
+                          )
+                        : Image.memory(
+                            base64Decode(place.pictureLink),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
                   ),
-                  Text(
-                    "${PlaceCategoryUtil.readCategory(place.category)} - ${place.city}",
-                    style: textStyle.labelLarge!.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
+                  Container(
+                    color: Colors.black.withOpacity(0.3),
+                  )
                 ],
               ),
             ),
-          )
-        ],
+
+            // THE TEXT
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      place.name,
+                      style: textStyle.headlineLarge!.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      "${PlaceCategoryUtil.readCategory(place.category)} - ${place.city}",
+                      style: textStyle.labelLarge!.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
