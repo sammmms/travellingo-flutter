@@ -108,9 +108,7 @@ class _SetUpPageState extends State<SetUpPage> {
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'[a-zA-Z ]')),
                                 ],
-                                style: const TextStyle(
-                                    color: Color(0xFF1B1446),
-                                    letterSpacing: 1.1)),
+                                style: const TextStyle(letterSpacing: 1.1)),
                             const SizedBox(
                               height: 20,
                             ),
@@ -135,9 +133,7 @@ class _SetUpPageState extends State<SetUpPage> {
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'[a-zA-Z ]')),
                                 ],
-                                style: const TextStyle(
-                                    color: Color(0xFF1B1446),
-                                    letterSpacing: 1.1)),
+                                style: const TextStyle(letterSpacing: 1.1)),
                             const SizedBox(
                               height: 20,
                             ),
@@ -152,7 +148,6 @@ class _SetUpPageState extends State<SetUpPage> {
                                 decoration: InputDecoration(
                                   enabled: false,
                                   hintText: widget.email,
-                                  fillColor: const Color(0xFFF6F8FB),
                                 ),
                                 style: const TextStyle(
                                     color: Color(0xFF1B1446),
@@ -192,9 +187,7 @@ class _SetUpPageState extends State<SetUpPage> {
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'[a-zA-Z@.0-9]'))
                                 ],
-                                style: const TextStyle(
-                                    color: Color(0xFF1B1446),
-                                    letterSpacing: 1.1)),
+                                style: const TextStyle(letterSpacing: 1.1)),
                             const SizedBox(
                               height: 20,
                             ),
@@ -211,15 +204,17 @@ class _SetUpPageState extends State<SetUpPage> {
                                   children: [
                                     Theme(
                                       data: Theme.of(context).copyWith(
-                                          canvasColor: const Color.fromRGBO(
-                                              246, 248, 251, 1)),
+                                          canvasColor: Theme.of(context)
+                                              .colorScheme
+                                              .surface),
                                       child: Container(
                                         width: 100,
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          color: const Color(0xFFF6F8FB),
-                                        ),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .surfaceBright),
                                         child: Center(
                                           child: DropdownButton(
                                               padding: const EdgeInsets.only(
@@ -228,7 +223,9 @@ class _SetUpPageState extends State<SetUpPage> {
                                               isExpanded: true,
                                               iconEnabledColor:
                                                   const Color(0xFF0768FD),
-                                              dropdownColor: Colors.white,
+                                              dropdownColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .surfaceBright,
                                               borderRadius:
                                                   BorderRadius.circular(20),
                                               underline: Container(
@@ -247,7 +244,7 @@ class _SetUpPageState extends State<SetUpPage> {
                                                         width: 10,
                                                       ),
                                                       Image.asset(
-                                                        "assets/$items.png",
+                                                        "assets/images/$items.png",
                                                         height: 23,
                                                         width: 18,
                                                       )
@@ -297,7 +294,6 @@ class _SetUpPageState extends State<SetUpPage> {
                                         ],
                                         decoration: InputDecoration(
                                             filled: true,
-                                            fillColor: const Color(0xFFF6F8FB),
                                             prefix: Text(
                                               "$currentCountry - ",
                                             )),
@@ -314,7 +310,9 @@ class _SetUpPageState extends State<SetUpPage> {
                                 child: Text(
                                   numberError.getString(context),
                                   style: TextStyle(
-                                      color: Colors.red.shade900, fontSize: 12),
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                      fontSize: 12),
                                 ),
                               ),
                             const SizedBox(
@@ -349,7 +347,10 @@ class _SetUpPageState extends State<SetUpPage> {
                               child: TextFormField(
                                 enabled: false,
                                 controller: birthday,
-                                style: const TextStyle(color: Colors.black),
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface),
                                 decoration: const InputDecoration(
                                     suffixIcon: Padding(
                                       padding: EdgeInsets.only(right: 20),
@@ -433,15 +434,13 @@ class _SetUpPageState extends State<SetUpPage> {
                                               width: 2.0,
                                               color: Color.fromARGB(
                                                   255, 245, 209, 97)))),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isAgreeing = !isAgreeing;
-                                      });
-                                    },
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.75,
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          isAgreeing = !isAgreeing;
+                                        });
+                                      },
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -450,15 +449,15 @@ class _SetUpPageState extends State<SetUpPage> {
                                             "travellingoterms"
                                                 .getString(context),
                                             style: const TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(0xFF1B1446)),
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                             textScaler:
                                                 const TextScaler.linear(1.1),
                                           ),
                                           if (!isAgreeing)
                                             Text(
-                                              "termsagree".getString(context),
+                                              "termsAgree".getString(context),
                                               style: const TextStyle(
                                                   color: Colors.redAccent,
                                                   fontSize: 10),

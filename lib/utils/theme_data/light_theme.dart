@@ -57,7 +57,7 @@ ThemeData lightTheme = ThemeData(
           side: const WidgetStatePropertyAll(
               BorderSide(color: Colors.transparent)),
           foregroundColor: const WidgetStatePropertyAll(Colors.white))),
-  colorScheme: ColorScheme.fromSeed(seedColor: colorScheme.primary),
+  colorScheme: colorScheme,
   iconTheme: IconThemeData(color: colorScheme.primary),
   primaryIconTheme: IconThemeData(color: colorScheme.primary),
   switchTheme: SwitchThemeData(
@@ -109,5 +109,7 @@ ColorScheme colorScheme = ColorScheme(
   error: Colors.redAccent.shade200,
   onError: Colors.white,
   surface: Colors.white,
+  surfaceTint: const Color.fromARGB(255, 247, 247, 247),
+  surfaceDim: const Color.fromARGB(255, 255, 250, 250),
   onSurface: const Color.fromRGBO(27, 20, 70, 1),
 );

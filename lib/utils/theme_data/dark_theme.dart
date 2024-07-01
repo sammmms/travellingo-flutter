@@ -28,7 +28,8 @@ ThemeData darkTheme = ThemeData(
     color: Color(0xFF1E1E1E),
     surfaceTintColor: Color(0xFF1E1E1E),
   ),
-  bottomSheetTheme: const BottomSheetThemeData(surfaceTintColor: Color(0xFF1E1E1E)),
+  bottomSheetTheme:
+      const BottomSheetThemeData(surfaceTintColor: Color(0xFF1E1E1E)),
   canvasColor: const Color(0xFF121212),
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
@@ -65,7 +66,8 @@ ThemeData darkTheme = ThemeData(
     trackColor: WidgetStatePropertyAll(colorSchemeDark.primary),
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: const Color(0xFF1E1E1E), selectedItemColor: colorSchemeDark.secondary),
+      backgroundColor: const Color(0xFF1E1E1E),
+      selectedItemColor: colorSchemeDark.secondary),
   useMaterial3: true,
 );
 
@@ -109,5 +111,7 @@ ColorScheme colorSchemeDark = ColorScheme(
   error: Colors.redAccent.shade200,
   onError: Colors.black,
   surface: const Color(0xFF1E1E1E),
+  surfaceTint: const Color.fromARGB(255, 59, 59, 59),
+  surfaceBright: const Color(0xFF2C2C2C),
   onSurface: const Color(0xFFE0E0E0),
 );

@@ -35,14 +35,16 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
         body: CustomScrollView(
       slivers: [
-        SliverAppBar(
-          title: Text(
-            "changeLanguage".getString(context),
-            style: const TextStyle(color: Colors.black26),
-          ),
+        const SliverAppBar(
           scrolledUnderElevation: 0,
           centerTitle: true,
-          actions: const [ChangeThemeSwitchComponent(),ChangeLanguageComponent()],
+          actions: [
+            ChangeThemeSwitchComponent(),
+            SizedBox(
+              width: 10,
+            ),
+            ChangeLanguageComponent()
+          ],
         ),
         SliverList(
             delegate: SliverChildListDelegate([
@@ -57,7 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(child: Image.asset("assets/Signup.png")),
+                      Center(child: Image.asset("assets/images/Signup.png")),
                       const SizedBox(
                         height: 40,
                       ),
@@ -88,7 +90,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           color: Color.fromARGB(255, 62, 132, 168),
                         )),
                         style: const TextStyle(
-                            color: Color(0xFF1B1446),
                             fontSize: 14,
                             letterSpacing: 1.1,
                             fontWeight: FontWeight.bold),
@@ -142,10 +143,10 @@ class _SignUpPageState extends State<SignUpPage> {
                             child: Text(
                                 "orsignupwith".getString(context).toUpperCase(),
                                 style: const TextStyle(
-                                    fontSize: 9,
-                                    letterSpacing: 1.1,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xAA1B1446)),
+                                  fontSize: 9,
+                                  letterSpacing: 1.1,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 textScaler: const TextScaler.linear(1.1))),
                         Expanded(
                             child: Container(
@@ -176,8 +177,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("alreadyhaveaccount".getString(context),
-                                style: const TextStyle(color: Colors.black26)),
+                            Text("alreadyhaveaccount".getString(context)),
                             const SizedBox(
                               width: 10,
                             ),

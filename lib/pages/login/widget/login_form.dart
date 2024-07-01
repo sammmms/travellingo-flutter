@@ -80,7 +80,7 @@ class _LoginFormState extends State<LoginForm> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Image(
-                image: AssetImage('assets/Signin.png'),
+                image: AssetImage('assets/images/Signin.png'),
                 width: 200,
               ),
               const SizedBox(
@@ -94,13 +94,7 @@ class _LoginFormState extends State<LoginForm> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("email".getString(context),
-                            style: const TextStyle(
-                                fontSize: 10,
-                                letterSpacing: 1.1,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1B1446)),
-                            textScaler: const TextScaler.linear(1.1)),
+                        const TextLabel(content: "email"),
                         const SizedBox(
                           height: 10,
                         ),
@@ -123,7 +117,7 @@ class _LoginFormState extends State<LoginForm> {
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(
                               color: !isAuthenticating
-                                  ? const Color(0xFF1B1446)
+                                  ? Theme.of(context).colorScheme.onSurface
                                   : Colors.grey,
                               fontSize: 14,
                               letterSpacing: 1.1,
@@ -139,13 +133,7 @@ class _LoginFormState extends State<LoginForm> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Text("password".getString(context),
-                            style: const TextStyle(
-                                fontSize: 10,
-                                letterSpacing: 1.1,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1B1446)),
-                            textScaler: const TextScaler.linear(1.1)),
+                        const TextLabel(content: "password"),
                         const SizedBox(
                           height: 10,
                         ),
@@ -320,10 +308,10 @@ class _LoginFormState extends State<LoginForm> {
                       child: Text(
                         "orsigninwith".getString(context).toUpperCase(),
                         style: const TextStyle(
-                            fontSize: 9,
-                            letterSpacing: 1.1,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xAA1B1446)),
+                          fontSize: 9,
+                          letterSpacing: 1.1,
+                          fontWeight: FontWeight.bold,
+                        ),
                         textScaler: const TextScaler.linear(1.1),
                       )),
                   Expanded(
@@ -360,7 +348,6 @@ class _LoginFormState extends State<LoginForm> {
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text(
                   "donthaveaccount".getString(context),
-                  style: const TextStyle(color: Colors.black26),
                 ),
                 const SizedBox(
                   width: 10,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travellingo/bloc/theme/theme_state.dart';
 import 'package:travellingo/pages/profile/notifications/notifications_page.dart';
 
 class Store {
@@ -96,5 +97,21 @@ class Store {
   static Future<String?> getLanguage() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('language');
+  }
+
+  // THEME
+  static Future<void> saveTheme(ThemeType themeType) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('theme', themeType.toString());
+  }
+
+  static Future<ThemeType> getTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? theme = prefs.getString('theme');
+    if (theme == null) {
+      return ThemeType.light;
+    }
+    return ThemeType.values
+        .firstWhere((element) => element.toString() == theme);
   }
 }

@@ -13,7 +13,6 @@ class TextLabel extends StatelessWidget {
         fontSize: 10,
         letterSpacing: 1.1,
         fontWeight: FontWeight.bold,
-        color: Color(0xFF1B1446),
       ),
       textScaler: const TextScaler.linear(1.1),
     );

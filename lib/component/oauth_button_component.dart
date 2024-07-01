@@ -9,10 +9,8 @@ class OAuthButtonComponent extends StatelessWidget {
     return OutlinedButton(
       onPressed: () {},
       style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.surfaceTint,
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          side: BorderSide(color: Colors.grey.shade200, width: 1),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
       child: Image(

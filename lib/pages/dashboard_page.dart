@@ -31,27 +31,11 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     authBloc = context.read<AuthBloc>();
     navigationItem = [
-      {"title": "home", "icon": _buildIcon("home"), "page": const HomePage()},
-      {
-        "title": "transaction",
-        "icon": _buildIcon("transaction"),
-        "page": const TransactionPage()
-      },
-      {
-        "title": "notification",
-        "icon": _buildIcon("notification"),
-        "page": const NotificationPage()
-      },
-      {
-        "title": "wishlist",
-        "icon": _buildIcon("wishlist"),
-        "page": const WishlistPages()
-      },
-      {
-        "title": "profile",
-        "icon": _buildIcon("profile"),
-        "page": const ProfilePage()
-      }
+      {"title": "home", "page": const HomePage()},
+      {"title": "transaction", "page": const TransactionPage()},
+      {"title": "notification", "page": const NotificationPage()},
+      {"title": "wishlist", "page": const WishlistPages()},
+      {"title": "profile", "page": const ProfilePage()}
     ];
     super.initState();
   }
@@ -97,21 +81,20 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             child: Theme(
                 data: Theme.of(context).copyWith(
-                  canvasColor: colorScheme.surface,
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
                 ),
                 child: StreamBuilder<int>(
                     stream: _dashboardPage,
                     builder: (context, snapshot) {
+                      int index = snapshot.data ?? 0;
                       return BottomNavigationBar(
                           unselectedItemColor: Colors.grey,
                           showUnselectedLabels: false,
                           showSelectedLabels: false,
                           currentIndex: snapshot.data ?? 0,
                           elevation: 0,
-                          backgroundColor: Colors.transparent,
-                          type: BottomNavigationBarType.fixed,
+                          type: BottomNavigationBarType.shifting,
                           onTap: (value) async {
                             bool notAuthenticated = authBloc
                                     .controller.valueOrNull?.isAuthenticated ==
@@ -130,7 +113,10 @@ class _DashboardPageState extends State<DashboardPage> {
                             String title = entry["title"];
                             return BottomNavigationBarItem(
                               label: title,
-                              icon: _buildIcon(title),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.surface,
+                              icon: _buildIcon(title,
+                                  index == navigationItem.indexOf(entry)),
                             );
                           }).toList());
                     })),
@@ -138,12 +124,15 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildIcon(String fileName) {
+  Widget _buildIcon(String fileName, bool selected) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: SvgPicture.asset(
         "assets/svg/${fileName}_icon.svg",
-        width: 20,
+        width: selected ? 25 : 18,
+        color: selected
+            ? Theme.of(context).colorScheme.primary
+            : Theme.of(context).colorScheme.onSurface,
       ),
     );
   }

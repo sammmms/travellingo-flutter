@@ -15,7 +15,7 @@ class CircleCheckboxComponent extends StatelessWidget {
         value: isChecked,
         shape: const CircleBorder(),
         checkColor: const Color.fromARGB(255, 245, 209, 97),
-        fillColor: const WidgetStatePropertyAll(Colors.white),
+        fillColor: const WidgetStatePropertyAll(Colors.transparent),
         side: WidgetStateBorderSide.resolveWith((states) => const BorderSide(
             width: 2.0, color: Color.fromARGB(255, 245, 209, 97))),
         onChanged: (value) {

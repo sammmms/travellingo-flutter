@@ -55,22 +55,23 @@ class TransactionCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        item.place.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
+                      Text(item.place.name,
+                          style: textStyle.headlineSmall!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface)),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.local_activity,
-                              color: Color(0xFFFF9141), size: 16),
+                          Icon(Icons.local_activity,
+                              color: Theme.of(context).colorScheme.secondary,
+                              size: 16),
                           Text(
                               " ${item.quantity} ${'ticket'.getString(context)}"),
-                          const Icon(Icons.favorite,
-                              color: Color(0xFFFF9141), size: 16),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Icon(Icons.favorite,
+                              color: Theme.of(context).colorScheme.secondary,
+                              size: 16),
                           Text(" ${item.place.reviewAverage} "),
                         ],
                       )

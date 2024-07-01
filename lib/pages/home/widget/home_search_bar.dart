@@ -14,7 +14,7 @@ class HomeSearchBar extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: Theme.of(context).colorScheme.surface,
         hintText: "exploreSomethingFun".getString(context),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),

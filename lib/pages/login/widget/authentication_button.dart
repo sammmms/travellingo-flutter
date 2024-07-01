@@ -12,8 +12,7 @@ class AuthenticationButton extends StatelessWidget {
     return OutlinedButton(
         onPressed: () => handleBiometrics(context),
         style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.surfaceBright,
           minimumSize: const Size(40, 52),
           side: BorderSide(color: Colors.grey.shade300, width: 1),
           shape: RoundedRectangleBorder(
@@ -23,12 +22,12 @@ class AuthenticationButton extends StatelessWidget {
         child: biometricType == BiometricType.face
             ? Image.asset("assets/images/Faceid.png")
             : biometricType == BiometricType.fingerprint
-                ? const Icon(
+                ? Icon(
                     Icons.fingerprint,
-                    color: Color(0xFFF5D161),
+                    color: Theme.of(context).colorScheme.primary,
                     size: 35,
                   )
-                : const Icon(Icons.password,
-                    color: Color(0xFFF5D161), size: 35));
+                : Icon(Icons.password,
+                    color: Theme.of(context).colorScheme.primary, size: 35));
   }
 }
