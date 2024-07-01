@@ -7,7 +7,6 @@ import 'package:travellingo/pages/flight/widget/location_choice.dart';
 import 'package:travellingo/pages/flight/ticket_list/ticket_list_page.dart';
 import 'package:travellingo/utils/airplane_class_util.dart';
 import 'package:travellingo/utils/date_converter.dart';
-import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class FlightChoice extends StatefulWidget {
   const FlightChoice({super.key});
@@ -33,7 +32,7 @@ class _FlightChoiceState extends State<FlightChoice> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surfaceTint,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -49,32 +48,8 @@ class _FlightChoiceState extends State<FlightChoice> {
         mainAxisSize: MainAxisSize.min,
         children: [
           FlightLocationChoice(from: from, to: to),
-          StreamBuilder<DateTime>(
-              stream: pickedDate,
-              builder: (context, snapshot) {
-                DateTime date = snapshot.data ?? DateTime.now();
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ButtonChoice(
-                      onPressed: () async {
-                        DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(DateTime.now().year + 1, 12, 31),
-                        );
-
-                        if (picked != null) return;
-                        pickedDate.add(picked!);
-                      },
-                      content: DateConverter.fullReadableDate(date),
-                      icon: Image.asset("assets/flight/calendar.png"),
-                    ),
-                  ),
-                );
-              }),
+          const SizedBox(height: 12),
+          _buildDropdownDatetime(),
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -137,6 +112,35 @@ class _FlightChoiceState extends State<FlightChoice> {
     );
   }
 
+  Widget _buildDropdownDatetime() {
+    return StreamBuilder<DateTime>(
+        stream: pickedDate,
+        builder: (context, snapshot) {
+          DateTime date = snapshot.data ?? DateTime.now();
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ButtonChoice(
+                onPressed: () async {
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(DateTime.now().year + 1, 12, 31),
+                  );
+
+                  if (picked == null) return;
+                  pickedDate.add(picked);
+                },
+                content: DateConverter.fullReadableDate(date),
+                icon: Image.asset("assets/flight/calendar.png"),
+              ),
+            ),
+          );
+        });
+  }
+
   Widget _buildDropdownPassenger(count) {
     return Expanded(
       child: Container(
@@ -155,14 +159,12 @@ class _FlightChoiceState extends State<FlightChoice> {
                 iconSize: 0,
                 elevation: 16,
                 borderRadius: BorderRadius.circular(10),
+                dropdownColor: Theme.of(context).colorScheme.surfaceTint,
                 padding: EdgeInsets.zero,
                 menuMaxHeight: 300,
                 style: TextStyle(
-                    color: colorScheme.onSurface, fontFamily: 'Poppins'),
-                underline: Container(
-                  height: 2,
-                  color: Colors.deepPurpleAccent,
-                ),
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontFamily: 'Poppins'),
                 onChanged: (int? newValue) {
                   passengerCount.add(newValue!);
                 },
@@ -203,11 +205,8 @@ class _FlightChoiceState extends State<FlightChoice> {
                 padding: EdgeInsets.zero,
                 menuMaxHeight: 300,
                 style: TextStyle(
-                    color: colorScheme.onSurface, fontFamily: 'Poppins'),
-                underline: Container(
-                  height: 2,
-                  color: Colors.deepPurpleAccent,
-                ),
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontFamily: 'Poppins'),
                 onChanged: (AirplaneClass? newValue) {
                   flightClass.add(newValue!);
                 },
