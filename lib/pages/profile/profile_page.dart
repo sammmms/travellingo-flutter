@@ -1,8 +1,10 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
-import 'package:travellingo/component/refresh_component.dart';
+import 'package:travellingo/component/my_shimmer.dart';
+import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/component/my_title.dart';
@@ -13,7 +15,7 @@ import 'package:travellingo/pages/profile/appearance/appearance_page.dart';
 import 'package:travellingo/pages/profile/notifications/notifications_page.dart';
 import 'package:travellingo/pages/profile/personal_info_page.dart';
 import 'package:travellingo/pages/profile/privacy_sharing/privacy_sharing_page.dart';
-import 'package:travellingo/pages/profile/widget/avatar.dart';
+import 'package:travellingo/pages/profile/widget/border_avatar.dart';
 import 'package:travellingo/pages/profile/widget/text_navigator.dart';
 import 'package:travellingo/pages/purchase_history/purchase_history_page.dart';
 
@@ -30,7 +32,20 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     bloc.getUser();
+
+    bloc.controller.listen((event) {
+      if (event.hasError) {
+        showMySnackBar(context, event.error?.message ?? "somethingWrong",
+            SnackbarStatus.failed);
+      }
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,50 +66,46 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                StreamBuilder<UserState>(
-                    stream: bloc.controller,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData ||
-                          (snapshot.data?.isLoading ?? false)) {
-                        return const Expanded(
-                            child: Center(child: CircularProgressIndicator()));
-                      }
-                      if (snapshot.data!.hasError) {
-                        return Expanded(
-                          child: RefreshComponent(onRefresh: () async {
-                            await bloc.getUser();
-                          }),
-                        );
-                      }
+                // TODO : Pisahkan profile dengan setelah untuk memungkinkan user mengakses setelan local
+                RefreshIndicator(
+                  onRefresh: () async {
+                    await bloc.getUser();
+                  },
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          StreamBuilder<UserState>(
+                              stream: bloc.controller,
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData ||
+                                    (snapshot.data?.isLoading ?? false)) {
+                                  return myProfileLoadingShimmer();
+                                }
 
-                      if (snapshot.data?.receivedProfile == null) {
-                        return Expanded(
-                          child: Center(
-                              child: Text("somethingWrong".getString(context))),
-                        );
-                      }
-                      User data = snapshot.data!.receivedProfile!;
-                      // print(data.pictureLink);
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          await bloc.getUser();
-                        },
-                        child: SingleChildScrollView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Center(
+                                bool hasError = snapshot.data!.hasError ||
+                                    snapshot.data!.receivedProfile == null;
+
+                                if (hasError) {
+                                  return _myErrorProfileShimmer();
+                                }
+
+                                User profile = snapshot.data!.receivedProfile!;
+
+                                // print(data.pictureLink);
+                                return Center(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      BorderedAvatar(content: data.pictureLink),
+                                      BorderedAvatar(
+                                          content: profile.pictureLink),
                                       const SizedBox(
                                         height: 5,
                                       ),
                                       Text(
-                                        data.name,
+                                        profile.name,
                                         style: const TextStyle(
                                             fontWeight: FontWeight.bold),
                                         textScaler:
@@ -103,96 +114,140 @@ class _ProfilePageState extends State<ProfilePage> {
                                       const SizedBox(
                                         height: 5,
                                       ),
-                                      Text(data.email)
+                                      Text(profile.email)
                                     ],
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                const MyTitle(title: "account"),
-                                TextNavigator(
-                                  needIcon: true,
-                                  onTapFunction: () {
-                                    Navigator.of(context).push(slideInFromRight(
-                                        Provider<UserBloc>.value(
-                                            value: bloc,
-                                            child: const PersonalInfoPage())));
-                                  },
-                                  text: "personalInfo",
-                                ),
-                                TextNavigator(
-                                  needIcon: true,
-                                  onTapFunction: () {
-                                    Navigator.of(context).push(slideInFromRight(
-                                        const PrivacySharingPage()));
-                                  },
-                                  text: "privacyNSharing",
-                                ),
-                                const Divider(
-                                  height: 1,
-                                  color: Color(0xFFF6F8FB),
-                                  indent: 20,
-                                  endIndent: 20,
-                                ),
-                                const MyTitle(title: "settings"),
-                                TextNavigator(
-                                  onTapFunction: () async {
-                                    Map<String, UserNotificationPreference>
-                                        result = await Store
-                                            .getNotificationPreferences();
+                                );
+                              }),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const MyTitle(title: "account"),
+                          TextNavigator(
+                            needIcon: true,
+                            onTapFunction: () {
+                              if (bloc.controller.valueOrNull
+                                      ?.receivedProfile ==
+                                  null) {
+                                showMySnackBar(context, "pleaseRefreshPage",
+                                    SnackbarStatus.failed);
+                                return;
+                              }
+                              Navigator.of(context).push(slideInFromRight(
+                                  Provider<UserBloc>.value(
+                                      value: bloc,
+                                      child: const PersonalInfoPage())));
+                            },
+                            text: "personalInfo",
+                          ),
+                          TextNavigator(
+                            needIcon: true,
+                            onTapFunction: () {
+                              Navigator.of(context).push(
+                                  slideInFromRight(const PrivacySharingPage()));
+                            },
+                            text: "privacyNSharing",
+                          ),
+                          const Divider(
+                            height: 1,
+                            color: Color(0xFFF6F8FB),
+                            indent: 20,
+                            endIndent: 20,
+                          ),
+                          const MyTitle(title: "settings"),
+                          TextNavigator(
+                            onTapFunction: () async {
+                              Map<String, UserNotificationPreference> result =
+                                  await Store.getNotificationPreferences();
 
-                                    if (!context.mounted) return;
-                                    Navigator.push(
-                                        context,
-                                        slideInFromRight(
-                                            NotificationPreferencesPage(
-                                                specialTipsAndOffers: result[
-                                                    'specialTipsAndOffers']!,
-                                                activity: result['activity']!,
-                                                reminders:
-                                                    result['reminders']!)));
-                                  },
-                                  text: "notification",
-                                  needIcon: true,
-                                ),
-                                TextNavigator(
-                                  onTapFunction: () {
-                                    Navigator.of(context).push(slideInFromRight(
-                                        const AppearancePage()));
-                                  },
-                                  text: "appearance",
-                                  needIcon: true,
-                                ),
-                                TextNavigator(
-                                  onTapFunction: () {
-                                    Navigator.of(context).push(
-                                        slideInFromRight(const PurchasePage()));
-                                  },
-                                  text: "purchaseHistory",
-                                ),
-                                TextNavigator(
-                                  onTapFunction: () {},
-                                  text: "review",
-                                ),
-                                TextNavigator(
-                                  onTapFunction: () async {
-                                    await context.read<AuthBloc>().logout();
-                                    if (!context.mounted) return;
-                                    context
-                                        .read<PageController>()
-                                        .jumpToPage(0);
-                                  },
-                                  text: "logout",
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              ]),
-                        ),
-                      );
-                    }),
+                              if (!context.mounted) return;
+                              Navigator.push(
+                                  context,
+                                  slideInFromRight(NotificationPreferencesPage(
+                                      specialTipsAndOffers:
+                                          result['specialTipsAndOffers']!,
+                                      activity: result['activity']!,
+                                      reminders: result['reminders']!)));
+                            },
+                            text: "notification",
+                            needIcon: true,
+                          ),
+                          TextNavigator(
+                            onTapFunction: () {
+                              Navigator.of(context).push(
+                                  slideInFromRight(const AppearancePage()));
+                            },
+                            text: "appearance",
+                            needIcon: true,
+                          ),
+                          TextNavigator(
+                            onTapFunction: () {
+                              Navigator.of(context)
+                                  .push(slideInFromRight(const PurchasePage()));
+                            },
+                            text: "purchaseHistory",
+                          ),
+                          TextNavigator(
+                            onTapFunction: () {},
+                            text: "review",
+                          ),
+                          TextNavigator(
+                            onTapFunction: () async {
+                              await context.read<AuthBloc>().logout();
+                              if (!context.mounted) return;
+                              context.read<PageController>().jumpToPage(0);
+                            },
+                            text: "logout",
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ]),
+                  ),
+                )
               ],
             ),
           )),
+    );
+  }
+
+  Widget _myErrorProfileShimmer() {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(3),
+            child: DottedBorder(
+                strokeWidth: 3,
+                color: const Color(0xFFF6F8FB),
+                dashPattern: const [9, 7],
+                borderType: BorderType.Circle,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceTint,
+                      child: Icon(
+                        Icons.person,
+                        size: 40,
+                        color: Theme.of(context).colorScheme.inverseSurface,
+                      )),
+                )),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          const Text(
+            "-",
+            style: TextStyle(fontWeight: FontWeight.bold),
+            textScaler: TextScaler.linear(1.1),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          const Text("-")
+        ],
+      ),
     );
   }
 }
