@@ -5,7 +5,7 @@ void printError({required Object err, String? method}) {
   if (kDebugMode) {
     if (err is DioException) {
       print("error on $method : dio");
-      print(err.response?.data);
+      print(err.response);
       return;
     }
     print("error on $method : platform");
