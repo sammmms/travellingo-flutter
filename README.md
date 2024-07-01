@@ -52,4 +52,6 @@ A mobile-platformed application that allows users to safely and remotely get tic
     ```bash
     flutter pub get
     ```
-
+## 🤝 Our Partner
+### 🏦 MoPay E-Wallet
+An e-wallet application that allows users to store their money, manage their economy, make payments, and support QRIS payment.
