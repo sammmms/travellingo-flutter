@@ -27,11 +27,11 @@ class _ChangeLanguageSwitchTileState extends State<ChangeLanguageSwitchTile> {
     return SwitchListTile(
       contentPadding: const EdgeInsets.all(0),
       title: Text("language".getString(context)),
-      inactiveThumbImage: const AssetImage('assets/Indonesia.png'),
+      inactiveThumbImage: const AssetImage('assets/images/Indonesia.png'),
       inactiveTrackColor: Colors.red[100],
       inactiveThumbColor: Colors.red[100],
-      activeThumbImage:
-          const ResizeImage(AssetImage('assets/US.png'), height: 16, width: 22),
+      activeThumbImage: const ResizeImage(AssetImage('assets/images/US.png'),
+          height: 16, width: 22),
       activeTrackColor: Colors.blue[100],
       trackOutlineColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {

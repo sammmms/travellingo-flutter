@@ -21,7 +21,7 @@ class AuthenticationButton extends StatelessWidget {
           ),
         ),
         child: biometricType == BiometricType.face
-            ? Image.asset("assets/Faceid.png")
+            ? Image.asset("assets/images/Faceid.png")
             : biometricType == BiometricType.fingerprint
                 ? const Icon(
                     Icons.fingerprint,

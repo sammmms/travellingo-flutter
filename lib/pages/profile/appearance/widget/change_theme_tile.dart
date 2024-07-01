@@ -29,10 +29,10 @@ class _ChangeThemeSwitchTileState extends State<ChangeThemeSwitchTile> {
         return SwitchListTile(
           contentPadding: const EdgeInsets.all(0),
           title: const Text("Theme"),
-          inactiveThumbImage: const AssetImage('assets/Sun.png'),
+          inactiveThumbImage: const AssetImage('assets/images/Sun.png'),
           inactiveTrackColor: Colors.yellow[100],
           inactiveThumbColor: Colors.yellow[100],
-          activeThumbImage: const AssetImage('assets/Moon.png'),
+          activeThumbImage: const AssetImage('assets/images/Moon.png'),
           activeTrackColor: Colors.grey[700],
           trackOutlineColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.selected)) {

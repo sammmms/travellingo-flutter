@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: RefreshIndicator(
           onRefresh: () async {
             await _bloc.getPlace(
@@ -196,13 +197,13 @@ class _HomePageState extends State<HomePage> {
             height: 20,
           ),
           const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              TransportButton(icon: "assets/Bus.png", label: "bus"),
-              TransportButton(icon: "assets/Car.png", label: "car"),
-              TransportButton(icon: "assets/Train.png", label: "train"),
+              TransportButton(icon: "assets/images/Bus.png", label: "bus"),
+              TransportButton(icon: "assets/images/Car.png", label: "car"),
+              TransportButton(icon: "assets/images/Train.png", label: "train"),
               TransportButton(
-                icon: "assets/Airplane.png",
+                icon: "assets/images/Airplane.png",
                 label: "airplane",
                 routeTo: FlightPage(),
               ),
@@ -309,7 +310,8 @@ class _HomePageState extends State<HomePage> {
                     .map((e) => Center(
                             child: Text(
                           e["kota"]!,
-                          style: textStyle.headlineLarge,
+                          style: textStyle.headlineLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface),
                         )))
                     .toList();
               },

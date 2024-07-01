@@ -9,7 +9,7 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: LottieBuilder.asset(
-          'assets/lottie/travellingoAnimation.json',
+          'assets/lottie/travelling_animation.json',
           fit: BoxFit.cover,
         ),
       ),

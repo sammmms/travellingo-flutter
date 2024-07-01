@@ -16,7 +16,7 @@ class OAuthButtonComponent extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
       child: Image(
-        image: AssetImage("assets/$content"),
+        image: AssetImage("assets/images/$content"),
         width: 20,
       ),
     );
