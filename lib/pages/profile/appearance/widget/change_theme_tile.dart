@@ -38,7 +38,7 @@ class _ChangeThemeSwitchTileState extends State<ChangeThemeSwitchTile> {
             if (states.contains(WidgetState.selected)) {
               return const Color.fromARGB(255, 100, 100, 100);
             }
-            return Colors.yellow[300];
+            return Colors.yellow[100];
           }),
           overlayColor: const WidgetStatePropertyAll(Colors.transparent),
           activeColor: Colors.grey[700],
