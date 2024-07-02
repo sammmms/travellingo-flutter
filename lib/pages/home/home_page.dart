@@ -22,7 +22,9 @@ import 'package:travellingo/pages/home/widget/see_all.dart';
 import 'package:travellingo/pages/home/widget/transport_button.dart';
 import 'package:travellingo/pages/flight/flight_page.dart';
 import 'package:travellingo/pages/login/login_page.dart';
+import 'package:travellingo/pages/place_detail_page.dart';
 import 'package:travellingo/utils/dummy_data.dart';
+import 'package:travellingo/utils/picture_type_util.dart';
 import 'package:travellingo/utils/place_category_util.dart';
 import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
@@ -155,7 +157,7 @@ class _HomePageState extends State<HomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: const Color(0xFFF5D161),
-          elevation: 10,
+          elevation: 2,
           shape: const CircleBorder(),
           onPressed: () {},
           child: const Icon(
@@ -213,13 +215,60 @@ class _HomePageState extends State<HomePage> {
             );
           }
 
-          return ListView.builder(
+          return ListView.separated(
               shrinkWrap: true,
               itemCount: places.length,
-              itemBuilder: (context, index) => Card(
+              separatorBuilder: (context, index) => const SizedBox(
+                    height: 5,
+                  ),
+              itemBuilder: (context, index) {
+                Place place = places[index];
+                return GestureDetector(
+                  onTap: () => Navigator.push(
+                      context, slideInFromRight(PlaceDetailPage(place: place))),
+                  child: Card(
                     color: Theme.of(context).colorScheme.surfaceTint,
-                    child: const Text("Data"),
-                  ));
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Row(
+                        children: [
+                          if (place.pictureType == PictureType.link)
+                            FadeInImage(
+                              imageErrorBuilder: (context, error, stackTrace) =>
+                                  Image.asset("assets/images/placeholder.png"),
+                              placeholder: const AssetImage(
+                                  "assets/images/placeholder.png"),
+                              image: NetworkImage(
+                                place.pictureLink,
+                              ),
+                              fit: BoxFit.cover,
+                              width: 100,
+                              height: 100,
+                            ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  place.name,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                Text(
+                                  "${place.country}, ${place.city}",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              });
         });
   }
 
