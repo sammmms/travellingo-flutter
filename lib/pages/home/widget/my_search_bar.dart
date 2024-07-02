@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
 
-class HomeSearchBar extends StatelessWidget {
-  final Function(String)? onChanged;
+class MySearchBar extends StatelessWidget {
+  final Function(String searchString)? onChanged;
   final TextEditingController? controller;
-  const HomeSearchBar({super.key, this.onChanged, this.controller});
+  final String? label;
+  const MySearchBar({super.key, this.onChanged, this.controller, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,9 @@ class HomeSearchBar extends StatelessWidget {
       decoration: InputDecoration(
         filled: true,
         fillColor: Theme.of(context).colorScheme.surface,
-        hintText: "exploreSomethingFun".getString(context),
+        hintText: label == null
+            ? "search".getString(context)
+            : label!.getString(context),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide(color: colorScheme.primary, width: 2)),

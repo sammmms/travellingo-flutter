@@ -16,7 +16,7 @@ import 'package:travellingo/models/place.dart';
 import 'package:travellingo/pages/cart/cart_page.dart';
 import 'package:travellingo/pages/home/widget/home_filter_chip.dart';
 import 'package:travellingo/pages/home/widget/home_carousel.dart';
-import 'package:travellingo/pages/home/widget/home_search_bar.dart';
+import 'package:travellingo/pages/home/widget/my_search_bar.dart';
 import 'package:travellingo/pages/home/widget/label_heading.dart';
 import 'package:travellingo/pages/home/widget/see_all.dart';
 import 'package:travellingo/pages/home/widget/transport_button.dart';
@@ -132,7 +132,8 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Column(
                       children: [
-                        HomeSearchBar(
+                        MySearchBar(
+                          label: "exploreSomethingFun",
                           controller: _searchController,
                           onChanged: (value) {
                             _searchStream.add(value);
