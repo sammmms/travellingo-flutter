@@ -9,7 +9,7 @@ import 'package:travellingo/bloc/place/place_bloc.dart';
 import 'package:travellingo/bloc/place/place_state.dart';
 import 'package:travellingo/component/my_no_data_component.dart';
 import 'package:travellingo/component/my_shimmer.dart';
-import 'package:travellingo/component/refresh_component.dart';
+import 'package:travellingo/component/error_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/models/place.dart';
@@ -193,7 +193,7 @@ class _HomePageState extends State<HomePage> {
           PlaceState state = snapshot.data!;
           if (state.hasError) {
             // Error data
-            return RefreshComponent(onRefresh: () {
+            return MyErrorComponent(onRefresh: () {
               _bloc.getPlace(
                 search: _searchStream.valueOrNull,
                 filter: _filterStream.valueOrNull,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/bloc/transaction/transaction_bloc.dart';
 import 'package:travellingo/bloc/transaction/transaction_state.dart';
-import 'package:travellingo/component/refresh_component.dart';
+import 'package:travellingo/component/error_component.dart';
 import 'package:travellingo/models/transaction.dart';
 import 'package:travellingo/pages/transaction/transaction_card.dart';
 
@@ -36,7 +36,7 @@ class _TransactionPageState extends State<TransactionPage> {
             }
 
             if (snapshot.data!.hasError) {
-              return RefreshComponent(onRefresh: () async {
+              return MyErrorComponent(onRefresh: () async {
                 bloc.getTransaction();
               });
             }

@@ -5,7 +5,6 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:travellingo/models/transaction.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
-import 'package:travellingo/utils/theme_data/light_theme.dart';
 import 'package:travellingo/utils/transaction_status_util.dart';
 
 class TransactionCard extends StatelessWidget {
@@ -56,8 +55,12 @@ class TransactionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(item.place.name,
-                          style: textStyle.headlineSmall!.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface)),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -115,7 +118,7 @@ class TransactionCard extends StatelessWidget {
                   transactionData.status == TransactionStatus.paid
                       ? "viewDetail".getString(context).toUpperCase()
                       : "payNow".getString(context).toUpperCase(),
-                  style: textStyle.labelMedium,
+                  style: Theme.of(context).textTheme.labelMedium,
                   textScaler: const TextScaler.linear(1.1),
                 ),
               ),

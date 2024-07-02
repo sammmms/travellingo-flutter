@@ -5,7 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/cart/cart_bloc.dart';
 import 'package:travellingo/bloc/cart/cart_state.dart';
 import 'package:travellingo/component/my_no_data_component.dart';
-import 'package:travellingo/component/refresh_component.dart';
+import 'package:travellingo/component/error_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/pages/cart/widget/cart_list.dart';
@@ -57,7 +57,7 @@ class _CartPageState extends State<CartPage> {
                   bool hasError = state.hasError;
 
                   if (hasError) {
-                    return RefreshComponent(onRefresh: () async {
+                    return MyErrorComponent(onRefresh: () async {
                       bloc.getCart();
                     });
                   }
