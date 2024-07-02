@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 
 class SeeAllButton extends StatelessWidget {
-  const SeeAllButton({super.key});
+  final Function()? onTap;
+  const SeeAllButton({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: onTap,
       child: Row(
         children: [
           Text(
