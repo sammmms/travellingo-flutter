@@ -111,13 +111,16 @@ class _CarouselItems extends StatelessWidget {
                   children: [
                     Text(
                       place.name,
-                      style: textStyle.headlineLarge!.copyWith(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge!
+                          .copyWith(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                     Text(
                       "${PlaceCategoryUtil.readCategory(place.category)} - ${place.city}",
-                      style: textStyle.labelLarge!.copyWith(
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           color: Colors.white, fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),

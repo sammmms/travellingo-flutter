@@ -84,15 +84,18 @@ class _CartCardState extends State<CartCard> {
                         children: [
                           Text(
                             place.name,
-                            style: textStyle.headlineMedium,
+                            style: Theme.of(context).textTheme.headlineMedium,
                           ),
                           Text("${place.country}, ${place.city}"),
                           const Spacer(),
                           Text(
                             "Rp ${NumberFormat("###,###", "id_ID").format(place.price)}",
-                            style: textStyle.titleMedium!.copyWith(
-                                color: colorScheme.onSurface,
-                                fontWeight: FontWeight.bold),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                    color: colorScheme.onSurface,
+                                    fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(
                             height: 10,
@@ -121,7 +124,7 @@ class _CartCardState extends State<CartCard> {
                 margin: const EdgeInsets.only(right: 10),
                 child: Text(
                     "Rp ${NumberFormat("###,###", "id_ID").format(place.price * snapshot.data!)}",
-                    style: textStyle.titleMedium!.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: colorScheme.onSurface,
                         fontWeight: FontWeight.bold)),
               );
@@ -187,7 +190,7 @@ class _CartCardState extends State<CartCard> {
               builder: (context, snapshot) {
                 return Text(
                   snapshot.data.toString(),
-                  style: textStyle.labelMedium!.copyWith(
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
                       color: colorScheme.onSurface,
                       fontWeight: FontWeight.bold),
                 );

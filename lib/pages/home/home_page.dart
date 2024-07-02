@@ -351,8 +351,12 @@ class _HomePageState extends State<HomePage> {
                     .map((e) => Center(
                             child: Text(
                           e["kota"]!,
-                          style: textStyle.headlineLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge!
+                              .copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface),
                         )))
                     .toList();
               },

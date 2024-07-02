@@ -66,7 +66,6 @@ class _ProfilePageState extends State<ProfilePage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                // TODO : Pisahkan profile dengan setelah untuk memungkinkan user mengakses setelan local
                 RefreshIndicator(
                   onRefresh: () async {
                     await bloc.getUser();

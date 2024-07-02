@@ -136,9 +136,11 @@ class _DashboardPageState extends State<DashboardPage> {
       child: SvgPicture.asset(
         "assets/svg/${fileName}_icon.svg",
         width: selected ? 25 : 18,
-        color: selected
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.onSurface,
+        theme: SvgTheme(
+          currentColor: selected
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.onSurface,
+        ),
       ),
     );
   }

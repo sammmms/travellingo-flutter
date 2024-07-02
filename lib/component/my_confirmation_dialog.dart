@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class MyConfirmationDialog extends StatelessWidget {
   final String? title;
@@ -32,11 +31,11 @@ class MyConfirmationDialog extends StatelessWidget {
             if (title != null)
               Text(
                 title!,
-                style: textStyle.headlineLarge,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
             Text(
               label,
-              style: textStyle.headlineMedium,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             if (subLabel != null) Text(subLabel!),
             const SizedBox(
@@ -50,7 +49,7 @@ class MyConfirmationDialog extends StatelessWidget {
                         onClickNegative ?? () => Navigator.pop(context, false),
                     child: Text(
                       negativeLabel ?? "Cancel",
-                      style: textStyle.labelLarge,
+                      style: Theme.of(context).textTheme.labelLarge,
                     )),
                 const SizedBox(
                   width: 10,
@@ -60,7 +59,7 @@ class MyConfirmationDialog extends StatelessWidget {
                         onClickPositive ?? () => Navigator.pop(context, true),
                     child: Text(
                       positiveLabel ?? "Yes",
-                      style: textStyle.labelLarge,
+                      style: Theme.of(context).textTheme.labelLarge,
                     )),
               ],
             )

@@ -98,10 +98,10 @@ class _BorderedAvatarState extends State<BorderedAvatar> {
                                 color: Colors.white,
                                 size: 20,
                               )
-                            : SvgPicture.asset(
-                                "assets/svg/edit_icon.svg",
-                                color: Colors.white,
-                              )),
+                            : SvgPicture.asset("assets/svg/edit_icon.svg",
+                                theme: const SvgTheme(
+                                  currentColor: Colors.white,
+                                ))),
                   )
                 ],
               ),
