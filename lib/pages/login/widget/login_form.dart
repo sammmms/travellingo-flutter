@@ -374,20 +374,19 @@ class _LoginFormState extends State<LoginForm> {
 
       String? token = await Store.getToken();
 
+      await Store.saveLoginPreferences(
+          _isTicked.value, email.text, _passwordTEC.text);
+
+      if (!mounted) return;
       if (token == null) {
-        if (!context.mounted) return;
         showMySnackBar(
             context, "somethingWrongWithAuthentication", SnackbarStatus.failed);
         return;
       }
 
-      await Store.saveLoginPreferences(
-          _isTicked.value, email.text, _passwordTEC.text);
-      if (!context.mounted) return;
       Navigator.pop(context);
     } catch (err) {
       var error = err as AppError?;
-      if (!context.mounted) return;
       showMySnackBar(
           context, error?.message ?? "somethingWrong", SnackbarStatus.failed);
     }
