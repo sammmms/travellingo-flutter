@@ -22,9 +22,9 @@ class TransactionStatusUtil {
   static Color colorOf(TransactionStatus status) {
     switch (status) {
       case TransactionStatus.pending:
-        return Colors.orangeAccent.shade100;
+        return Colors.orangeAccent.shade400;
       case TransactionStatus.paid:
-        return Colors.green.shade100;
+        return Colors.green.shade400;
     }
   }
 
