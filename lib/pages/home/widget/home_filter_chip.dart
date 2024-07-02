@@ -17,14 +17,14 @@ class HomeFilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        highlightColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        focusColor: Colors.transparent,
-      ),
+          highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          canvasColor: Colors.transparent),
       child: ChoiceChip(
         label: Text(PlaceCategoryUtil.stringOf(selection).getString(context)),
         surfaceTintColor: Colors.transparent,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
         side: BorderSide(
             color: isSelected
                 ? Colors.transparent
@@ -34,7 +34,7 @@ class HomeFilterChip extends StatelessWidget {
         labelStyle: TextStyle(
             color: isSelected
                 ? Colors.white
-                : const Color.fromRGBO(27, 20, 70, 1)),
+                : Theme.of(context).colorScheme.onSurface),
         showCheckmark: false,
         selectedShadowColor: const Color.fromRGBO(87, 163, 187, 1),
         selected: isSelected,

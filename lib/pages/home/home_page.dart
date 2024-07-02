@@ -7,6 +7,7 @@ import 'package:travellingo/bloc/cart/cart_bloc.dart';
 import 'package:travellingo/bloc/cart/cart_state.dart';
 import 'package:travellingo/bloc/place/place_bloc.dart';
 import 'package:travellingo/bloc/place/place_state.dart';
+import 'package:travellingo/component/my_image_loader.dart';
 import 'package:travellingo/component/my_no_data_component.dart';
 import 'package:travellingo/component/my_shimmer.dart';
 import 'package:travellingo/component/error_component.dart';
@@ -218,7 +219,9 @@ class _HomePageState extends State<HomePage> {
 
           return ListView.separated(
               shrinkWrap: true,
-              itemCount: places.length,
+              padding: const EdgeInsets.only(bottom: 20),
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: places.length > 8 ? 8 : places.length,
               separatorBuilder: (context, index) => const SizedBox(
                     height: 5,
                   ),
@@ -228,23 +231,18 @@ class _HomePageState extends State<HomePage> {
                   onTap: () => Navigator.push(
                       context, slideInFromRight(PlaceDetailPage(place: place))),
                   child: Card(
+                    key: const ValueKey(""),
                     color: Theme.of(context).colorScheme.surfaceTint,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Row(
                         children: [
                           if (place.pictureType == PictureType.link)
-                            FadeInImage(
-                              imageErrorBuilder: (context, error, stackTrace) =>
-                                  Image.asset("assets/images/placeholder.png"),
-                              placeholder: const AssetImage(
-                                  "assets/images/placeholder.png"),
-                              image: NetworkImage(
-                                place.pictureLink,
-                              ),
-                              fit: BoxFit.cover,
+                            MyImageLoader(
+                              url: place.pictureLink,
                               width: 100,
                               height: 100,
+                              fit: BoxFit.cover,
                             ),
                           const SizedBox(
                             width: 10,
