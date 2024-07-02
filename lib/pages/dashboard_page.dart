@@ -9,7 +9,7 @@ import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/pages/home/home_page.dart';
 import 'package:travellingo/pages/login/login_page.dart';
 import 'package:travellingo/pages/transaction/transaction_page.dart';
-import 'package:travellingo/pages/wishlist_page.dart';
+import 'package:travellingo/pages/wishlist/wishlist_page.dart';
 import 'package:travellingo/pages/notification_page.dart';
 import 'package:travellingo/pages/profile/profile_page.dart';
 import 'package:travellingo/splash_page.dart';
