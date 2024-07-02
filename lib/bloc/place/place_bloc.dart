@@ -96,4 +96,102 @@ class PlaceBloc {
       return _updateError(err);
     }
   }
+
+  Future<AppError?> getPlaceById(String id) async {
+    try {
+      _updateStream(PlaceState(isLoading: true));
+
+      var response = await dio.get("/places/$id");
+      if (kDebugMode) {
+        print(response.data);
+      }
+      Place place = Place.fromJson(response.data);
+
+      _updateStream(PlaceState(data: [place]));
+      return null;
+    } catch (err) {
+      printError(err: err, method: "getPlaceById");
+      return _updateError(err);
+    }
+  }
+
+  Future<AppError?> createPlace(Place place) async {
+    try {
+      _updateStream(PlaceState(isLoading: true));
+
+      var response = await dio.post("/places", data: place.toJson());
+      if (kDebugMode) {
+        print(response.data);
+      }
+      Place newPlace = Place.fromJson(response.data);
+
+      _updateStream(PlaceState(data: [newPlace]));
+      return null;
+    } catch (err) {
+      printError(err: err, method: "createPlace");
+      return _updateError(err);
+    }
+  }
+
+  Future<AppError?> updatePlace(Place place) async {
+    try {
+      _updateStream(PlaceState.isLoading());
+
+      var response = await dio.put("/places/${place.id}", data: place.toJson());
+      if (kDebugMode) {
+        print(response.data);
+      }
+      Place updatedPlace = Place.fromJson(response.data);
+
+      _updateStream(PlaceState(data: [updatedPlace]));
+      return null;
+    } catch (err) {
+      printError(err: err, method: "updatePlace");
+      return _updateError(err);
+    }
+  }
+
+  Future<AppError?> deletePlace(String id) async {
+    try {
+      _updateStream(PlaceState.isLoading());
+
+      await dio.delete("/places/$id");
+
+      return null;
+    } catch (err) {
+      printError(err: err, method: "deletePlace");
+      return _updateError(err);
+    }
+  }
+
+  Future<AppError?> addToCart(String id, int quantity) async {
+    try {
+      _updateStream(PlaceState.isLoading());
+
+      await dio.post(
+        "/place/$id/cart",
+        data: {"quantity": quantity},
+      );
+
+      return null;
+    } catch (err) {
+      printError(err: err, method: "addToCart");
+      return _updateError(err);
+    }
+  }
+
+  Future<AppError?> addToWishlist(String id) async {
+    try {
+      _updateStream(PlaceState.isLoading());
+
+      await dio.post(
+        "/place/$id/wishlist",
+      );
+
+      return null;
+    } catch (err) {
+      printError(err: err, method: "addToWishlist");
+      return _updateError(err);
+    }
+  }
 }
