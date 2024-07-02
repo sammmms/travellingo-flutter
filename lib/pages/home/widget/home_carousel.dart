@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/place.dart';
+import 'package:travellingo/pages/place_detail_page.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
 import 'package:travellingo/utils/place_category_util.dart';
-import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class HomeCarousel extends StatefulWidget {
   final List<Place> places;
@@ -47,7 +48,10 @@ class _HomeCarouselState extends State<HomeCarousel> {
       itemCount: places.length,
       itemBuilder: (context, index, realIndex) {
         Place place = places[index];
-        return _CarouselItems(place: place, onTap: () {});
+        return _CarouselItems(
+            place: place,
+            onTap: () => Navigator.push(
+                context, slideInFromRight(PlaceDetailPage(place: place))));
       },
     );
   }
