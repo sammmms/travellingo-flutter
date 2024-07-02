@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,20 +32,9 @@ class AuthBloc {
   }
 
   AppError _updateError(Object err) {
-    late AppError appError;
-    if (err is DioException) {
-      if (err is SocketException) {
-        appError = AppError(message: "noInternetConnect", statusCode: 400);
-      } else {
-        appError = AppError(
-            message: err.response?.data?.toString() ?? "somethingWrong",
-            statusCode: err.response?.statusCode);
-      }
-    } else {
-      appError = AppError(message: "somethingWrong");
-    }
-    _updateStream(AuthState.hasError(error: appError));
-    return appError;
+    AppError error = AppError.fromObjectErr(err);
+    _updateStream(AuthState.hasError(error: error));
+    return error;
   }
 
   void dispose() {

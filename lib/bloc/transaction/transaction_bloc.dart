@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -40,18 +38,7 @@ class TransactionBloc {
   }
 
   AppError _updateError(Object err) {
-    late AppError appError;
-    if (err is DioException) {
-      if (err is SocketException) {
-        appError = AppError(message: "noInternetConnect", statusCode: 400);
-      } else {
-        appError = AppError(
-            message: err.response?.data?.toString() ?? "somethingWrong",
-            statusCode: err.response?.statusCode);
-      }
-    } else {
-      appError = AppError(message: "somethingWrong");
-    }
+    AppError appError = AppError.fromObjectErr(err);
     _updateStream(TransactionState.hasError(error: appError));
     return appError;
   }

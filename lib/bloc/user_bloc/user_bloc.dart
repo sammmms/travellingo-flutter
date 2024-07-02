@@ -33,25 +33,14 @@ class UserBloc {
     controller.sink.add(state);
   }
 
-  void dispose() {
-    controller.close();
-  }
-
   AppError _updateError(Object err) {
-    late AppError appError;
-    if (err is DioException) {
-      if (err is SocketException) {
-        appError = AppError(message: "noInternetConnect", statusCode: 400);
-      } else {
-        appError = AppError(
-            message: err.response?.data?.toString() ?? "somethingWrong",
-            statusCode: err.response?.statusCode);
-      }
-    } else {
-      appError = AppError(message: "somethingWrong");
-    }
+    AppError appError = AppError.fromObjectErr(err);
     _updateStream(UserState.hasError(error: appError));
     return appError;
+  }
+
+  void dispose() {
+    controller.close();
   }
 
   Future<AppError?> getUser() async {
