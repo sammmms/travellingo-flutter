@@ -110,6 +110,6 @@ ColorScheme colorScheme = ColorScheme(
   onError: Colors.white,
   surface: Colors.white,
   surfaceTint: const Color.fromARGB(255, 247, 247, 247),
-  surfaceDim: const Color.fromARGB(255, 255, 250, 250),
+  surfaceDim: const Color.fromARGB(255, 243, 243, 243),
   onSurface: const Color.fromRGBO(27, 20, 70, 1),
 );

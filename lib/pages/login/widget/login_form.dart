@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/auth/auth_state.dart';
 import 'package:travellingo/component/check_component.dart';
-import 'package:travellingo/component/oauth_button_component.dart';
+import 'package:travellingo/component/my_oauth_button.dart';
 import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/pages/sign_up/register_page.dart';
 import 'package:travellingo/pages/login/widget/authentication_button.dart';

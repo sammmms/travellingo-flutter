@@ -216,6 +216,11 @@ const Map<String, String> idLanguage = {
   "payNow": "Bayar Sekarang",
   "transactionPage": "Laman Transaksi",
 
+  // Place Detail
+  "noReviewYet": "Belum ada ulasan",
+  "placeDetail": "Detail Tempat",
+  "reviews": "Ulasan",
+
   // Util
   "noData": "Tidak ada data",
   "clickToRefresh": "Tekan untuk refresh",

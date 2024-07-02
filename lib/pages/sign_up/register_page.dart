@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/component/change_theme_component.dart';
-import 'package:travellingo/component/oauth_button_component.dart';
+import 'package:travellingo/component/my_oauth_button.dart';
 import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/pages/sign_up/setup_page.dart';

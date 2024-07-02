@@ -216,6 +216,11 @@ const Map<String, String> usLanguage = {
   "payNow": "Pay Now",
   "transactionPage": "Transaction Page",
 
+  // Place Detail
+  "noReviewYet": "No review",
+  "placeDetail": "Place Detail",
+  "reviews": "Reviews",
+
   // Util
   "noData": "No data",
   "clickToRefresh": "Click to refresh",

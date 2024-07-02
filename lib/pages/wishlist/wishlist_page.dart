@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:travellingo/bloc/wishlist/wishlist_bloc.dart';
