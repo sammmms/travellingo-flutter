@@ -1,101 +1,88 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:travellingo/component/my_image_loader.dart';
+import 'package:travellingo/models/place.dart';
 
-class HomeNearby extends StatefulWidget {
-  const HomeNearby({super.key});
+class HomeNearby extends StatelessWidget {
+  final Place place;
+  final Function() onTap;
+  const HomeNearby({super.key, required this.place, required this.onTap});
 
-  @override
-  State<HomeNearby> createState() => _HomeNearbyState();
-}
-
-class _HomeNearbyState extends State<HomeNearby> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 0.2),
-          borderRadius: BorderRadius.circular(20)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-            child: Image(
-              image: AssetImage("HimejiCastle.png"),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Himeji Castle"),
-                const SizedBox(
-                  height: 5,
-                ),
-                const Row(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        constraints:
+            const BoxConstraints(maxWidth: 200, minHeight: 300, maxHeight: 300),
+        margin: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 0.2),
+            borderRadius: BorderRadius.circular(20)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(15)),
+                child: MyImageLoader(
+                  url: place.pictureLink,
+                  width: 200,
+                  height: 150,
+                  fit: BoxFit.cover,
+                )),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      Icons.location_pin,
-                      color: Colors.black,
-                      size: 15,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "HIMEJI, JAPAN",
-                      style: TextStyle(fontSize: 10),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                    width: 120,
-                    child: Divider(
-                      color: Colors.grey.shade200,
-                      thickness: 0.1,
-                    )),
-                Text(
-                  "\$250",
-                  style: TextStyle(
-                      decoration: TextDecoration.lineThrough,
-                      decorationColor: Colors.grey[300],
-                      color: Colors.grey[300],
-                      fontSize: 10),
-                ),
-                Row(
-                  children: [
-                    const Text(
-                      "\$125",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromRGBO(62, 132, 168, 1)),
-                    ),
-                    const Text(
-                      " /PERSON",
-                      style: TextStyle(fontSize: 10),
-                    ),
+                    Text(place.name),
                     const SizedBox(
-                      width: 25,
+                      height: 5,
                     ),
-                    const Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 12,
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_pin,
+                          color: Theme.of(context).colorScheme.onSurface,
+                          size: 15,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "${place.country.toUpperCase()}, ${place.city.toUpperCase()}",
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                      ],
                     ),
+                    const Spacer(),
                     Text(
-                      "4.5",
-                      style: TextStyle(fontSize: 10, color: Colors.grey[400]),
+                      NumberFormat.compactCurrency(
+                              locale: 'id', symbol: 'Rp', decimalDigits: 0)
+                          .format(place.price),
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                          size: 12,
+                        ),
+                        Text(
+                          place.reviewAverage.toString(),
+                          style: Theme.of(context).textTheme.labelSmall,
+                        )
+                      ],
                     )
                   ],
-                )
-              ],
-            ),
-          )
-        ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

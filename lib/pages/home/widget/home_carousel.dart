@@ -4,7 +4,7 @@ import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/place.dart';
-import 'package:travellingo/pages/place_detail_page.dart';
+import 'package:travellingo/pages/place_detail/place_detail_page.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
 import 'package:travellingo/utils/place_category_util.dart';
 
