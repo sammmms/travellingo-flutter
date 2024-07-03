@@ -86,6 +86,12 @@ class _MyAppState extends State<MyApp> {
       setState(() {});
     };
 
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        FlutterNativeSplash.remove();
+      },
+    );
+
     super.initState();
   }
 
