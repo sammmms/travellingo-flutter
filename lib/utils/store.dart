@@ -114,4 +114,15 @@ class Store {
     return ThemeType.values
         .firstWhere((element) => element.toString() == theme);
   }
+
+  // HOMEPAGE CITY
+  static Future<void> saveChoosenCity(String city) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('city', city);
+  }
+
+  static Future<String?> getChoosenCity() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('city');
+  }
 }
