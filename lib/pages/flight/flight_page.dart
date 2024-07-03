@@ -1,3 +1,4 @@
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/pages/flight/widget/app_bar_stack.dart';
@@ -18,6 +19,7 @@ class _FlightPageState extends State<FlightPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
+      padding: const EdgeInsets.only(bottom: 20),
       child: Column(
         children: [
           const AppBarStack(),
@@ -69,24 +71,25 @@ class _FlightPageState extends State<FlightPage> {
               ],
             ),
           ),
-          Container(
-            margin: const EdgeInsets.only(right: 16, bottom: 20, left: 16),
-            height: 175,
-            child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                separatorBuilder: (context, index) => const SizedBox(
-                      width: 20,
-                    ),
-                itemCount: 5,
-                itemBuilder: (context, index) => FlightCardImage(
-                      heading: "50%",
-                      heading2: "discount".getString(context),
-                      subheading: "forNewUsers".getString(context),
-                      subheading2:
-                          "*${"termsNConditionApply".getString(context)}",
-                      image: "assets/flight/flight.jpg",
-                    )),
-          ),
+          CarouselSlider.builder(
+              options: CarouselOptions(
+                  aspectRatio: 16 / 9,
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  initialPage: 0,
+                  padEnds: true,
+                  enableInfiniteScroll: true,
+                  pageSnapping: true,
+                  viewportFraction: 0.8),
+              itemCount: 5,
+              itemBuilder: (context, __, _) => FlightCardImage(
+                    heading: "50%",
+                    heading2: "discount".getString(context),
+                    subheading: "forNewUsers".getString(context),
+                    subheading2:
+                        "*${"termsNConditionApply".getString(context)}",
+                    image: "assets/flight/flight.jpg",
+                  ))
         ],
       ),
     ));
