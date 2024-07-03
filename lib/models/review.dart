@@ -18,6 +18,9 @@ class Review {
   });
 
   factory Review.fromJson(Map<String, dynamic> json) {
+    if (json["user"] is Map) {
+      json["user"] = json["user"]["name"];
+    }
     return Review(
       id: json["_id"],
       user: json["user"],
