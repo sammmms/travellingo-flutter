@@ -1,17 +1,20 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:travellingo/component/airplane_animation_component.dart';
+import 'package:travellingo/component/my_image_loader.dart';
+import 'package:travellingo/models/flight.dart';
 
-class TicketDetailCard extends StatelessWidget {
-  final Map<String, dynamic> ticketData;
-  const TicketDetailCard({super.key, required this.ticketData});
+class FlightDetailCard extends StatelessWidget {
+  final Flight flight;
+  const FlightDetailCard({super.key, required this.flight});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surfaceBright,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -30,34 +33,25 @@ class TicketDetailCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Text(
-                //   ticketData['destination'] ?? 'Unknown Castle',
-                //   style: const TextStyle(
-                //     fontWeight: FontWeight.bold,
-                //     fontSize: 18,
-                //     color: Colors.black,
-                //   ),
-                // ),
-                Image.network(
-                  ticketData["image"],
-                  width: 50,
+                MyImageLoader(
+                  url: flight.pictureLink,
+                  fit: BoxFit.cover,
+                  width: 30,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "\$${(ticketData['price'] ?? 0).toStringAsFixed(2)}",
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                      DateFormat("d MMMM yy").format(flight.departureTime),
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "${ticketData['available'] ?? '0'} tickets remaining",
-                      style: const TextStyle(
-                        color: Colors.red,
+                      "${flight.availableSeats} tickets remaining",
+                      style: TextStyle(
+                        color: flight.availableSeats < 30
+                            ? Colors.red
+                            : Theme.of(context).colorScheme.onSurface,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -68,47 +62,44 @@ class TicketDetailCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      ticketData['origin'] ?? 'Unknown',
+                      flight.departure,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      "${ticketData['departureTime'] ?? 'Unknown'}",
+                      DateFormat("hh:mm").format(flight.departureTime),
                       style: const TextStyle(
-                        color: Colors.grey,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(width: 12),
-                const Icon(Icons.circle, color: Color(0xFF3E84A8), size: 8),
-                const SizedBox(width: 8),
-                const AirplaneAnimation(),
-                const SizedBox(width: 8),
-                const Icon(Icons.circle, color: Color(0xFF3E84A8), size: 8),
-                const SizedBox(width: 12),
+                const Row(
+                  children: [
+                    AirplaneAnimation(),
+                  ],
+                ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      ticketData['destination'] ?? 'Unknown',
+                      flight.arrival,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      "${ticketData['arrivalTime'] ?? 'Unknown'}",
+                      DateFormat("hh:mm").format(flight.arrivalTime),
                       style: const TextStyle(
-                        color: Colors.grey,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -123,28 +114,23 @@ class TicketDetailCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF28527A),
+                    color: Theme.of(context).colorScheme.surfaceTint,
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Row(
                     children: [
                       Transform.rotate(
                         angle: pi / 4,
-                        child: const Icon(Icons.airplanemode_active,
-                            color: Colors.white, size: 16),
+                        child: Icon(Icons.airplanemode_active,
+                            color: Theme.of(context).colorScheme.onSurface,
+                            size: 16),
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "${ticketData['transport'] ?? 'Unknown'}",
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 12),
-                      )
                     ],
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  "Duration ${ticketData['duration'] ?? 'Unknown'}",
+                  "Duration ${flight.duration.inHours}h ${flight.duration.inMinutes.remainder(60)}m",
                   style:
                       const TextStyle(fontSize: 10, color: Color(0xFF88879C)),
                 ),
@@ -153,7 +139,7 @@ class TicketDetailCard extends StatelessWidget {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5D161),
+                    color: Theme.of(context).colorScheme.primary,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: IconButton(
