@@ -17,6 +17,7 @@ import 'package:travellingo/models/place.dart';
 import 'package:travellingo/pages/cart/cart_page.dart';
 import 'package:travellingo/pages/home/widget/home_filter_chip.dart';
 import 'package:travellingo/pages/home/widget/home_carousel.dart';
+import 'package:travellingo/pages/home/widget/home_nearby.dart';
 import 'package:travellingo/pages/home/widget/my_search_bar.dart';
 import 'package:travellingo/pages/home/widget/label_heading.dart';
 import 'package:travellingo/pages/home/widget/see_all.dart';
@@ -49,19 +50,33 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    bool firstSearchInit = true;
+    bool firstFilterInit = true;
     currentTime = timePicker(DateTime.now().hour);
 
     _searchStream
         .debounceTime(const Duration(milliseconds: 500))
         .listen((event) {
+      if (firstSearchInit) {
+        firstSearchInit = false;
+        return;
+      }
+
       _bloc.getPlace(filter: _filterStream.value, search: event);
     });
 
     _filterStream
         .debounceTime(const Duration(milliseconds: 500))
         .listen((event) {
+      if (firstFilterInit) {
+        firstFilterInit = false;
+        return;
+      }
       _bloc.getPlace(filter: event, search: _searchStream.value);
     });
+
+    Store.getChoosenCity().then((value) =>
+        _selectedCity.add(value ?? indonesiaAirport[0]["kodeBandara"]!));
 
     _bloc.getPlace();
     _cartBloc.getCart();
@@ -130,7 +145,7 @@ class _HomePageState extends State<HomePage> {
               SliverList(
                 delegate: SliverChildListDelegate.fixed([
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 20),
                     child: Column(
                       children: [
                         MySearchBar(
