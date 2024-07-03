@@ -1,19 +1,25 @@
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:travellingo/component/success_dialog_component.dart';
-import 'package:travellingo/pages/checkout/widget/checkout_alert_card.dart';
+import 'package:travellingo/models/flight.dart';
+import 'package:travellingo/pages/flight/flight_detail/flight_detail_page.dart';
 import 'package:travellingo/pages/flight/select_seat/widget/seat_passenger_card.dart';
 import 'package:travellingo/pages/dashboard_page.dart';
 import 'package:travellingo/utils/dummy_data.dart';
 
 class SelectSeatPage extends StatefulWidget {
-  const SelectSeatPage({super.key});
+  final Flight flight;
+  final List<Passenger> passengers;
+  const SelectSeatPage(
+      {super.key, required this.passengers, required this.flight});
+
   @override
   State<SelectSeatPage> createState() => _SelectSeatPageState();
 }
 
 class _SelectSeatPageState extends State<SelectSeatPage> {
+  int _currentPassenger = 0;
 // Contoh kursi yang terisi
   List<String> selectedSeats = [];
 
@@ -22,31 +28,35 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           'selectSeat'.getString(context),
-          style: GoogleFonts.dmSans(
-            textStyle: const TextStyle(
-              color: Color(0xFF292F2E),
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            const CheckoutAlertCard(),
-            const SizedBox(
-              height: 20,
+            CarouselSlider.builder(
+              options: CarouselOptions(
+                enableInfiniteScroll: false,
+                padEnds: true,
+                height: 100,
+                viewportFraction: 0.9,
+                onPageChanged: (index, reason) {
+                  _currentPassenger = index;
+                },
+              ),
+              itemCount: widget.passengers.length,
+              itemBuilder: (context, index, _) => SeatPassengerCard(
+                flight: widget.flight,
+                passenger: widget.passengers[index],
+                selectedSeat: "",
+              ),
             ),
-            const SeatPassengerCard(),
             _buildSeatLegend(context),
             Expanded(child: _buildSeatGrid(context)),
             SizedBox(
@@ -199,8 +209,10 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
               }
 
               if (selectedSeats.contains(seatNumber)) {
+                widget.passengers[_currentPassenger].seat = "";
                 selectedSeats.remove(seatNumber);
               } else {
+                widget.passengers[_currentPassenger].seat = seatNumber;
                 selectedSeats.add(seatNumber);
               }
             });
