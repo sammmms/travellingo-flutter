@@ -15,10 +15,13 @@ class MyNoDataComponent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset("assets/lottie/empty_animation.json"),
+            Lottie.asset(
+              width: 200,
+              "assets/lottie/empty_animation.json",
+            ),
             Text(label == null
                 ? "noData".getString(context)
-                : "noItemInCart".getString(context)),
+                : label!.getString(context)),
             if (onRefresh != null) ...[
               const SizedBox(
                 height: 20,
