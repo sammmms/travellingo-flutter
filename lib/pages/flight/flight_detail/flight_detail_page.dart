@@ -1,46 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:provider/provider.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
+import 'package:travellingo/bloc/auth/auth_state.dart';
+import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/models/flight.dart';
 import 'package:travellingo/pages/flight/select_seat/select_seat_page.dart';
-import 'package:travellingo/pages/flight/ticket_detail/widget/passenger_detail_card.dart';
-import 'package:travellingo/pages/flight/ticket_detail/widget/ticket_detail_card.dart';
+import 'package:travellingo/pages/flight/flight_detail/widget/passenger_detail_card.dart';
+import 'package:travellingo/pages/flight/flight_detail/widget/flight_detail_card.dart';
+import 'package:travellingo/pages/login/login_page.dart';
+import 'package:travellingo/utils/format_currency.dart';
+import 'package:travellingo/utils/identity_util.dart';
 
-class TicketDetailPage extends StatefulWidget {
-  final Map<String, dynamic>? data; // Data can be null
+class Passenger {
+  String identityNumber;
+  String fullName;
+  IdentityType identityType;
+  String seat;
 
-  const TicketDetailPage(
-      {super.key, this.data}); // Constructor can receive null data
-
-  @override
-  State<TicketDetailPage> createState() => _TicketDetailPageState();
+  Passenger({
+    this.identityNumber = "",
+    this.fullName = "",
+    this.identityType = IdentityType.idCard,
+    this.seat = "",
+  });
 }
 
-class _TicketDetailPageState extends State<TicketDetailPage> {
-  late Map<String, dynamic> ticketData; // Variable to store ticket data
+class FlightDetailPage extends StatefulWidget {
+  final Flight flight;
+
+  const FlightDetailPage(
+      {super.key, required this.flight}); // Constructor can receive null data
+
+  @override
+  State<FlightDetailPage> createState() => _FlightDetailPageState();
+}
+
+class _FlightDetailPageState extends State<FlightDetailPage> {
+  late AuthBloc authBloc;
   late List<bool> _isExpanded;
+  late List<Passenger> _passengerControllers;
 
   @override
   void initState() {
+    authBloc = context.read<AuthBloc>();
     super.initState();
+    _passengerControllers = [Passenger()];
     _isExpanded = [true];
-    // If data is null or not complete, use default data
-    ticketData = widget.data ??
-        {
-          "castleName": "Himeji Castle",
-          "departure": "KOBE",
-          "arrival": "HCL",
-          "departureTime": "12:00 PM",
-          "arrivalTime": "01:15 PM",
-          "duration": "1h 15m",
-          "price": 475.22,
-          "ticketsLeft": "2",
-          "passengerCount": 1,
-          "transport": "Aircraft"
-        };
   }
 
   void _addNewPassengerPanel() {
     setState(() {
+      _passengerControllers.add(Passenger());
       _isExpanded.add(false); // Add new passenger in collapsed state
     });
   }
@@ -49,18 +61,12 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           'ticketDetails'.getString(context),
-          style: const TextStyle(
-            color: Color(0xFF292F2E),
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
         ),
         scrolledUnderElevation: 0,
       ),
@@ -71,28 +77,42 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(children: [
-                  TicketDetailCard(ticketData: ticketData),
+                  FlightDetailCard(
+                    flight: widget.flight,
+                  ),
                   const SizedBox(height: 20),
                   Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Icon(Icons.favorite, color: Color(0xFF3E84A8)),
-                          const SizedBox(width: 8),
-                          Text(
-                            "passengers".getString(context),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                              color: Color(0xFF3E84A8),
-                            ),
-                          ),
-                        ],
-                      ),
+                      StreamBuilder<AuthState>(
+                          stream: authBloc.controller,
+                          builder: (context, snapshot) {
+                            if (!(snapshot.data?.isAuthenticated ?? false)) {
+                              return const SizedBox();
+                            }
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(Icons.favorite,
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "passengers".getString(context),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                       const SizedBox(
                           height: 8), // Add space between the containers
-                      const PassengerDetailCard()
+                      PassengerDetailCard(
+                        onAdd: () {},
+                      )
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -103,15 +123,16 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                         children: [
                           Row(
                             children: [
-                              const Icon(Icons.people,
-                                  color: Color(0xFF3E84A8)),
+                              Icon(Icons.people,
+                                  color:
+                                      Theme.of(context).colorScheme.tertiary),
                               const SizedBox(width: 8),
                               Text(
                                 "passengersDetails".getString(context),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
-                                  color: Color(0xFF3E84A8),
+                                  color: Theme.of(context).colorScheme.tertiary,
                                 ),
                               ),
                             ],
@@ -149,23 +170,14 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '/PERSON',
-                      style: TextStyle(
-                        color: Color(0xFF6B7B78),
-                        fontSize: 10,
-                      ),
+                      '${'price'.getString(context)} / ${'person'.getString(context)}',
                     ),
                     Text(
-                      '\$475.22',
-                      style: TextStyle(
-                        color: Color(0xFF292F2E),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      formatToIndonesiaCurrency(widget.flight.price),
                     ),
                   ],
                 ),
@@ -184,16 +196,39 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                         const Size(171, 48)), // Set the button's size
                   ),
                   onPressed: () {
+                    if (!(authBloc.controller.valueOrNull?.isAuthenticated ??
+                        false)) {
+                      showMySnackBar(
+                          context, "loginFirst", SnackbarStatus.nothing);
+                      Navigator.push(
+                          context, slideInFromBottom(const LoginPage()));
+                      return;
+                    }
+
+                    if (_passengerControllers.first.fullName.isEmpty ||
+                        _passengerControllers.first.identityNumber.isEmpty) {
+                      showMySnackBar(
+                          context, "fillPassengerData", SnackbarStatus.nothing);
+                      return;
+                    }
+
                     Navigator.push(
                       context,
                       slideInFromBottom(
-                        const SelectSeatPage(),
+                        SelectSeatPage(
+                          flight: widget.flight,
+                          passengers: _passengerControllers
+                              .where((element) =>
+                                  element.fullName.isNotEmpty ||
+                                  element.identityNumber.isNotEmpty)
+                              .toList(),
+                        ),
                       ),
                     );
                   },
-                  child: const Text(
-                    'Select Seat',
-                    style: TextStyle(
+                  child: Text(
+                    'selectSeat'.getString(context),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -208,9 +243,6 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
 
   Widget _buildPassengerPanel(int index) {
     return Card(
-      surfaceTintColor: Colors.white,
-      color: Colors.white,
-      shadowColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         side: BorderSide(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(16),
@@ -223,19 +255,14 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
           initiallyExpanded: _isExpanded[index],
           title: Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.emoji_emotions_outlined,
-                color: Color(0xFF3E84A8),
+                color: Theme.of(context).colorScheme.tertiary,
                 size: 24,
               ),
               const SizedBox(width: 8),
               Text(
                 "${'passenger'.getString(context)} ${index + 1}",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Color(0xFF3E84A8),
-                ),
               ),
             ],
           ),
@@ -249,74 +276,86 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
-                        child: DropdownButtonFormField<String>(
+                        child: DropdownButtonFormField<IdentityType>(
                           decoration: const InputDecoration(
                             hintText: '',
                             hintStyle: TextStyle(height: 2.2),
                           ),
-                          value: 'Passport',
+                          value: _passengerControllers[index].identityType,
                           selectedItemBuilder: (context) {
-                            return ['Passport', 'ID Card', 'Driver License']
-                                .map((String value) => DropdownMenuItem<String>(
+                            return IdentityType.values
+                                .map((IdentityType value) =>
+                                    DropdownMenuItem<IdentityType>(
                                       value: value,
                                       child: SizedBox(
                                         width: 40,
                                         child: Text(
-                                          value,
+                                          IdentityTypeUtil.getString(value),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ))
                                 .toList();
                           },
-                          items: ['Passport', 'ID Card', 'Driver License']
-                              .map((String value) => DropdownMenuItem<String>(
+                          items: IdentityType.values
+                              .map((IdentityType value) =>
+                                  DropdownMenuItem<IdentityType>(
                                     value: value,
                                     child: SizedBox(
                                       width: 80,
                                       child: Text(
-                                        value,
+                                        IdentityTypeUtil.getString(value),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ))
                               .toList(),
-                          onChanged: (newValue) {},
+                          onChanged: (newValue) {
+                            setState(() {
+                              _passengerControllers[index].identityType =
+                                  newValue!;
+                            });
+                          },
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         flex: 2,
                         child: TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Identity number',
+                          decoration: InputDecoration(
+                            labelText: 'identityNumber'.getString(context),
                             hintText: '',
-                            hintStyle: TextStyle(height: 2.2),
+                            hintStyle: const TextStyle(height: 2.2),
                           ),
+                          onChanged: (value) {
+                            _passengerControllers[index].identityNumber = value;
+                          },
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Full name',
+                    decoration: InputDecoration(
+                      labelText: 'fullName'.getString(context),
                       hintText: '',
-                      hintStyle: TextStyle(height: 2.2),
+                      hintStyle: const TextStyle(height: 2.2),
                     ),
+                    onChanged: (value) {
+                      _passengerControllers[index].fullName = value;
+                    },
                   ),
                   const SizedBox(height: 24),
                   Text(
                     "passengerWarning".getString(context),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
-                      color: Colors.grey[600],
                     ),
                   ),
                   Text(
                     "passengerWarning2".getString(context),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12,
-                      color: Colors.grey[600],
                     ),
                   ),
                 ],
