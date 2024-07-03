@@ -65,6 +65,7 @@ class _CartPageState extends State<CartPage> {
                   bool noItemAvailable = state.data?.items.isEmpty ?? true;
                   if (noItemAvailable) {
                     return MyNoDataComponent(
+                      label: "noItemInCart",
                       onRefresh: () {
                         bloc.getCart();
                       },
