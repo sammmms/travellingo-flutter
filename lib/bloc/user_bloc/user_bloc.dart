@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -30,6 +28,7 @@ class UserBloc {
       }
       return;
     }
+    if (kDebugMode) print('update user stream');
     controller.sink.add(state);
   }
 
