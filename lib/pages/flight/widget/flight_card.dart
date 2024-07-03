@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FlightCard extends StatelessWidget {
+  // final Flight flight;
   const FlightCard({super.key});
 
   @override
