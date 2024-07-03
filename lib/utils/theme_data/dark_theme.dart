@@ -102,17 +102,18 @@ TextTheme textStyleDark = TextTheme(
 ).apply(fontFamily: 'Poppins');
 
 ColorScheme colorSchemeDark = ColorScheme(
-  brightness: Brightness.dark,
-  primary: const Color(0xFFF5D161),
-  onPrimary: Colors.black,
-  primaryContainer: Colors.orangeAccent.shade200,
-  secondary: Colors.yellow,
-  onSecondary: Colors.black,
-  error: Colors.redAccent.shade200,
-  onError: Colors.black,
-  surface: const Color(0xFF1E1E1E),
-  surfaceTint: const Color.fromARGB(255, 59, 59, 59),
-  surfaceDim: const Color.fromARGB(255, 63, 63, 63),
-  surfaceBright: const Color(0xFF2C2C2C),
-  onSurface: const Color(0xFFE0E0E0),
-);
+    brightness: Brightness.dark,
+    primary: const Color(0xFFF5D161),
+    onPrimary: Colors.black,
+    primaryContainer: Colors.orangeAccent.shade200,
+    secondary: Colors.yellow,
+    onSecondary: Colors.black,
+    error: Colors.redAccent.shade200,
+    onError: Colors.black,
+    surface: const Color(0xFF1E1E1E),
+    surfaceTint: const Color.fromARGB(255, 59, 59, 59),
+    surfaceDim: const Color.fromARGB(255, 63, 63, 63),
+    surfaceBright: const Color(0xFF2C2C2C),
+    onSurface: const Color(0xFFE0E0E0),
+    tertiary: Colors.cyan.shade100,
+    tertiaryContainer: Colors.cyan.shade600);

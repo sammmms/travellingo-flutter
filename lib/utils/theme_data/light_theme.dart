@@ -100,16 +100,17 @@ TextTheme textStyle = TextTheme(
 ).apply(fontFamily: 'Poppins');
 
 ColorScheme colorScheme = ColorScheme(
-  brightness: Brightness.light,
-  primary: const Color(0xFFF5D161),
-  onPrimary: Colors.white,
-  primaryContainer: Colors.orangeAccent.shade200,
-  secondary: Colors.yellow,
-  onSecondary: Colors.white,
-  error: Colors.redAccent.shade200,
-  onError: Colors.white,
-  surface: Colors.white,
-  surfaceTint: const Color.fromARGB(255, 247, 247, 247),
-  surfaceDim: const Color.fromARGB(255, 243, 243, 243),
-  onSurface: const Color.fromRGBO(27, 20, 70, 1),
-);
+    brightness: Brightness.light,
+    primary: const Color(0xFFF5D161),
+    onPrimary: Colors.white,
+    primaryContainer: Colors.orangeAccent.shade200,
+    secondary: Colors.yellow,
+    onSecondary: Colors.white,
+    error: Colors.redAccent.shade200,
+    onError: Colors.white,
+    surface: Colors.white,
+    surfaceTint: const Color.fromARGB(255, 247, 247, 247),
+    surfaceDim: const Color.fromARGB(255, 243, 243, 243),
+    onSurface: const Color.fromRGBO(27, 20, 70, 1),
+    tertiary: Colors.cyan.shade400,
+    tertiaryContainer: Colors.cyan.shade100);

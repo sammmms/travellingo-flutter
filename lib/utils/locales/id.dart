@@ -115,7 +115,9 @@ const Map<String, String> idLanguage = {
   "getAttractivePromo": "Dapatkan promo menarik",
   "discount": "Diskon",
   "forNewUsers": "Untuk pengguna baru",
+  "noFlightAvailable": "Tidak ada penerbangan yang tersedia",
   "termsNConditionApply": "Syarat dan Ketentuan berlaku",
+  "fillPassengerData": "Isi data penumpang",
 
   // Ticket List
   "ticketList": "Daftar Tiket",
@@ -220,8 +222,11 @@ const Map<String, String> idLanguage = {
   "noReviewYet": "Belum ada ulasan",
   "placeDetail": "Detail Tempat",
   "reviews": "Ulasan",
+  "bookNow": "Pesan Sekarang",
+  "price": "Harga",
 
   // Util
+  "loginFirst": "Harap login terlebih dahulu",
   "noData": "Tidak ada data",
   "clickToRefresh": "Tekan untuk refresh",
   "pleaseRefreshpage": "Harap muat ulang halaman ini"

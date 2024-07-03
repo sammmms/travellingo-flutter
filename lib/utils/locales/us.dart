@@ -115,7 +115,9 @@ const Map<String, String> usLanguage = {
   "getAttractivePromo": "Get Attractive Promo",
   "discount": "Discount",
   "forNewUsers": "For new users",
+  "noFlightAvailable": "No flight available",
   "termsNConditionApply": "Terms and Condition apply",
+  "fillPassengerData": "Please fill in the passenger data",
 
   // Ticket List
   "ticketList": "Ticket Lists",
@@ -220,8 +222,11 @@ const Map<String, String> usLanguage = {
   "noReviewYet": "No review",
   "placeDetail": "Place Detail",
   "reviews": "Reviews",
+  "bookNow": "Book Now",
+  "price": "Price",
 
   // Util
+  "loginFirst": "Please login first",
   "noData": "No data",
   "clickToRefresh": "Click to refresh",
   "pleaseRefreshpage": "Please refresh this page"
