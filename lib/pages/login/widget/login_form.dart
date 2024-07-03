@@ -26,7 +26,7 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  TextEditingController email = TextEditingController();
+  final TextEditingController _emailTEC = TextEditingController();
   final TextEditingController _passwordTEC = TextEditingController();
   final emailregex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
   final _biometricsAvailable = BehaviorSubject<bool>.seeded(false);
@@ -48,7 +48,7 @@ class _LoginFormState extends State<LoginForm> {
       // Get the email from shared preferences
       Map<String, dynamic> loginPreferences = await Store.getLoginPreferences();
       if (loginPreferences["isTicked"]) {
-        email.text = loginPreferences["email"];
+        _emailTEC.text = loginPreferences["email"];
         _haveLoggedIn = loginPreferences["haveLoggedIn"];
         _isTicked.add(true);
       }
@@ -62,7 +62,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   void dispose() {
-    email.dispose();
+    _emailTEC.dispose();
     _passwordTEC.dispose();
     super.dispose();
   }
@@ -100,7 +100,7 @@ class _LoginFormState extends State<LoginForm> {
                           height: 10,
                         ),
                         TextFormField(
-                          controller: email,
+                          controller: _emailTEC,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (value == null || value == "") {
@@ -317,27 +317,7 @@ class _LoginFormState extends State<LoginForm> {
           localizedReason: "authenticateToLogin".getString(context));
       if (didAuthenticate) {
         if (context.mounted) {
-          await bloc.login(
-            context,
-            prefs.getString("email") ?? "",
-            prefs.getString("password") ?? "",
-          );
-
-          String? token = await Store.getToken();
-
-          if (token == null) {
-            if (!context.mounted) return;
-            showMySnackBar(context, "somethingWrongWithAuthentication");
-            return;
-          }
-
-          await Store.saveLoginPreferences(
-              _isTicked.value,
-              prefs.getString("email") ?? "",
-              prefs.getString("password") ?? "");
-
-          if (!context.mounted) return;
-          Navigator.pop(context);
+          _tryLogin(prefs.getString("email"), prefs.getString("password"));
         }
       }
     } on PlatformException {
@@ -368,27 +348,30 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
-  Future<void> _tryLogin() async {
-    try {
-      await bloc.login(context, email.text, _passwordTEC.text);
+  Future<void> _tryLogin([String? email, String? password]) async {
+    AppError? error = await bloc.login(
+        context, email ?? _emailTEC.text, password ?? _passwordTEC.text);
 
-      String? token = await Store.getToken();
+    if (!mounted) return;
 
-      await Store.saveLoginPreferences(
-          _isTicked.value, email.text, _passwordTEC.text);
-
-      if (!mounted) return;
-      if (token == null) {
-        showMySnackBar(
-            context, "somethingWrongWithAuthentication", SnackbarStatus.failed);
-        return;
-      }
-
-      Navigator.pop(context);
-    } catch (err) {
-      var error = err as AppError?;
-      showMySnackBar(
-          context, error?.message ?? "somethingWrong", SnackbarStatus.failed);
+    if (error != null) {
+      showMySnackBar(context, error.message, SnackbarStatus.failed);
+      return;
     }
+
+    String? token = await Store.getToken();
+
+    await Store.saveLoginPreferences(_isTicked.value, email ?? _emailTEC.text,
+        password ?? _passwordTEC.text);
+
+    if (!mounted) return;
+
+    if (token == null) {
+      showMySnackBar(
+          context, "somethingWrongWithAuthentication", SnackbarStatus.failed);
+      return;
+    }
+
+    Navigator.pop(context);
   }
 }
