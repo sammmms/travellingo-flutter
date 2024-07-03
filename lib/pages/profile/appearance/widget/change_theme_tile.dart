@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/theme/theme_bloc.dart';
 import 'package:travellingo/bloc/theme/theme_state.dart';
@@ -28,7 +29,7 @@ class _ChangeThemeSwitchTileState extends State<ChangeThemeSwitchTile> {
 
         return SwitchListTile(
           contentPadding: const EdgeInsets.all(0),
-          title: const Text("Theme"),
+          title: Text("theme".getString(context)),
           inactiveThumbImage: const AssetImage('assets/images/Sun.png'),
           inactiveTrackColor: Colors.yellow[100],
           inactiveThumbColor: Colors.yellow[100],
