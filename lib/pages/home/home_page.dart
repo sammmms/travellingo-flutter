@@ -372,7 +372,59 @@ class _HomePageState extends State<HomePage> {
               SeeAllButton(),
             ],
           ),
+          const SizedBox(
+            height: 10,
+          ),
+          _buildNearbyPlace()
         ]);
+  }
+
+  Widget _buildNearbyPlace() {
+    return StreamBuilder<PlaceState>(
+        stream: _bloc.controller,
+        builder: (context, snapshot) {
+          List<Place> places = snapshot.data?.data ?? [];
+          if (places.isEmpty) {
+            return const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: MyShimmer(width: double.infinity, height: 200));
+          }
+          return StreamBuilder<String>(
+              stream: _selectedCity,
+              initialData: indonesiaAirport[0]["kodeBandara"],
+              builder: (context, snapshot) {
+                int indexOf = indonesiaAirport.indexWhere(
+                    (element) => element["kodeBandara"] == snapshot.data);
+                if (indexOf == -1) {
+                  return const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: MyShimmer(width: double.infinity, height: 200));
+                }
+
+                String city = indonesiaAirport[indexOf]["kota"]!;
+
+                List<Place> filteredPlace =
+                    places.where((element) => element.city == city).toList();
+
+                if (filteredPlace.isEmpty) {
+                  return const MyNoDataComponent(
+                      label: "Belum ada tempat wisata di kota ini");
+                }
+
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: filteredPlace
+                        .map((e) => HomeNearby(
+                              place: e,
+                              onTap: () => Navigator.push(context,
+                                  slideInFromRight(PlaceDetailPage(place: e))),
+                            ))
+                        .toList(),
+                  ),
+                );
+              });
+        });
   }
 
   Widget _buildCityDropdown() {
@@ -384,10 +436,14 @@ class _HomePageState extends State<HomePage> {
             child: DropdownButton<String>(
               borderRadius: BorderRadius.circular(10),
               isDense: true,
-              onChanged: (String? value) {
+              onChanged: (String? value) async {
                 _selectedCity.add(value!);
+                await Store.saveChoosenCity(value);
               },
-              padding: const EdgeInsets.only(top: 5),
+              dropdownColor: Colors.white.withAlpha(245),
+              padding: EdgeInsets.zero,
+              menuMaxHeight: 300,
+              elevation: 0,
               icon: const Icon(Icons.keyboard_arrow_down_rounded),
               value: snapshot.data,
               items: indonesiaAirport
