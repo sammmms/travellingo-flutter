@@ -78,7 +78,7 @@ class FlightCardImage extends StatelessWidget {
                 style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w800,
-                    fontSize: 10),
+                    fontSize: 8),
               ),
             ),
         ],
