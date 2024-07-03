@@ -23,7 +23,7 @@ import 'package:travellingo/pages/home/widget/see_all.dart';
 import 'package:travellingo/pages/home/widget/transport_button.dart';
 import 'package:travellingo/pages/flight/flight_page.dart';
 import 'package:travellingo/pages/login/login_page.dart';
-import 'package:travellingo/pages/place_detail_page.dart';
+import 'package:travellingo/pages/place_detail/place_detail_page.dart';
 import 'package:travellingo/utils/dummy_data.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
 import 'package:travellingo/utils/place_category_util.dart';
