@@ -46,34 +46,44 @@ class _AirplaneAnimationState extends State<AirplaneAnimation>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Row(
       children: [
-        // Background bar
-        Container(
-          color: Colors.white,
-          height: 50, // Height of the bar
-          width: 100, // Full width
-          child: CustomPaint(
-            painter: DottedLinePainter(),
-          ),
-        ),
-        // Airplane
-        AnimatedBuilder(
-          animation: _animation,
-          builder: (context, child) {
-            return Positioned(
-              left: _animation.value * 80,
-              top: 17, // Adjust to vertically center the airplane in the bar
-              child: Transform.rotate(
-                angle: _controller.status == AnimationStatus.forward
-                    ? pi / 2
-                    : 3 * pi / 2,
-                child: const Icon(Icons.airplanemode_active,
-                    color: Color(0xFF3E84A8), size: 16),
+        Icon(Icons.circle,
+            color: Theme.of(context).colorScheme.tertiary, size: 8),
+        Stack(
+          children: [
+            // Background bar
+            Container(
+              color: Colors.transparent,
+              height: 50, // Height of the bar
+              width: 100,
+              child: CustomPaint(
+                painter: DottedLinePainter(),
               ),
-            );
-          },
+            ),
+            // Airplane
+            AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return Positioned(
+                  left: _animation.value * 80,
+                  top:
+                      17, // Adjust to vertically center the airplane in the bar
+                  child: Transform.rotate(
+                    angle: _controller.status == AnimationStatus.forward
+                        ? pi / 2
+                        : 3 * pi / 2,
+                    child: Icon(Icons.airplanemode_active,
+                        color: Theme.of(context).colorScheme.tertiary,
+                        size: 16),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
+        Icon(Icons.circle,
+            color: Theme.of(context).colorScheme.tertiary, size: 8),
       ],
     );
   }
