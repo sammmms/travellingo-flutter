@@ -7,6 +7,7 @@ import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/auth/auth_state.dart';
 import 'package:travellingo/bloc/theme/theme_bloc.dart';
 import 'package:travellingo/bloc/theme/theme_state.dart';
+import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
 import 'package:travellingo/pages/dashboard_page.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/splash_page.dart';
@@ -26,20 +27,24 @@ void main() async {
     print('BASE_URL: ${dotenv.env['BASE_URL']}');
   }
 
+  // USER BLOC
+  final userBloc = UserBloc();
+
   // AUTH BLOC
-  final authBloc = AuthBloc();
+  final authBloc = AuthBloc(userBloc);
 
   // THEME BLOC
   final themeBloc = ThemeBloc()..initThemeStream();
 
   await authBloc.checkLogin();
 
-  FlutterNativeSplash.remove();
-
   Widget app = MultiProvider(
     providers: [
       Provider<AuthBloc>.value(
         value: authBloc,
+      ),
+      Provider<UserBloc>.value(
+        value: userBloc,
       ),
       Provider<ThemeBloc>.value(
         value: themeBloc,
