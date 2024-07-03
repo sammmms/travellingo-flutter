@@ -6,6 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/auth/auth_state.dart';
+import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
+import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/utils/error_print.dart';
 import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/utils/app_error.dart';
@@ -14,9 +16,15 @@ class AuthBloc {
   final BehaviorSubject<AuthState> controller =
       BehaviorSubject<AuthState>.seeded(AuthState.initial());
 
+  late UserBloc userBloc;
+
   final dio = Dio(BaseOptions(
     baseUrl: dotenv.env['BASE_URL']!,
   ));
+
+  AuthBloc(this.userBloc) {
+    dio.interceptors.add(TokenInterceptor());
+  }
 
   void _updateStream(AuthState state) {
     if (controller.isClosed) {
@@ -53,6 +61,8 @@ class AuthBloc {
       // SAVE TOKEN
       Store.saveToken(token);
 
+      userBloc.getUser();
+
       _updateStream(AuthState.isAuthenticated());
       return null;
     } catch (err) {
@@ -87,9 +97,11 @@ class AuthBloc {
     if (token != null) {
       Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
       if (decodedToken['exp'] > DateTime.now().millisecondsSinceEpoch / 1000) {
+        userBloc.getUser();
         return _updateStream(AuthState.isAuthenticated());
       }
     }
+    Store.removeToken();
     return _updateStream(AuthState.initial());
   }
 
