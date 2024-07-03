@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/pages/flight/flight_list/flight_list_page.dart';
 import 'package:travellingo/pages/flight/widget/button_choice.dart';
 import 'package:travellingo/pages/flight/widget/location_choice.dart';
-import 'package:travellingo/pages/flight/ticket_list/ticket_list_page.dart';
-import 'package:travellingo/utils/airplane_class_util.dart';
+import 'package:travellingo/utils/flight_class_util.dart';
 import 'package:travellingo/utils/date_converter.dart';
+import 'package:travellingo/utils/dummy_data.dart';
 
 class FlightChoice extends StatefulWidget {
   const FlightChoice({super.key});
@@ -16,15 +17,21 @@ class FlightChoice extends StatefulWidget {
 }
 
 class _FlightChoiceState extends State<FlightChoice> {
-  ValueNotifier<String> from = ValueNotifier<String>("Kobe");
-  ValueNotifier<String> to = ValueNotifier<String>("Himeji Castle");
+  final _departureCity = BehaviorSubject<String>();
+  final _arrivalCity = BehaviorSubject<String>();
   final pickedDate = BehaviorSubject<DateTime>.seeded(DateTime.now());
   final passengerCount = BehaviorSubject<int>.seeded(1);
-  final flightClass =
-      BehaviorSubject<AirplaneClass>.seeded(AirplaneClass.economy);
+  final flightClass = BehaviorSubject<FlightClass>.seeded(FlightClass.economy);
 
   @override
   void initState() {
+    _departureCity.add(indonesiaAirport.first["kodeBandara"]!);
+    _arrivalCity.add(indonesiaAirport.last["kodeBandara"]!);
+
+    _arrivalCity.listen((event) {
+      _departureCity.add(_departureCity.value);
+    });
+
     super.initState();
   }
 
@@ -47,7 +54,31 @@ class _FlightChoiceState extends State<FlightChoice> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          FlightLocationChoice(from: from, to: to),
+          StreamBuilder<String>(
+              stream: _departureCity,
+              builder: (context, snapshot) {
+                String from =
+                    snapshot.data ?? indonesiaAirport.first["kodeBandara"]!;
+                String to = _arrivalCity.valueOrNull ??
+                    indonesiaAirport.last["kodeBandara"]!;
+
+                return FlightLocationChoice(
+                  from: from,
+                  to: to,
+                  onChangedDeparture: (String? departureCity) {
+                    if (departureCity == _arrivalCity.valueOrNull) {
+                      _arrivalCity.add(_departureCity.value);
+                    }
+                    _departureCity.add(departureCity!);
+                  },
+                  onChangedArrival: (String? arrivalCity) {
+                    if (arrivalCity == _departureCity.valueOrNull) {
+                      _departureCity.add(_arrivalCity.value);
+                    }
+                    _arrivalCity.add(arrivalCity!);
+                  },
+                );
+              }),
           const SizedBox(height: 12),
           _buildDropdownDatetime(),
           const SizedBox(height: 12),
@@ -63,10 +94,10 @@ class _FlightChoiceState extends State<FlightChoice> {
                 const SizedBox(
                   width: 10,
                 ),
-                StreamBuilder<AirplaneClass>(
+                StreamBuilder<FlightClass>(
                     stream: flightClass,
                     builder: (context, snapshot) => _buildDropdownClass(
-                        snapshot.data ?? AirplaneClass.economy)),
+                        snapshot.data ?? FlightClass.economy)),
               ],
             ),
           ),
@@ -90,9 +121,16 @@ class _FlightChoiceState extends State<FlightChoice> {
                 onPressed: () {
                   Navigator.push(
                       context,
-                      slideInFromBottom(TicketListPage(
-                        from: from.value,
-                        to: to.value,
+                      slideInFromBottom(FlightListPage(
+                        from: indonesiaAirport.firstWhere((element) =>
+                            element["kodeBandara"] ==
+                            _departureCity.valueOrNull!)["kota"]!,
+                        to: indonesiaAirport.firstWhere((element) =>
+                            element["kodeBandara"] ==
+                            _arrivalCity.valueOrNull!)["kota"]!,
+                        startDate: pickedDate.valueOrNull!,
+                        passengerCount: passengerCount.valueOrNull!,
+                        flightClass: flightClass.valueOrNull!,
                       )));
                 },
                 child: Padding(
@@ -184,7 +222,7 @@ class _FlightChoiceState extends State<FlightChoice> {
     );
   }
 
-  Widget _buildDropdownClass(AirplaneClass chosen) {
+  Widget _buildDropdownClass(FlightClass chosen) {
     return Expanded(
       child: Container(
         height: 56,
@@ -197,7 +235,7 @@ class _FlightChoiceState extends State<FlightChoice> {
           children: [
             Image.asset("assets/flight/flight_class.png"),
             DropdownButtonHideUnderline(
-              child: DropdownButton<AirplaneClass>(
+              child: DropdownButton<FlightClass>(
                 value: chosen,
                 iconSize: 0,
                 elevation: 16,
@@ -207,13 +245,13 @@ class _FlightChoiceState extends State<FlightChoice> {
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                     fontFamily: 'Poppins'),
-                onChanged: (AirplaneClass? newValue) {
+                onChanged: (FlightClass? newValue) {
                   flightClass.add(newValue!);
                 },
-                items: AirplaneClass.values.map((AirplaneClass value) {
+                items: FlightClass.values.map((FlightClass value) {
                   return DropdownMenuItem(
                     value: value,
-                    child: Text(AirplaneClassUtil.stringFromClass(value)
+                    child: Text(FlightClassUtil.stringFromClass(value)
                         .getString(context)),
                   );
                 }).toList(),

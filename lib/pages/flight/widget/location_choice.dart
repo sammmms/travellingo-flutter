@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:travellingo/utils/dummy_data.dart';
 
-class FlightLocationChoice extends StatefulWidget {
-  final ValueNotifier<String> from;
-  final ValueNotifier<String> to;
+class FlightLocationChoice extends StatelessWidget {
+  final String from;
+  final String to;
+  final Function(String? departureCity) onChangedDeparture;
+  final Function(String? arrivalCity) onChangedArrival;
 
-  const FlightLocationChoice({super.key, required this.from, required this.to});
+  const FlightLocationChoice(
+      {super.key,
+      required this.from,
+      required this.to,
+      required this.onChangedDeparture,
+      required this.onChangedArrival});
 
-  @override
-  State<FlightLocationChoice> createState() => _FlightLocationChoiceState();
-}
-
-class _FlightLocationChoiceState extends State<FlightLocationChoice> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,27 +30,16 @@ class _FlightLocationChoiceState extends State<FlightLocationChoice> {
                     Expanded(
                       child: DropdownButton<String>(
                         isExpanded: true,
-                        value: widget.from.value,
+                        value: from,
+                        menuMaxHeight: 400,
                         borderRadius: BorderRadius.circular(12),
-                        onChanged: (String? newValue) {
-                          if (newValue == widget.to.value) {
-                            widget.to.value = widget.from.value;
-                            widget.from.value = newValue!;
-                          } else {
-                            widget.from.value = newValue!;
-                          }
-                          setState(() {});
-                        },
-                        items: const [
-                          DropdownMenuItem(value: 'Kobe', child: Text('Kobe')),
-                          DropdownMenuItem(
-                              value: 'Osaka', child: Text('Osaka')),
-                          DropdownMenuItem(
-                              value: 'Himeji Castle',
-                              child: Text('Himeji Castle')),
-                          DropdownMenuItem(
-                              value: 'Kyoto', child: Text('Kyoto')),
-                        ],
+                        onChanged: onChangedDeparture,
+                        items: indonesiaAirport
+                            .map((e) => DropdownMenuItem(
+                                value: e["kodeBandara"],
+                                child:
+                                    Text("${e["kota"]} (${e["kodeBandara"]})")))
+                            .toList(),
                       ),
                     ),
                   ],
@@ -60,27 +52,16 @@ class _FlightLocationChoiceState extends State<FlightLocationChoice> {
                     Expanded(
                       child: DropdownButton<String>(
                         isExpanded: true,
+                        menuMaxHeight: 400,
                         borderRadius: BorderRadius.circular(12),
-                        value: widget.to.value,
-                        onChanged: (String? newValue) {
-                          if (newValue == widget.from.value) {
-                            widget.from.value = widget.to.value;
-                            widget.to.value = newValue!;
-                          } else {
-                            widget.to.value = newValue!;
-                          }
-                          setState(() {});
-                        },
-                        items: const [
-                          DropdownMenuItem(
-                              value: 'Himeji Castle',
-                              child: Text('Himeji Castle')),
-                          DropdownMenuItem(
-                              value: 'Kyoto', child: Text('Kyoto')),
-                          DropdownMenuItem(value: 'Kobe', child: Text('Kobe')),
-                          DropdownMenuItem(
-                              value: 'Osaka', child: Text('Osaka')),
-                        ],
+                        value: to,
+                        onChanged: onChangedArrival,
+                        items: indonesiaAirport
+                            .map((e) => DropdownMenuItem(
+                                value: e["kodeBandara"],
+                                child:
+                                    Text("${e["kota"]} (${e["kodeBandara"]})")))
+                            .toList(),
                       ),
                     ),
                   ],
@@ -99,11 +80,7 @@ class _FlightLocationChoiceState extends State<FlightLocationChoice> {
                 ))),
             icon: const Icon(Icons.swap_vert, color: Colors.white),
             onPressed: () {
-              setState(() {
-                var to2 = widget.to.value;
-                widget.to.value = widget.from.value;
-                widget.from.value = to2;
-              });
+              onChangedArrival(from);
             },
           )
         ],
