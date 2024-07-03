@@ -12,7 +12,10 @@ void showMySnackBar(BuildContext context, String text,
         duration: const Duration(milliseconds: 500),
         content: Text(
           text.getString(context),
-          style: Theme.of(context).textTheme.labelLarge,
+          style: Theme.of(context)
+              .textTheme
+              .labelLarge!
+              .copyWith(color: Theme.of(context).colorScheme.onPrimary),
         )));
   });
 }
