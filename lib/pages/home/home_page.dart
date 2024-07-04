@@ -291,10 +291,10 @@ class _HomePageState extends State<HomePage> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          const LabelHeading(
+          LabelHeading(
               icon: Icon(
                 Icons.commute,
-                color: Color.fromRGBO(62, 132, 168, 1),
+                color: Theme.of(context).colorScheme.tertiary,
               ),
               content: "transportationType"),
           const SizedBox(
@@ -455,7 +455,8 @@ class _HomePageState extends State<HomePage> {
                 _selectedCity.add(value!);
                 await Store.saveChoosenCity(value);
               },
-              dropdownColor: Colors.white.withAlpha(245),
+              dropdownColor:
+                  Theme.of(context).colorScheme.surface.withAlpha(245),
               padding: EdgeInsets.zero,
               menuMaxHeight: 300,
               elevation: 0,
