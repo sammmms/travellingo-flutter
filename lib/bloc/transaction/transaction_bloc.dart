@@ -64,4 +64,35 @@ class TransactionBloc {
       _updateError(err);
     }
   }
+
+  Future getMopayId(String phoneNumber) async {
+    try {
+      _updateStream(TransactionState.isLoading());
+      final response = await Dio().get(
+          "https://travellingo-backend.netlify.app/api/mopay/profile/public?phoneNumber=$phoneNumber");
+
+      _updateStream(TransactionState.initial());
+      return response.data["_id"];
+    } catch (err) {
+      printError(err: err, method: "getMopayId");
+      return _updateError(err);
+    }
+  }
+
+  Future<AppError?> checkoutCart(
+      {required List<String> itemsId,
+      required String mopayId,
+      int? additionalPayment}) async {
+    try {
+      await dio.post("/cart/checkout", data: {
+        "checkoutItem": itemsId,
+        "mopayId": mopayId,
+        if (additionalPayment == null) "additionalPayment": additionalPayment,
+      });
+    } catch (err) {
+      printError(err: err, method: "checkoutCart");
+      return _updateError(err);
+    }
+    return null;
+  }
 }
