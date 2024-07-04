@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:svg_flutter/svg.dart';
+import 'package:travellingo/bloc/cart/cart_bloc.dart';
 import 'package:travellingo/bloc/place/place_bloc.dart';
 import 'package:travellingo/bloc/place/place_state.dart';
+import 'package:travellingo/component/my_loading_dialog.dart';
 import 'package:travellingo/component/my_no_data_component.dart';
 import 'package:travellingo/component/my_image_loader.dart';
 import 'package:travellingo/component/error_component.dart';
+import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/models/place.dart';
 import 'package:travellingo/models/review.dart';
 import 'package:travellingo/pages/home/widget/see_all.dart';
+import 'package:travellingo/pages/place_detail/widget/place_category_chip.dart';
+import 'package:travellingo/pages/place_detail/widget/place_review_star.dart';
+import 'package:travellingo/pages/place_detail/widget/quantity_bottom_sheet.dart';
+import 'package:travellingo/utils/app_error.dart';
 import 'package:travellingo/utils/format_currency.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
 import 'package:travellingo/utils/place_category_util.dart';
@@ -23,6 +30,10 @@ class PlaceDetailPage extends StatefulWidget {
 }
 
 class _PlaceDetailPageState extends State<PlaceDetailPage> {
+  final cartBloc = CartBloc();
+  final _backKey = GlobalKey();
+  final _notBackKey = GlobalKey();
+  final result = BoxHitTestResult();
   final bloc = PlaceBloc();
   final _selectedQuantity = BehaviorSubject<int>.seeded(0);
 
@@ -36,6 +47,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
   void dispose() {
     _selectedQuantity.close();
     bloc.dispose();
+    cartBloc.dispose();
     super.dispose();
   }
 
@@ -52,6 +64,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
           Place? place = snapshot.data?.data?.first;
           bool doNotLoadBody = isLoading || hasError || place == null;
           return Scaffold(
+              resizeToAvoidBottomInset: false,
               appBar: doNotLoadBody ? AppBar() : null,
               body: isLoading
                   ? const Center(
@@ -65,11 +78,35 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                         )
                       : doNotLoadBody
                           ? const MyNoDataComponent()
-                          : Stack(
-                              children: [
-                                _buildPlacePicture(place),
-                                _buildPlaceDetail(place),
-                              ],
+                          : Listener(
+                              onPointerUp: (event) {
+                                RenderBox? box = _backKey.currentContext
+                                    ?.findRenderObject() as RenderBox;
+                                Offset boxOffset =
+                                    box.globalToLocal(event.position);
+
+                                // Detect if box has been hit
+                                if (box.hitTest(result, position: boxOffset)) {
+                                  RenderBox? notBackBox = _notBackKey
+                                      .currentContext
+                                      ?.findRenderObject() as RenderBox;
+
+                                  Offset notBackBoxOffset =
+                                      notBackBox.globalToLocal(event.position);
+
+                                  if (!notBackBox.hitTest(result,
+                                      position: notBackBoxOffset)) {
+                                    Navigator.pop(context);
+                                  }
+                                  // Detect if container is on top of the back button
+                                }
+                              },
+                              child: Stack(
+                                children: [
+                                  _buildPlacePicture(place),
+                                  _buildPlaceDetail(place),
+                                ],
+                              ),
                             ),
               bottomSheet: doNotLoadBody ? null : _buildBottomAppBar(place));
         });
@@ -107,105 +144,43 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
               ],
             ),
           ),
-          SizedBox(
-            height: 56,
+          ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 56, minWidth: 160),
             child: ElevatedButton(
               onPressed: () async {
                 bool? proceed = await showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    builder: (context) => Container(
-                          padding: const EdgeInsets.all(20),
-                          color: Theme.of(context).colorScheme.surfaceBright,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                children: [
-                                  MyImageLoader(
-                                      url: place.pictureLink,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                      pictureType: PictureType.link),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(place.name,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineMedium),
-                                        Row(
-                                          children: [
-                                            _buildChip(
-                                                PlaceCategoryUtil.stringOf(
-                                                    place.category)),
-                                            const SizedBox(width: 10),
-                                            _starConstructor(
-                                                place.reviewAverage),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              Text("quantity".getString(context),
-                                  style:
-                                      Theme.of(context).textTheme.labelSmall),
-                              const SizedBox(height: 10),
-                              Row(children: [
-                                IconButton(
-                                  onPressed: () {
-                                    if (_selectedQuantity.value > 0) {
-                                      _selectedQuantity
-                                          .add(_selectedQuantity.value - 1);
-                                    }
-                                  },
-                                  icon: const Icon(Icons.remove),
-                                ),
-                                StreamBuilder<int>(
-                                    stream: _selectedQuantity,
-                                    builder: (context, snapshot) {
-                                      return Text(snapshot.data.toString());
-                                    }),
-                                IconButton(
-                                  onPressed: () {
-                                    _selectedQuantity
-                                        .add(_selectedQuantity.value + 1);
-                                  },
-                                  icon: const Icon(Icons.add),
-                                ),
-                              ]),
-                              const SizedBox(height: 20),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context, true);
-                                },
-                                style: ButtonStyle(
-                                  elevation: const WidgetStatePropertyAll(10),
-                                  padding: WidgetStateProperty.all(
-                                      const EdgeInsets.symmetric(
-                                          horizontal: 20)),
-                                  backgroundColor: WidgetStateProperty.all(
-                                      Theme.of(context).colorScheme.primary),
-                                  foregroundColor: WidgetStateProperty.all(
-                                      Theme.of(context).colorScheme.onPrimary),
-                                ),
-                                child: Text("book".getString(context)),
-                              ),
-                            ],
-                          ),
-                        ));
+                    builder: (context) => QuantityBottomSheet(
+                        selectedQuantity: _selectedQuantity, place: place));
 
-                if (_selectedQuantity.value <= 0 ||
+                if ((_selectedQuantity.valueOrNull ?? 0) <= 0 ||
                     proceed == null ||
                     !proceed) {
+                  _selectedQuantity.add(0);
                   return;
                 }
+
+                if (!mounted) return;
+                showDialog(
+                    context: context,
+                    builder: (context) => const MyLoadingDialog());
+
+                AppError? error =
+                    await cartBloc.addToCart(place.id, _selectedQuantity.value);
+
+                // Pop Loading Dialog
+                if (!mounted) return;
+                Navigator.pop(context);
+
+                if (error != null) {
+                  showMySnackBar(context, error.message, SnackbarStatus.failed);
+                  return;
+                }
+
+                showMySnackBar(
+                    context, "succesfullyAddedToCart", SnackbarStatus.success);
+                _selectedQuantity.add(0);
               },
               style: ButtonStyle(
                 elevation: const WidgetStatePropertyAll(10),
@@ -215,6 +190,11 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                     Theme.of(context).colorScheme.primary),
                 foregroundColor: WidgetStateProperty.all(
                     Theme.of(context).colorScheme.onPrimary),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
               ),
               child: Text("bookNow".getString(context)),
             ),
@@ -235,7 +215,27 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
         ),
         Container(
           color: Colors.black.withAlpha(50),
-        )
+          height: 300,
+        ),
+        Positioned(
+          top: 28,
+          left: 6,
+          child: CustomPaint(
+            key: _backKey,
+            child: IconButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      WidgetStateProperty.all(Colors.grey.withOpacity(0.4)),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                )),
+          ),
+        ),
       ],
     );
   }
@@ -250,43 +250,16 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Stack(
-              children: [
-                const SizedBox(
-                  height: 250,
-                  width: double.infinity,
-                ),
-                Positioned(
-                  top: 20,
-                  left: 10,
-                  child: IconButton(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(
-                            Colors.grey.withOpacity(0.4)),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      )),
-                ),
-              ],
+            const SizedBox(
+              height: 200,
             ),
             Container(
+              key: _notBackKey,
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(20)),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 10,
-                      offset: const Offset(0, -1)),
-                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,11 +274,13 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                   ),
                   Row(
                     children: [
-                      _buildChip(PlaceCategoryUtil.stringOf(place.category)),
+                      PlaceDetailChip(
+                          label:
+                              PlaceCategoryUtil.readCategory(place.category)),
                       const SizedBox(
                         width: 10,
                       ),
-                      _starConstructor(place.reviewAverage),
+                      PlaceReviewStar(reviewCount: place.reviewAverage),
                     ],
                   ),
                   Row(
@@ -344,21 +319,6 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
     );
   }
 
-  Widget _buildChip(String label) {
-    return Chip(
-      labelPadding: const EdgeInsets.symmetric(horizontal: 5),
-      labelStyle: const TextStyle(fontSize: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-      label: ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 60),
-          child: Text(
-            label.getString(context),
-            textAlign: TextAlign.center,
-          )),
-      padding: EdgeInsets.zero,
-    );
-  }
-
   Widget _buildReview(List<Review> reviews) {
     return ListView.builder(
         shrinkWrap: true,
@@ -372,7 +332,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _starConstructor(reviews[index].rating),
+                    PlaceReviewStar(reviewCount: reviews[index].rating),
                     const SizedBox(
                       height: 10,
                     ),
@@ -381,24 +341,5 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                 ),
               ));
         });
-  }
-
-  Widget _starConstructor(double reviewCount) {
-    List<Widget> reviewStar = [];
-    for (int i = 1; i <= 5; i++) {
-      if (i <= reviewCount) {
-        reviewStar.add(SvgPicture.asset(
-          "assets/svg/star_full_icon.svg",
-          height: 18,
-        ));
-      }
-    }
-
-    if (reviewStar.isEmpty) {
-      reviewStar.add(_buildChip("noReviewYet"));
-    }
-    return Row(
-      children: reviewStar,
-    );
   }
 }
