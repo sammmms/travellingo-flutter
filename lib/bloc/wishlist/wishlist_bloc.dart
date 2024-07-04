@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/wishlist/wishlist_state.dart';
+import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/place.dart';
 import 'package:travellingo/utils/app_error.dart';
 import 'package:travellingo/utils/error_print.dart';
@@ -12,6 +14,12 @@ class WishlistBloc {
 
   final controller =
       BehaviorSubject<WishlistState>.seeded(WishlistState.initial());
+
+  late AuthBloc authBloc;
+
+  WishlistBloc(this.authBloc) {
+    dio.interceptors.add(TokenInterceptor());
+  }
 
   void _updateStream(WishlistState state) {
     if (controller.isClosed) {

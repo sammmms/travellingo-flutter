@@ -18,7 +18,7 @@ class FlightState {
 
   factory FlightState.loading() => FlightState(isLoading: true);
 
-  factory FlightState.error([AppError? error]) =>
+  factory FlightState.error({AppError? error}) =>
       FlightState(hasError: true, error: error);
 
   factory FlightState.success(List<Flight>? flights) =>

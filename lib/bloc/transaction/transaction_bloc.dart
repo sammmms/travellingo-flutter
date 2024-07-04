@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/transaction/transaction_state.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/transaction.dart';
@@ -16,7 +19,9 @@ class TransactionBloc {
 
   Stream<TransactionState> get state => controller;
 
-  TransactionBloc() {
+  final AuthBloc authBloc;
+
+  TransactionBloc(this.authBloc) {
     dio.interceptors.add(TokenInterceptor());
   }
 
@@ -37,9 +42,10 @@ class TransactionBloc {
     controller.add(state);
   }
 
-  AppError _updateError(Object err) {
+  Future<AppError> _updateError(Object err) async {
     AppError appError = AppError.fromObjectErr(err);
     _updateStream(TransactionState.hasError(error: appError));
+    if (appError.statusCode == 401) await authBloc.logout();
     return appError;
   }
 
@@ -79,20 +85,25 @@ class TransactionBloc {
     }
   }
 
-  Future<AppError?> checkoutCart(
+  Future checkoutCart(
       {required List<String> itemsId,
       required String mopayId,
       int? additionalPayment}) async {
     try {
-      await dio.post("/cart/checkout", data: {
-        "checkoutItem": itemsId,
-        "mopayId": mopayId,
-        if (additionalPayment == null) "additionalPayment": additionalPayment,
-      });
+      Map<String, dynamic> payloadData = {
+        "checkoutItem": jsonEncode(itemsId),
+        "mopayUserId": mopayId,
+        if (additionalPayment != null) "additionalPayment": additionalPayment,
+      };
+      var response = await dio.post("/cart/checkout", data: payloadData);
+
+      return response.data;
     } catch (err) {
+      if (err is DioException && err.response?.statusCode == 402) {
+        return err.response?.data;
+      }
       printError(err: err, method: "checkoutCart");
       return _updateError(err);
     }
-    return null;
   }
 }

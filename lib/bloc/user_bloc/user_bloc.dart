@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/user.dart';
@@ -17,7 +18,9 @@ class UserBloc {
     ),
   );
 
-  UserBloc() {
+  late AuthBloc authBloc;
+
+  UserBloc(this.authBloc) {
     dio.interceptors.add(TokenInterceptor());
   }
 
@@ -32,9 +35,10 @@ class UserBloc {
     controller.sink.add(state);
   }
 
-  AppError _updateError(Object err) {
+  Future<AppError> _updateError(Object err) async {
     AppError appError = AppError.fromObjectErr(err);
     _updateStream(UserState.hasError(error: appError));
+    if (appError.statusCode == 401) await authBloc.logout();
     return appError;
   }
 

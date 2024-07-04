@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/place/place_state.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/place.dart';
@@ -17,7 +18,9 @@ class PlaceBloc {
   );
   final controller = BehaviorSubject<PlaceState>.seeded(PlaceState.initial());
 
-  PlaceBloc() {
+  late AuthBloc authBloc;
+
+  PlaceBloc(this.authBloc) {
     dio.interceptors.add(TokenInterceptor());
   }
 
@@ -35,9 +38,10 @@ class PlaceBloc {
     controller.sink.add(state);
   }
 
-  AppError _updateError(Object err) {
+  Future<AppError> _updateError(Object err) async {
     AppError appError = AppError.fromObjectErr(err);
     _updateStream(PlaceState.hasError(error: appError));
+    if (appError.statusCode == 401) await authBloc.logout();
     return appError;
   }
 

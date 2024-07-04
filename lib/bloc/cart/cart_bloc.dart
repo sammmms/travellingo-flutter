@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/cart/cart_state.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/cart.dart';
@@ -11,8 +12,9 @@ import 'package:travellingo/utils/error_print.dart';
 class CartBloc {
   final dio = Dio(BaseOptions(baseUrl: dotenv.env['BASE_URL']!));
   final controller = BehaviorSubject<CartState>();
+  late AuthBloc authBloc;
 
-  CartBloc() {
+  CartBloc(this.authBloc) {
     dio.interceptors.add(TokenInterceptor());
   }
 
@@ -29,10 +31,11 @@ class CartBloc {
     controller.add(state);
   }
 
-  AppError _updateError(Object err) {
-    AppError error = AppError.fromObjectErr(err);
-    _updateStream(CartState.hasError(error: error));
-    return error;
+  Future<AppError> _updateError(Object err) async {
+    AppError appError = AppError.fromObjectErr(err);
+    _updateStream(CartState.hasError(error: appError));
+    if (appError.statusCode == 401) await authBloc.logout();
+    return appError;
   }
 
   void dispose() {

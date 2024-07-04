@@ -6,7 +6,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/auth/auth_state.dart';
-import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/utils/error_print.dart';
 import 'package:travellingo/utils/store.dart';
@@ -16,13 +15,11 @@ class AuthBloc {
   final BehaviorSubject<AuthState> controller =
       BehaviorSubject<AuthState>.seeded(AuthState.initial());
 
-  late UserBloc userBloc;
-
   final dio = Dio(BaseOptions(
     baseUrl: dotenv.env['BASE_URL']!,
   ));
 
-  AuthBloc(this.userBloc) {
+  AuthBloc() {
     dio.interceptors.add(TokenInterceptor());
   }
 
@@ -39,9 +36,12 @@ class AuthBloc {
     controller.add(state);
   }
 
-  AppError _updateError(Object err) {
+  Future<AppError> _updateError(Object err) async {
     AppError error = AppError.fromObjectErr(err);
     _updateStream(AuthState.hasError(error: error));
+    if (error.statusCode == 401) {
+      await logout();
+    }
     return error;
   }
 
@@ -60,8 +60,6 @@ class AuthBloc {
 
       // SAVE TOKEN
       Store.saveToken(token);
-
-      userBloc.getUser();
 
       _updateStream(AuthState.isAuthenticated());
       return null;
@@ -97,7 +95,6 @@ class AuthBloc {
     if (token != null) {
       Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
       if (decodedToken['exp'] > DateTime.now().millisecondsSinceEpoch / 1000) {
-        userBloc.getUser();
         return _updateStream(AuthState.isAuthenticated());
       }
     }
@@ -106,6 +103,9 @@ class AuthBloc {
   }
 
   Future logout() async {
+    if (kDebugMode) {
+      print("logouting user");
+    }
     await Store.removeToken();
     return _updateStream(AuthState.initial());
   }
