@@ -71,6 +71,7 @@ class _WishlistPagesState extends State<WishlistPages> {
           IconButton(
             onPressed: () {},
             icon: SvgPicture.asset(
+              color: Theme.of(context).colorScheme.tertiary,
               "assets/svg/filter_icon.svg",
             ),
           )
