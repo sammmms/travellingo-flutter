@@ -27,16 +27,18 @@ void main() async {
     print('BASE_URL: ${dotenv.env['BASE_URL']}');
   }
 
-  // USER BLOC
-  final userBloc = UserBloc();
-
   // AUTH BLOC
-  final authBloc = AuthBloc(userBloc);
+  final authBloc = AuthBloc();
+
+  // USER BLOC
+  final userBloc = UserBloc(authBloc);
 
   // THEME BLOC
   final themeBloc = ThemeBloc()..initThemeStream();
 
   await authBloc.checkLogin();
+
+  await userBloc.getUser();
 
   Widget app = MultiProvider(
     providers: [
