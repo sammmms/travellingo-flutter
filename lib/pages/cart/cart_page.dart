@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,8 @@ import 'package:travellingo/component/error_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/pages/cart/widget/cart_list.dart';
-import '../checkout/checkout_page.dart';
+import 'package:travellingo/utils/format_currency.dart';
+import '../cart_checkout/checkout_page.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -22,12 +24,47 @@ class _CartPageState extends State<CartPage> {
   final _totalController = BehaviorSubject<int>.seeded(0);
   late CartBloc bloc;
 
+  final _isCheckedId = BehaviorSubject<List<String>>.seeded([]);
+
   @override
   void initState() {
     bloc = context.read<CartBloc>();
     if (bloc.controller.valueOrNull?.data != null) {
       bloc.getCart();
     }
+
+    bloc.controller.listen((event) {
+      if (event.data?.items.isNotEmpty ?? false) {
+        List<String> currentChecked = _isCheckedId.valueOrNull ?? [];
+        List<CartItems> items = event.data!.items;
+
+        int tallyPoints = currentChecked.fold<int>(0, (prev, cur) {
+          CartItems? item =
+              items.firstWhereOrNull((item) => item.place.id == cur);
+          if (item == null) return 0;
+          return prev + (item.place.price * item.quantity);
+        });
+
+        _totalController.add(tallyPoints);
+      }
+    });
+
+    _isCheckedId.listen((event) {
+      if (bloc.controller.valueOrNull?.data?.items.isNotEmpty ?? false) {
+        List<String> currentChecked = _isCheckedId.valueOrNull ?? [];
+        List<CartItems> items = bloc.controller.value.data!.items;
+
+        int tallyPoints = currentChecked.fold<int>(0, (prev, cur) {
+          CartItems? item =
+              items.firstWhereOrNull((item) => item.place.id == cur);
+          if (item == null) return 0;
+          return prev + (item.place.price * item.quantity);
+        });
+
+        _totalController.add(tallyPoints);
+      }
+    });
+
     super.initState();
   }
 
@@ -73,11 +110,31 @@ class _CartPageState extends State<CartPage> {
                   }
 
                   Cart cart = state.data!;
-                  return Provider<CartBloc>.value(
-                    value: bloc,
-                    child: CartList(
-                      totalController: _totalController,
-                      cart: cart,
+                  return MultiProvider(
+                    providers: [
+                      Provider<CartBloc>.value(value: bloc),
+                      StreamProvider<List<String>>.value(
+                        value: _isCheckedId,
+                        initialData: const [],
+                        updateShouldNotify: (_, __) => true,
+                      )
+                    ],
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        await bloc.getCart();
+                      },
+                      child: CartList(
+                        cart: cart,
+                        onCheckmarkTap: (String value) {
+                          List<String> currentArray =
+                              _isCheckedId.valueOrNull ?? [];
+                          if (currentArray.remove(value)) {
+                            _isCheckedId.add(currentArray);
+                            return;
+                          }
+                          _isCheckedId.add([...currentArray, value]);
+                        },
+                      ),
                     ),
                   );
                 }),
@@ -93,7 +150,7 @@ class _CartPageState extends State<CartPage> {
                 return Container(
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.surfaceBright,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.2),
@@ -116,7 +173,7 @@ class _CartPageState extends State<CartPage> {
                             ),
                           ),
                           Text(
-                            'Rp $totals',
+                            formatToIndonesiaCurrency(totals),
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
@@ -139,18 +196,27 @@ class _CartPageState extends State<CartPage> {
       style: ButtonStyle(
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
           minimumSize: WidgetStateProperty.all<Size>(const Size(171, 48))),
       onPressed: () {
-        Navigator.push(context, slideInFromBottom(const CheckoutPage()));
+        List<CartItems> cartItems =
+            bloc.controller.valueOrNull?.data?.items.where((item) {
+                  return _isCheckedId.value.contains(item.place.id);
+                }).toList() ??
+                [];
+
+        print(cartItems);
+
+        Navigator.push(
+            context,
+            slideInFromBottom(CheckoutPage(
+              cartItems: cartItems,
+            )));
       },
-      child: Text(
-        'checkout'.getString(context),
-        style: const TextStyle(
-            color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-      ),
+      child: Text('checkout'.getString(context),
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
     );
   }
 }
