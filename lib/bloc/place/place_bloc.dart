@@ -151,22 +151,6 @@ class PlaceBloc {
     }
   }
 
-  Future<AppError?> addToCart(String id, int quantity) async {
-    try {
-      _updateStream(PlaceState.isLoading());
-
-      await dio.post(
-        "/place/$id/cart",
-        data: {"quantity": quantity},
-      );
-
-      return null;
-    } catch (err) {
-      printError(err: err, method: "addToCart");
-      return _updateError(err);
-    }
-  }
-
   Future<AppError?> addToWishlist(String id) async {
     try {
       _updateStream(PlaceState.isLoading());

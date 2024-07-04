@@ -41,7 +41,8 @@ class CartBloc {
 
   Future getCart([needLoading = true]) async {
     try {
-      _updateStream(CartState(isLoading: needLoading));
+      _updateStream(controller.valueOrNull?.copyWith(isLoading: needLoading) ??
+          CartState(isLoading: true));
 
       var response = await dio.get('/cart');
       var responseData = response.data;
@@ -72,6 +73,22 @@ class CartBloc {
       return _updateError(AppError(message: "somethingWrong"));
     } catch (err) {
       printError(err: err);
+      return _updateError(err);
+    }
+  }
+
+  Future<AppError?> addToCart(String id, int quantity) async {
+    try {
+      _updateStream(CartState.isLoading());
+
+      await dio.post(
+        "/cart/$id",
+        data: {"quantity": quantity},
+      );
+
+      return null;
+    } catch (err) {
+      printError(err: err, method: "addToCart");
       return _updateError(err);
     }
   }
