@@ -55,16 +55,9 @@ class _TransactionPageState extends State<TransactionPage> {
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   Transaction transaction = transactions[index];
-                  return ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: transaction.items.length,
-                    shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      return TransactionCard(
-                          transactionData: transactions[index],
-                          item: transaction.items[index]);
-                    },
-                  );
+                  return TransactionCard(
+                      transactionData: transactions[index],
+                      items: transaction.items);
                 },
               ),
             );
