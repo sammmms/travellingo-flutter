@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/wishlist/wishlist_bloc.dart';
 import 'package:travellingo/bloc/wishlist/wishlist_state.dart';
 import 'package:travellingo/pages/home/widget/my_search_bar.dart';
@@ -15,10 +17,11 @@ class WishlistPages extends StatefulWidget {
 class _WishlistPagesState extends State<WishlistPages> {
   final _searchController = TextEditingController();
   final _searchStream = BehaviorSubject<String>.seeded("");
-  final bloc = WishlistBloc();
+  late WishlistBloc bloc;
 
   @override
   void initState() {
+    bloc = WishlistBloc(context.read<AuthBloc>());
     bloc.getWishlist();
 
     _searchStream

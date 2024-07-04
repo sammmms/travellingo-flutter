@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/cart/cart_bloc.dart';
 import 'package:travellingo/bloc/place/place_bloc.dart';
 import 'package:travellingo/bloc/place/place_state.dart';
@@ -30,31 +32,33 @@ class PlaceDetailPage extends StatefulWidget {
 }
 
 class _PlaceDetailPageState extends State<PlaceDetailPage> {
-  final cartBloc = CartBloc();
   final _backKey = GlobalKey();
   final _notBackKey = GlobalKey();
   final result = BoxHitTestResult();
-  final bloc = PlaceBloc();
+  late CartBloc _cartBloc;
+  late PlaceBloc _bloc;
   final _selectedQuantity = BehaviorSubject<int>.seeded(0);
 
   @override
   void initState() {
-    bloc.getPlaceById(widget.place.id);
+    _cartBloc = CartBloc(context.read<AuthBloc>());
+    _bloc = PlaceBloc(context.read<AuthBloc>());
+    _bloc.getPlaceById(widget.place.id);
     super.initState();
   }
 
   @override
   void dispose() {
     _selectedQuantity.close();
-    bloc.dispose();
-    cartBloc.dispose();
+    _bloc.dispose();
+    _cartBloc.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<PlaceState>(
-        stream: bloc.controller,
+        stream: _bloc.controller,
         builder: (context, snapshot) {
           bool isLoading =
               snapshot.data?.isLoading ?? false || !snapshot.hasData;
@@ -66,6 +70,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
           return Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: doNotLoadBody ? AppBar() : null,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               body: isLoading
                   ? const Center(
                       child: CircularProgressIndicator(),
@@ -73,7 +78,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                   : hasError
                       ? MyErrorComponent(
                           onRefresh: () {
-                            bloc.getPlaceById(widget.place.id);
+                            _bloc.getPlaceById(widget.place.id);
                           },
                         )
                       : doNotLoadBody
@@ -166,8 +171,8 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                     context: context,
                     builder: (context) => const MyLoadingDialog());
 
-                AppError? error =
-                    await cartBloc.addToCart(place.id, _selectedQuantity.value);
+                AppError? error = await _cartBloc.addToCart(
+                    place.id, _selectedQuantity.value);
 
                 // Pop Loading Dialog
                 if (!mounted) return;
@@ -243,7 +248,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
   Widget _buildPlaceDetail(Place place) {
     return RefreshIndicator(
       onRefresh: () async {
-        bloc.getPlaceById(widget.place.id);
+        _bloc.getPlaceById(widget.place.id);
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -293,6 +298,17 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                         "${place.country}, ${place.city}",
                       ),
                     ],
+                  ),
+                  Divider(
+                    height: 50,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.4),
+                  ),
+                  Text(
+                    place.description,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   Divider(
                     height: 50,

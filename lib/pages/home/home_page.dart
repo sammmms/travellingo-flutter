@@ -45,11 +45,13 @@ class _HomePageState extends State<HomePage> {
   final _searchStream = BehaviorSubject<String>.seeded("");
   final _selectedCity = BehaviorSubject<String>();
   final _searchController = TextEditingController();
-  final _bloc = PlaceBloc();
-  final _cartBloc = CartBloc();
+  late PlaceBloc _bloc;
+  late CartBloc _cartBloc;
 
   @override
   void initState() {
+    _bloc = PlaceBloc(context.read<AuthBloc>());
+    _cartBloc = CartBloc(context.read<AuthBloc>());
     bool firstSearchInit = true;
     bool firstFilterInit = true;
     currentTime = timePicker(DateTime.now().hour);
@@ -422,8 +424,7 @@ class _HomePageState extends State<HomePage> {
                     places.where((element) => element.city == city).toList();
 
                 if (filteredPlace.isEmpty) {
-                  return const MyNoDataComponent(
-                      label: "Belum ada tempat wisata di kota ini");
+                  return const MyNoDataComponent(label: "noAttractionFound");
                 }
 
                 return SingleChildScrollView(

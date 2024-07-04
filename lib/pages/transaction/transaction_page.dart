@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:provider/provider.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/transaction/transaction_bloc.dart';
 import 'package:travellingo/bloc/transaction/transaction_state.dart';
 import 'package:travellingo/component/error_component.dart';
 import 'package:travellingo/models/transaction.dart';
-import 'package:travellingo/pages/transaction/transaction_card.dart';
+import 'package:travellingo/pages/transaction/widget/transaction_card.dart';
 
 class TransactionPage extends StatefulWidget {
   const TransactionPage({super.key});
@@ -14,9 +16,10 @@ class TransactionPage extends StatefulWidget {
 }
 
 class _TransactionPageState extends State<TransactionPage> {
-  final bloc = TransactionBloc();
+  late TransactionBloc bloc;
   @override
   void initState() {
+    bloc = TransactionBloc(context.read<AuthBloc>());
     bloc.getTransaction();
     super.initState();
   }

@@ -27,10 +27,11 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final bloc = UserBloc();
+  late UserBloc bloc;
 
   @override
   void initState() {
+    bloc = context.read<UserBloc>();
     bloc.getUser();
 
     bloc.controller.listen((event) {
