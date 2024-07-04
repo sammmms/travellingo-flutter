@@ -125,9 +125,9 @@ class _LoginFormState extends State<LoginForm> {
                               fontWeight: FontWeight.bold),
                           decoration: InputDecoration(
                             enabled: !isAuthenticating,
-                            prefixIcon: const Icon(
+                            prefixIcon: Icon(
                               Icons.account_circle,
-                              color: Color.fromARGB(255, 62, 132, 168),
+                              color: Theme.of(context).colorScheme.tertiary,
                             ),
                           ),
                         ),
@@ -197,8 +197,10 @@ class _LoginFormState extends State<LoginForm> {
                                       ? const CircularProgressIndicator()
                                       : Text(
                                           "signin".getString(context),
-                                          style: const TextStyle(
-                                              color: Colors.white,
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
                                               fontSize: 11.5,
                                               fontWeight: FontWeight.bold,
                                               letterSpacing: 1.1),

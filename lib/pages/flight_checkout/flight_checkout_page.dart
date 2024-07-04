@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_card.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_passenger.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_protection.dart';
-import '../cart_checkout/cart_payment_page.dart';
 
 class CheckoutPage extends StatefulWidget {
   final List<CartItems> cartItems;

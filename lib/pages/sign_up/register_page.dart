@@ -87,11 +87,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                   RegExp(r'[a-zA-Z@.0-9]'))
                             ],
                             keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(
-                                prefixIcon: Icon(
-                              Icons.account_circle,
-                              color: Color.fromARGB(255, 62, 132, 168),
-                            )),
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.account_circle,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiary)),
                             style: const TextStyle(
                                 fontSize: 14,
                                 letterSpacing: 1.1,
@@ -126,8 +126,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                               Radius.circular(16))))),
                               child: Text(
                                 "signup".getString(context),
-                                style: const TextStyle(
-                                    color: Colors.white,
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
                                     fontSize: 11.5,
                                     fontWeight: FontWeight.bold,
                                     letterSpacing: 1.1),

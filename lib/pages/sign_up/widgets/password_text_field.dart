@@ -30,6 +30,8 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
         },
         controller: widget.controller,
         decoration: InputDecoration(
+            prefixIcon: Icon(Icons.lock_rounded,
+                color: Theme.of(context).colorScheme.tertiary),
             filled: true,
             suffixIcon: InkWell(
                 onTap: () {

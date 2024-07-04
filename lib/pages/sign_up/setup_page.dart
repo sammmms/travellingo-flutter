@@ -489,23 +489,19 @@ class _SetUpPageState extends State<SetUpPage> {
                                               slideInFromLeft(
                                                   const LoginPage()));
                                         },
-                                  child: isAuthenticating
-                                      ? Text("pleaseWait".getString(context),
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                              letterSpacing: 1.1),
-                                          textScaler:
-                                              const TextScaler.linear(1.1))
-                                      : Text("continue".getString(context),
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
-                                              letterSpacing: 1.1),
-                                          textScaler:
-                                              const TextScaler.linear(1.1))),
+                                  child: Text(
+                                      isAuthenticating
+                                          ? "pleaseWait".getString(context)
+                                          : "continue".getString(context),
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                          letterSpacing: 1.1),
+                                      textScaler:
+                                          const TextScaler.linear(1.1))),
                             )
                           ],
                         );
