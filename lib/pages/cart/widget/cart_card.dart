@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
@@ -9,12 +10,13 @@ import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/models/place.dart';
 import 'package:travellingo/utils/app_error.dart';
+import 'package:travellingo/utils/format_currency.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
-import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class CartCard extends StatefulWidget {
   final CartItems cartItems;
-  const CartCard({super.key, required this.cartItems});
+  final Function(String) onTap;
+  const CartCard({super.key, required this.cartItems, required this.onTap});
 
   @override
   State<CartCard> createState() => _CartCardState();
@@ -76,39 +78,62 @@ class _CartCardState extends State<CartCard> {
                           child: Image.memory(base64Decode(place.pictureLink),
                               width: 100, fit: BoxFit.cover)),
                     const SizedBox(
-                      width: 10,
+                      width: 15,
                     ),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            place.name,
-                            style: Theme.of(context).textTheme.headlineMedium,
-                          ),
-                          Text("${place.country}, ${place.city}"),
-                          const Spacer(),
-                          Text(
-                            "Rp ${NumberFormat("###,###", "id_ID").format(place.price)}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium!
-                                .copyWith(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              place.name,
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                            Text("${place.country}, ${place.city}"),
+                            const Spacer(),
+                            Text(
+                              "Rp ${NumberFormat("###,###", "id_ID").format(place.price)}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                      fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(
                       width: 10,
                     ),
-                    Align(
-                        alignment: AlignmentDirectional.bottomEnd,
-                        child: _buildQuantity()),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Checkbox(
+                          value: context.watch<List<String>>().firstWhereOrNull(
+                                  (value) => value == place.id) !=
+                              null,
+                          onChanged: (_) {
+                            widget.onTap(place.id);
+                          },
+                          side: WidgetStateBorderSide.resolveWith(
+                            (state) => BorderSide(
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                          checkColor: Theme.of(context).colorScheme.secondary,
+                          shape: const CircleBorder(),
+                          fillColor: WidgetStateColor.transparent,
+                        ),
+                        _buildQuantity(),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -123,9 +148,9 @@ class _CartCardState extends State<CartCard> {
               return Container(
                 margin: const EdgeInsets.only(right: 10),
                 child: Text(
-                    "Rp ${NumberFormat("###,###", "id_ID").format(place.price * snapshot.data!)}",
+                    "Total : ${formatToIndonesiaCurrency(place.price * snapshot.data!)}",
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: colorScheme.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold)),
               );
             })
@@ -137,7 +162,7 @@ class _CartCardState extends State<CartCard> {
     return Container(
       margin: const EdgeInsets.only(right: 5, bottom: 10),
       decoration: BoxDecoration(
-        border: Border.all(color: colorScheme.onSurface),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface),
         borderRadius: BorderRadius.circular(10),
       ),
       padding: EdgeInsets.zero,
@@ -177,7 +202,7 @@ class _CartCardState extends State<CartCard> {
               padding: const EdgeInsets.all(5),
               child: Icon(
                 Icons.remove,
-                color: colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.onSurface,
                 size: 15,
               ),
             ),
@@ -191,7 +216,7 @@ class _CartCardState extends State<CartCard> {
                 return Text(
                   snapshot.data.toString(),
                   style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: colorScheme.onSurface,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold),
                 );
               }),
@@ -207,7 +232,7 @@ class _CartCardState extends State<CartCard> {
               padding: const EdgeInsets.all(5),
               child: Icon(
                 Icons.add,
-                color: colorScheme.onSurface,
+                color: Theme.of(context).colorScheme.onSurface,
                 size: 15,
               ),
             ),
