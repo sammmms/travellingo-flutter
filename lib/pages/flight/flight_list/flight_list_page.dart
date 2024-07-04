@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/flight/flight_bloc.dart';
 import 'package:travellingo/bloc/flight/flight_state.dart';
 import 'package:travellingo/models/flight.dart';
@@ -27,10 +29,11 @@ class FlightListPage extends StatefulWidget {
 
 class _FlightListPageState extends State<FlightListPage> {
   late List<DateTime> dates;
-  final bloc = FlightBloc();
+  late FlightBloc bloc;
 
   @override
   void initState() {
+    bloc = FlightBloc(context.read<AuthBloc>());
     dates = List.generate(14, (index) {
       return widget.startDate.add(Duration(days: index));
     });

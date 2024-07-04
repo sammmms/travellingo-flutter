@@ -11,7 +11,7 @@ import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/pages/cart/widget/cart_list.dart';
 import 'package:travellingo/utils/format_currency.dart';
-import '../cart_checkout/checkout_page.dart';
+import '../cart_checkout/cart_checkout_page.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -207,11 +207,9 @@ class _CartPageState extends State<CartPage> {
                 }).toList() ??
                 [];
 
-        print(cartItems);
-
         Navigator.push(
             context,
-            slideInFromBottom(CheckoutPage(
+            slideInFromBottom(CartCheckoutPage(
               cartItems: cartItems,
             )));
       },

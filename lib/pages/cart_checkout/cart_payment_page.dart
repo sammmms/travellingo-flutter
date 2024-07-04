@@ -2,33 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/transaction/transaction_bloc.dart';
 import 'package:travellingo/bloc/transaction/transaction_state.dart';
 import 'package:travellingo/component/snackbar_component.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/cart.dart';
-import 'package:travellingo/pages/cart_checkout/widget/checkout_card.dart';
+import 'package:travellingo/pages/cart_checkout/widget/cart_checkout_card.dart';
+import 'package:travellingo/pages/transaction/transaction_detail_page.dart';
 import 'package:travellingo/utils/app_error.dart';
 import 'package:travellingo/utils/format_currency.dart';
 
-class PaymentPage extends StatefulWidget {
+class CartPaymentPage extends StatefulWidget {
   final List<CartItems> cartItems;
   final int additionalPayment;
   final int totalPayment;
-  const PaymentPage(
+  const CartPaymentPage(
       {super.key,
       required this.cartItems,
       this.additionalPayment = 0,
       required this.totalPayment});
 
   @override
-  State<PaymentPage> createState() => _PaymentPageState();
+  State<CartPaymentPage> createState() => _CartPaymentPageState();
 }
 
-class _PaymentPageState extends State<PaymentPage> {
-  final transactionBloc = TransactionBloc();
+class _CartPaymentPageState extends State<CartPaymentPage> {
+  late TransactionBloc transactionBloc;
   final _formKey = GlobalKey<FormState>();
 
   final _phoneNumberTEC = TextEditingController();
+
+  @override
+  void initState() {
+    transactionBloc = TransactionBloc(context.read<AuthBloc>());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +77,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       );
                     },
                     itemCount: widget.cartItems.length,
-                    itemBuilder: (context, index) => CheckoutCard(
+                    itemBuilder: (context, index) => CartCheckoutCard(
                       item: widget.cartItems[index],
                     ),
                   ),
@@ -227,20 +237,28 @@ class _PaymentPageState extends State<PaymentPage> {
       }
 
       if (response is String) {
-        List<String> itemsId = widget.cartItems.map((e) => e.id).toList();
-        AppError? checkoutError = await transactionBloc.checkoutCart(
+        List<String> itemsId = widget.cartItems.map((e) => e.place.id).toList();
+        var checkoutResponse = await transactionBloc.checkoutCart(
             itemsId: itemsId,
             mopayId: response,
             additionalPayment: widget.additionalPayment);
 
         if (!mounted) return;
-        if (checkoutError != null) {
-          showMySnackBar(context, checkoutError.message, SnackbarStatus.failed);
+        if (checkoutResponse is AppError) {
+          showMySnackBar(
+              context, checkoutResponse.message, SnackbarStatus.failed);
           return;
         }
 
-        showMySnackBar(
-            context, "pleaseProceedToMopayToPay", SnackbarStatus.success);
+        if (checkoutResponse is String) {
+          showMySnackBar(
+              context, "pleaseProceedToMopayToPay", SnackbarStatus.success);
+
+          Navigator.pushReplacement(
+              context,
+              slideInFromRight(
+                  TransactionDetailPage(transactionId: checkoutResponse)));
+        }
       }
     }
   }

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/component/my_image_loader.dart';
 import 'package:travellingo/models/cart.dart';
 import 'package:travellingo/models/place.dart';
 
-class CheckoutCard extends StatefulWidget {
+class CartCheckoutCard extends StatefulWidget {
   final CartItems item;
-  const CheckoutCard({super.key, required this.item});
+  const CartCheckoutCard({super.key, required this.item});
 
   @override
-  State<CheckoutCard> createState() => _CheckoutCardState();
+  State<CartCheckoutCard> createState() => _CartCheckoutCardState();
 }
 
-class _CheckoutCardState extends State<CheckoutCard> {
+class _CartCheckoutCardState extends State<CartCheckoutCard> {
   late CartItems items;
   late Place place;
 

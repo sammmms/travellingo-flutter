@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/cart.dart';
-import 'package:travellingo/pages/cart_checkout/widget/checkout_card.dart';
+import 'package:travellingo/pages/cart_checkout/widget/cart_checkout_card.dart';
 import 'package:travellingo/pages/cart_checkout/widget/checkout_extra_prot.dart';
 import 'package:travellingo/utils/format_currency.dart';
 import 'cart_payment_page.dart';
 
-class CheckoutPage extends StatefulWidget {
+class CartCheckoutPage extends StatefulWidget {
   final List<CartItems> cartItems;
-  const CheckoutPage({super.key, required this.cartItems});
+  const CartCheckoutPage({super.key, required this.cartItems});
 
   @override
-  State<CheckoutPage> createState() => _CheckoutPageState();
+  State<CartCheckoutPage> createState() => _CartCheckoutPageState();
 }
 
-class _CheckoutPageState extends State<CheckoutPage> {
+class _CartCheckoutPageState extends State<CartCheckoutPage> {
   late int protectionPrice;
   bool isChecked = false;
 
@@ -70,7 +70,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       );
                     },
                     itemCount: widget.cartItems.length,
-                    itemBuilder: (context, index) => CheckoutCard(
+                    itemBuilder: (context, index) => CartCheckoutCard(
                       item: widget.cartItems[index],
                     ),
                   ),
@@ -169,12 +169,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 ),
               ),
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                     context,
-                    slideInFromRight(PaymentPage(
+                    slideInFromRight(CartPaymentPage(
                       cartItems: widget.cartItems,
                       additionalPayment: isChecked ? protectionPrice : 0,
-                      totalPayment: currentSubtotal + protectionPrice,
+                      totalPayment:
+                          currentSubtotal + (isChecked ? protectionPrice : 0),
                     )));
               },
               child: Text(
