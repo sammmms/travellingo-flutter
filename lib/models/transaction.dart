@@ -55,9 +55,10 @@ class Transaction {
       items: items,
       id: json['_id'],
       total: json['total'],
-      transactionDate: DateTime.parse(json['transactionDate']),
-      expiredAt:
-          json['expiredAt'] == null ? null : DateTime.parse(json['expiredAt']),
+      transactionDate: DateTime.parse(json['createdAt']).toLocal(),
+      expiredAt: json['expiredAt'] == null
+          ? null
+          : DateTime.parse(json['expiredAt']).toLocal(),
       status: TransactionStatusUtil.fromString(json['status']),
     );
   }
