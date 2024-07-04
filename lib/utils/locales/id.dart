@@ -77,6 +77,7 @@ const Map<String, String> idLanguage = {
   "restaurant": "Restoran",
   "attraction": "Tempat Wisata",
   "cart": "Keranjang",
+  "noAttractionFound": "Tidak ada tempat wisata yang ditemukan",
 
   // Personal info
   "save": "Simpan",

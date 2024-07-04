@@ -77,6 +77,7 @@ const Map<String, String> usLanguage = {
   "restaurant": "Restaurant",
   "attraction": "Attraction",
   "cart": "Cart",
+  "noAttractionFound": "No attraction spot found in this city",
 
   // Personal info
   "save": "Save",
