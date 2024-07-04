@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/component/airplane_animation_component.dart';
 import 'package:travellingo/component/dotted_divider_component.dart';
+import 'package:travellingo/component/my_image_loader.dart';
+import 'package:travellingo/models/cart.dart';
 
-class CheckoutCard extends StatelessWidget {
-  const CheckoutCard({super.key});
+class FlightCheckoutCard extends StatelessWidget {
+  final CartItems items;
+  const FlightCheckoutCard({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 194, // Set the card height
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surfaceBright,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -29,21 +32,16 @@ class CheckoutCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
+              MyImageLoader(
+                url: items.place.pictureLink,
+                pictureType: items.place.pictureType,
                 height: 32,
-                width: 52,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        'https://i.pinimg.com/originals/2f/88/4b/2f884b66c1a53b93a9e4826e5f4c459d.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                fit: BoxFit.cover,
               ),
-              const Text(
-                'View Details',
+              Text(
+                'viewDetails'.getString(context),
                 style: TextStyle(
-                  color: Color(0xFF3E84A8),
+                  color: Theme.of(context).colorScheme.tertiary,
                   fontSize: 14,
                 ),
               ),

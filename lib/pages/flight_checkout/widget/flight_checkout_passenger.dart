@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CheckoutPassengerCard extends StatelessWidget {
-  const CheckoutPassengerCard({super.key});
+class FlightCheckoutPassengerCard extends StatelessWidget {
+  const FlightCheckoutPassengerCard({super.key});
 
   @override
   Widget build(BuildContext context) {

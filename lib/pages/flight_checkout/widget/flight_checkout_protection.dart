@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class CheckoutExtraProtectionCard extends StatelessWidget {
-  const CheckoutExtraProtectionCard({super.key});
+class FlightExtraProtection extends StatelessWidget {
+  const FlightExtraProtection({super.key});
 
   @override
   Widget build(BuildContext context) {
