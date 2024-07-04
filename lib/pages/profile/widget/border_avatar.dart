@@ -112,7 +112,7 @@ class _BorderedAvatarState extends State<BorderedAvatar> {
 
   void _pickImage() async {
     ImageSource? source = await showModalBottomSheet(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         useSafeArea: true,
         context: context,
         builder: (context) => const ChooseImageSource());

@@ -24,6 +24,13 @@ class ChooseImageSource extends StatelessWidget {
             Navigator.pop(context, ImageSource.gallery);
           },
         ),
+        ListTile(
+          leading: const Icon(Icons.close),
+          title: Text('cancel'.getString(context)),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
       ],
     );
   }
