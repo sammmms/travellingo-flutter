@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:travellingo/component/my_image_loader.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/place.dart';
 import 'package:travellingo/pages/place_detail/place_detail_page.dart';
@@ -72,38 +73,14 @@ class _CarouselItems extends StatelessWidget {
         child: Stack(
           children: [
             // THE PICTURE
-            ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              child: Stack(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: place.pictureType == PictureType.link
-                        ? FadeInImage(
-                            image: NetworkImage(
-                              place.pictureLink,
-                            ),
-                            placeholder: const AssetImage(
-                                "assets/images/placeholder.png"),
-                            imageErrorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                  "assets/images/placeholder.png");
-                            },
-                            fit: BoxFit.cover,
-                          )
-                        : Image.memory(
-                            base64Decode(place.pictureLink),
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
-                  ),
-                  Container(
-                    color: Colors.black.withOpacity(0.3),
-                  )
-                ],
-              ),
-            ),
+            MyImageLoader(
+                url: place.pictureLink,
+                pictureType: place.pictureType,
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+                roundedRadius: 20,
+                darken: true),
 
             // THE TEXT
             Padding(
