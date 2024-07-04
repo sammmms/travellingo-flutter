@@ -92,6 +92,7 @@ const Map<String, String> usLanguage = {
   "profileUpdated": "Profile successfully updated.",
   "camera": "Camera",
   "gallery": "Gallery",
+  "cancel": "Cancel",
   "fileSizeExceeds3MB": "File size exceeds 3MB",
   "removeImage": "Remove Image",
   "saveImage": "Save Image",
@@ -151,6 +152,11 @@ const Map<String, String> usLanguage = {
   "changeSeat": "Change Seat",
   "subtotal": "Subtotal",
   "proceedToPayment": "Proceed to Payment",
+  "payment": "Payment",
+  "paymentWith": "Payment with",
+  "pleaseEnterYourPhoneNumber": "Please enter your phone number",
+  "collabMopayDetail":
+      "We're working together with MoPay E-Wallet, any payment must be done in MoPay E-wallet.",
 
   // Transaction Details
   "transactionDetails": "Transaction Details",
@@ -210,6 +216,11 @@ const Map<String, String> usLanguage = {
   "deleteItemConfirmation": "Are you sure you want to delete this item?",
   "yesDelete": "Yes, delete",
   "failUpdateItemQuantity": "Failed to update item quantity",
+  "succesfullyAddedToCart": "Succesfully added item to cart",
+  "refundProtection": "Refund Protection",
+  "refundProtectionDetail":
+      "We'll guarantee a refundment of up to 90% total prices, in case of an unexpected event.",
+  "moreInfo": "More info",
 
   // Transaction Page
   "ticket": "Ticket",
@@ -224,10 +235,17 @@ const Map<String, String> usLanguage = {
   "reviews": "Reviews",
   "bookNow": "Book Now",
   "price": "Price",
+  "quantity": "Quantity",
+  "book": "Book",
 
   // Util
   "loginFirst": "Please login first",
   "noData": "No data",
   "clickToRefresh": "Click to refresh",
-  "pleaseRefreshpage": "Please refresh this page"
+  "pleaseRefreshpage": "Please refresh this page",
+  "tokenInvalid": "Token invalid, you need to log back in",
+
+  // Mopay
+  "userNotFound": "Mopay user not found",
+  "pleaseProceedToMopayToPay": "Please proceed to MoPay to complete payment.",
 };

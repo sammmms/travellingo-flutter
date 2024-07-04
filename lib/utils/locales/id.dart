@@ -93,6 +93,7 @@ const Map<String, String> idLanguage = {
   "camera": "Kamera",
   "gallery": "Galeri",
   "fileSizeExceeds3MB": "Ukuran file melebihi 3MB",
+  "cancel": "Batal",
   "removeImage": "Hapus gambar",
   "saveImage": "Simpan gambar",
 
@@ -151,6 +152,11 @@ const Map<String, String> idLanguage = {
   "changeSeat": "Pindah Tempat Duduk",
   "subtotal": "Subtotal",
   "proceedToPayment": "Lanjutkan ke Pembayaran",
+  "payment": "Pembayaran",
+  "paymentWith": "Pembayaran dengan",
+  "pleaseEnterYourPhoneNumber": "Mohon masukkan nomor telepon anda",
+  "collabMopayDetail":
+      "Tim kami bekerja sama dengan MoPay E-Wallet, segala transaksi yang ingin dilakukan wajib menggunakan MoPay E-Wallet.",
 
   // Transaction Details
   "transactionDetails": "Detail Transaksi",
@@ -210,6 +216,11 @@ const Map<String, String> idLanguage = {
   "deleteItemConfirmation": "Apakah kamu yakin ingin menghapus tiket ini?",
   "yesDelete": "Ya, hapus",
   "failUpdateItemQuantity": "Gagal mengubah jumlah item",
+  "succesfullyAddedToCart": "Berhasil menambah item ke dalam keranjang",
+  "refundProtection": "Proteksi Dana Kembali",
+  "refundProtectionDetail":
+      "Apabila terjadi hal yang tidak berkenan, kami dapat memastikan bahwa anda akan mendapatkan kembali nominal yang anda keluarkan hingga 90% dari total harga.",
+  "moreInfo": "More info",
 
   // Transaction Page
   "ticket": "Tiket",
@@ -224,10 +235,18 @@ const Map<String, String> idLanguage = {
   "reviews": "Ulasan",
   "bookNow": "Pesan Sekarang",
   "price": "Harga",
+  "quantity": "Jumlah",
+  "book": "Pesan",
 
   // Util
   "loginFirst": "Harap login terlebih dahulu",
   "noData": "Tidak ada data",
   "clickToRefresh": "Tekan untuk refresh",
-  "pleaseRefreshpage": "Harap muat ulang halaman ini"
+  "pleaseRefreshpage": "Harap muat ulang halaman ini",
+  "tokenInvalid": "Token sudah kadaluarsa, kamu harus login kembali",
+
+  // Mopay
+  "userNotFound": "User mopay tidak ditemukan",
+  "pleaseProceedToMopayToPay":
+      "Silahkan melanjutkan pembayaran di aplikasi MoPay untuk menyelesaikan pesanan.",
 };
