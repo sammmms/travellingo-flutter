@@ -12,7 +12,7 @@ class TransactionStatusUtil {
   };
 
   static TransactionStatus fromString(String status) {
-    return TransactionStatus.values.firstWhere((e) => statusMap[e] == status);
+    return statusMap.keys.firstWhere((element) => statusMap[element] == status);
   }
 
   static String textOf(TransactionStatus status) {
