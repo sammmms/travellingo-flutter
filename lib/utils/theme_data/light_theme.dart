@@ -56,7 +56,7 @@ ThemeData lightTheme = ThemeData(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
           side: const WidgetStatePropertyAll(
               BorderSide(color: Colors.transparent)),
-          foregroundColor: const WidgetStatePropertyAll(Colors.white))),
+          foregroundColor: WidgetStatePropertyAll(colorScheme.onPrimary))),
   colorScheme: colorScheme,
   iconTheme: IconThemeData(color: colorScheme.primary),
   primaryIconTheme: IconThemeData(color: colorScheme.primary),

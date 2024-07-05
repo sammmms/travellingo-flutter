@@ -57,7 +57,7 @@ ThemeData darkTheme = ThemeData(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
           side: const WidgetStatePropertyAll(
               BorderSide(color: Colors.transparent)),
-          foregroundColor: const WidgetStatePropertyAll(Colors.white))),
+          foregroundColor: WidgetStatePropertyAll(colorSchemeDark.onPrimary))),
   colorScheme: colorSchemeDark,
   iconTheme: IconThemeData(color: colorSchemeDark.primary),
   primaryIconTheme: IconThemeData(color: colorSchemeDark.primary),
