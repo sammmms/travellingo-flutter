@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/component/my_shimmer.dart';
 import 'package:travellingo/component/snackbar_component.dart';
+import 'package:travellingo/pages/review/review_page.dart';
 import 'package:travellingo/utils/store.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/component/my_title.dart';
@@ -188,7 +189,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             text: "purchaseHistory",
                           ),
                           TextNavigator(
-                            onTapFunction: () {},
+                            onTapFunction: () {
+                              Navigator.push(context,
+                                  slideInFromRight(const ReviewPage()));
+                            },
                             text: "review",
                           ),
                           TextNavigator(
