@@ -77,7 +77,6 @@ class TransactionBloc {
       final response = await Dio().get(
           "https://travellingo-backend.netlify.app/api/mopay/profile/public?phoneNumber=$phoneNumber");
 
-      _updateStream(TransactionState.initial());
       return response.data["_id"];
     } catch (err) {
       printError(err: err, method: "getMopayId");
@@ -90,6 +89,7 @@ class TransactionBloc {
       required String mopayId,
       int? additionalPayment}) async {
     try {
+      _updateStream(TransactionState.isLoading());
       Map<String, dynamic> payloadData = {
         "checkoutItem": jsonEncode(itemsId),
         "mopayUserId": mopayId,
@@ -97,6 +97,7 @@ class TransactionBloc {
       };
       var response = await dio.post("/cart/checkout", data: payloadData);
 
+      _updateStream(TransactionState.initial());
       return response.data;
     } catch (err) {
       if (err is DioException && err.response?.statusCode == 402) {
