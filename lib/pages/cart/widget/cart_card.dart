@@ -115,6 +115,7 @@ class _CartCardState extends State<CartCard> {
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Checkbox(
                           value: context.watch<List<String>>().firstWhereOrNull(
