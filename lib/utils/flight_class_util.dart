@@ -1,4 +1,10 @@
-enum FlightClass { economy, business, first, executive, all }
+enum FlightClass {
+  all,
+  economy,
+  business,
+  first,
+  executive,
+}
 
 class FlightClassUtil {
   static const Map<FlightClass, String> _airplaneClass = {
