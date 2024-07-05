@@ -13,8 +13,12 @@ import 'package:travellingo/utils/dummy_data.dart';
 class SelectSeatPage extends StatefulWidget {
   final Flight flight;
   final List<Passenger> passengers;
+  final bool isChangingSeat;
   const SelectSeatPage(
-      {super.key, required this.passengers, required this.flight});
+      {super.key,
+      required this.passengers,
+      required this.flight,
+      this.isChangingSeat = false});
 
   @override
   State<SelectSeatPage> createState() => _SelectSeatPageState();
@@ -25,11 +29,21 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
 // Contoh kursi yang terisi
   List<String> selectedSeats = [];
 
+  @override
+  void initState() {
+    for (var passenger in widget.passengers) {
+      if (passenger.seat.isNotEmpty) {
+        selectedSeats.add(passenger.seat);
+      }
+    }
+    super.initState();
+  }
+
   // Contoh kursi terpilih
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+      canPop: widget.isChangingSeat,
       onPopInvoked: (didPop) async {
         if (didPop) return;
 
@@ -101,6 +115,11 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
                       return;
                     }
 
+                    if (widget.isChangingSeat) {
+                      Navigator.of(context).pop();
+                      return;
+                    }
+
                     Navigator.push(
                         context,
                         slideInFromRight(FlightCheckoutPage(
@@ -108,7 +127,10 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
                           passengers: widget.passengers,
                         )));
                   },
-                  child: Text('proceedToPayment'.getString(context),
+                  child: Text(
+                      widget.isChangingSeat
+                          ? 'backToCheckout'.getString(context)
+                          : 'proceedToPayment'.getString(context),
                       style: const TextStyle(fontSize: 16.0)),
                 ),
               ),

@@ -83,7 +83,18 @@ class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
                         return FlightCheckoutPassengerCard(
                           flight: flight,
                           passenger: passenger,
-                        );
+                            onClickChangeSeat: () async {
+                              await Navigator.push(
+                                  context,
+                                  slideInFromBottom(
+                                    SelectSeatPage(
+                                      passengers: widget.passengers,
+                                      flight: flight,
+                                      isChangingSeat: true,
+                                    ),
+                                  ));
+                              setState(() {});
+                            });
                       }),
                   const SizedBox(
                     height: 40,

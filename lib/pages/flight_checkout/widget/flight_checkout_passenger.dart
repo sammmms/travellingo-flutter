@@ -7,8 +7,12 @@ import 'package:travellingo/utils/flight_class_util.dart';
 class FlightCheckoutPassengerCard extends StatelessWidget {
   final Flight flight;
   final Passenger passenger;
+  final Function() onClickChangeSeat;
   const FlightCheckoutPassengerCard(
-      {super.key, required this.flight, required this.passenger});
+      {super.key,
+      required this.flight,
+      required this.passenger,
+      required this.onClickChangeSeat});
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +71,8 @@ class FlightCheckoutPassengerCard extends StatelessWidget {
               ),
             ),
             TextButton(
-                onPressed: () {},
-                child: Text("Change Seat",
+                onPressed: onClickChangeSeat,
+                child: Text("changeSeat".getString(context),
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.tertiary,
                       fontSize: 14,
