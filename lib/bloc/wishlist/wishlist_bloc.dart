@@ -8,6 +8,7 @@ import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/place.dart';
 import 'package:travellingo/utils/app_error.dart';
 import 'package:travellingo/utils/error_print.dart';
+import 'package:travellingo/utils/place_category_util.dart';
 
 class WishlistBloc {
   final dio = Dio(BaseOptions(baseUrl: dotenv.env['BASE_URL']!));
@@ -26,7 +27,7 @@ class WishlistBloc {
       if (kDebugMode) print("controller is closed");
       return;
     }
-    if (kDebugMode) print("updated cart state");
+    if (kDebugMode) print("updated wishlist state");
     controller.add(state);
   }
 
@@ -36,17 +37,44 @@ class WishlistBloc {
     return error;
   }
 
-  Future getWishlist() async {
+  Future getWishlist(
+      {String? id, PlaceCategory? category, String? search}) async {
     try {
       _updateStream(WishlistState.loading());
-      final response = await dio.get('/wishlist');
+
+      String url = "/wishlist";
+
+      if (id != null) {
+        url += "/$id";
+      }
+
+      List<String> query = [];
+
+      if (category != null && category != PlaceCategory.all) {
+        query.add("type=${PlaceCategoryUtil.stringOf(category)}");
+      }
+
+      if (search != null) {
+        query.add("search=$search");
+      }
+
+      if (query.isNotEmpty) {
+        url += "?${query.join("&")}";
+      }
+
+      final response = await dio.get(url);
 
       var data = response.data;
 
       if (kDebugMode) print(data);
 
-      List<Place> places =
-          data.map<Place>((place) => Place.fromJson(place)).toList();
+      List<Place> places = [];
+      if (data['items'] is List) {
+        List items = data['items'];
+        places = items.map((e) => Place.fromJson(e['place'])).toList();
+      } else {
+        places = [Place.fromJson(data['place'])];
+      }
 
       _updateStream(WishlistState.success(places));
     } catch (err) {
