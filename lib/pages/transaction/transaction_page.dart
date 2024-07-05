@@ -7,6 +7,7 @@ import 'package:travellingo/bloc/transaction/transaction_state.dart';
 import 'package:travellingo/component/error_component.dart';
 import 'package:travellingo/models/transaction.dart';
 import 'package:travellingo/pages/transaction/widget/transaction_card.dart';
+import 'package:travellingo/pages/transaction/widget/transaction_page_loading.dart';
 
 class TransactionPage extends StatefulWidget {
   const TransactionPage({super.key});
@@ -35,7 +36,7 @@ class _TransactionPageState extends State<TransactionPage> {
           builder: (context, snapshot) {
             bool isLoading = snapshot.data?.isLoading ?? false;
             if (!snapshot.hasData || isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return TransactionPageLoading(isLoading: isLoading);
             }
 
             if (snapshot.data!.hasError) {
