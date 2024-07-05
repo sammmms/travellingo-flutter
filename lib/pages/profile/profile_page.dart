@@ -17,7 +17,7 @@ import 'package:travellingo/pages/profile/personal_info_page.dart';
 import 'package:travellingo/pages/profile/privacy_sharing/privacy_sharing_page.dart';
 import 'package:travellingo/pages/profile/widget/border_avatar.dart';
 import 'package:travellingo/pages/profile/widget/text_navigator.dart';
-import 'package:travellingo/pages/purchase_history/purchase_history_page.dart';
+import 'package:travellingo/pages/transaction_history/transaction_history_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

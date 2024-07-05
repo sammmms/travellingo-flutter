@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/utils/dummy_data.dart';
-import 'widget/purchase_card.dart'; // Make sure this import points to where your PurchaseCard class is defined.
+import 'widget/transaction_history_card.dart'; // Make sure this import points to where your PurchaseCard class is defined.
 
 class PurchasePage extends StatelessWidget {
   const PurchasePage({super.key});
@@ -29,9 +29,9 @@ class PurchasePage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-              "purchaseHistory".getString(context),
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+          "purchaseHistory".getString(context),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
