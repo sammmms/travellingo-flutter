@@ -5,7 +5,13 @@ import 'package:svg_flutter/svg.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/wishlist/wishlist_bloc.dart';
 import 'package:travellingo/bloc/wishlist/wishlist_state.dart';
+import 'package:travellingo/component/error_component.dart';
+import 'package:travellingo/component/my_no_data_component.dart';
+import 'package:travellingo/models/place.dart';
+import 'package:travellingo/pages/home/widget/home_filter_chip.dart';
 import 'package:travellingo/pages/home/widget/my_search_bar.dart';
+import 'package:travellingo/pages/wishlist/widget/wishlist_card.dart';
+import 'package:travellingo/utils/place_category_util.dart';
 
 class WishlistPages extends StatefulWidget {
   const WishlistPages({super.key});
@@ -18,6 +24,8 @@ class _WishlistPagesState extends State<WishlistPages> {
   final _searchController = TextEditingController();
   final _searchStream = BehaviorSubject<String>.seeded("");
   late WishlistBloc bloc;
+  bool filterState = false;
+  final _selecting = BehaviorSubject<PlaceCategory>.seeded(PlaceCategory.all);
 
   @override
   void initState() {
@@ -26,27 +34,96 @@ class _WishlistPagesState extends State<WishlistPages> {
 
     _searchStream
         .debounceTime(const Duration(milliseconds: 500))
-        .listen((event) {});
+        .listen((event) {
+      bloc.getWishlist(search: event, category: _selecting.value);
+    });
+
+    _selecting.debounceTime(const Duration(milliseconds: 500)).listen((event) {
+      bloc.getWishlist(search: _searchController.text, category: event);
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: RefreshIndicator(
+        edgeOffset: 100,
+        onRefresh: () async {
+          await bloc.getWishlist();
+        },
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             _buildAppBar(),
-            const SizedBox(
-              height: 20,
-            ),
+            if (filterState) ...[
+              const SizedBox(
+                height: 10,
+              ),
+              StreamBuilder<PlaceCategory>(
+                  stream: _selecting,
+                  builder: (context, snapshot) {
+                    PlaceCategory selection =
+                        snapshot.data ?? PlaceCategory.all;
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          for (var category in PlaceCategory.values) ...[
+                            const SizedBox(width: 10),
+                            HomeFilterChip(
+                                selection: category,
+                                isSelected: selection == category,
+                                onSelected: (value) {
+                                  _selecting.add(category);
+                                }),
+                          ]
+                        ],
+                      ),
+                    );
+                  }),
+            ],
             Expanded(
-                child: StreamBuilder<WishlistState>(
-              stream: bloc.controller,
-              builder: (context, snapshot) {
-                return const Text("Wishlist Page Search");
-              },
-            )),
+              child: StreamBuilder<WishlistState>(
+                stream: bloc.controller,
+                builder: (context, snapshot) {
+                  bool isLoading =
+                      snapshot.data?.isLoading ?? false || !snapshot.hasData;
+
+                  if (isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (snapshot.data?.hasError ?? false) {
+                    return MyErrorComponent(
+                      onRefresh: () {
+                        bloc.getWishlist();
+                      },
+                    );
+                  }
+
+                  List<Place> places = snapshot.data!.places ?? [];
+                  if (places.isEmpty) {
+                    return const MyNoDataComponent(
+                      label: "noWishlistCurrently",
+                    );
+                  }
+
+                  return ListView.separated(
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return WishlistCard(place: places[index]);
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(
+                            height: 10,
+                          ),
+                      itemCount: places.length);
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -55,13 +132,9 @@ class _WishlistPagesState extends State<WishlistPages> {
 
   Widget _buildAppBar() {
     return Padding(
-      padding: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.only(top: 30, left: 20, right: 10),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.arrow_back),
-          ),
           Expanded(
             child: MySearchBar(
               label: "search",
@@ -72,7 +145,11 @@ class _WishlistPagesState extends State<WishlistPages> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                filterState = !filterState;
+              });
+            },
             icon: SvgPicture.asset(
               color: Theme.of(context).colorScheme.tertiary,
               "assets/svg/filter_icon.svg",
