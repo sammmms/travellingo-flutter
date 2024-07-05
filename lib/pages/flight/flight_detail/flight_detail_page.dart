@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
@@ -239,9 +240,9 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                   },
                   child: Text(
                     'selectSeat'.getString(context),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onPrimary),
                   ),
                 ),
               ],
@@ -336,6 +337,10 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                           controller: TextEditingController()
                             ..text =
                                 _passengerControllers[index].identityNumber,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             labelText: 'identityNumber'.getString(context),
                             hintText: '',
@@ -352,6 +357,9 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                   TextFormField(
                     controller: TextEditingController()
                       ..text = _passengerControllers[index].fullName,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z ]'))
+                    ],
                     decoration: InputDecoration(
                       labelText: 'fullName'.getString(context),
                       hintText: '',
