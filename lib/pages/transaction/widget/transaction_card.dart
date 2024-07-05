@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/transaction.dart';
+import 'package:travellingo/pages/transaction/transaction_detail_page.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
 import 'package:travellingo/utils/transaction_status_util.dart';
 
@@ -137,7 +139,15 @@ class TransactionCard extends StatelessWidget {
             Align(
               alignment: AlignmentDirectional.centerEnd,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      slideInFromBottom(
+                        TransactionDetailPage(
+                          transactionId: transactionData.id,
+                        ),
+                      ));
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary),
                 child: Text(
