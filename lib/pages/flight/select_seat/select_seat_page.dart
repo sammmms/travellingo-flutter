@@ -1,11 +1,13 @@
 import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/component/success_dialog_component.dart';
+import 'package:travellingo/component/my_confirmation_dialog.dart';
+import 'package:travellingo/component/snackbar_component.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/flight.dart';
 import 'package:travellingo/models/passenger.dart';
 import 'package:travellingo/pages/flight/select_seat/widget/seat_passenger_card.dart';
-import 'package:travellingo/pages/dashboard_page.dart';
+import 'package:travellingo/pages/flight_checkout/flight_checkout_page.dart';
 import 'package:travellingo/utils/dummy_data.dart';
 
 class SelectSeatPage extends StatefulWidget {
@@ -26,57 +28,92 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
   // Contoh kursi terpilih
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
-          onPressed: () => Navigator.of(context).pop(),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+
+        bool? confirmExit = await showDialog(
+          context: context,
+          builder: (context) {
+            return const MyConfirmationDialog(
+              label: "seatWillBeReset",
+              subLabel: "seatWillBeResetContent",
+            );
+          },
+        );
+
+        if (confirmExit == null || !confirmExit) return;
+
+        for (var passenger in widget.passengers) {
+          passenger.seat = "";
+        }
+
+        if (!context.mounted) return;
+
+        Navigator.of(context).pop();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'selectSeat'.getString(context),
+          ),
         ),
-        title: Text(
-          'selectSeat'.getString(context),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            CarouselSlider.builder(
-              options: CarouselOptions(
-                enableInfiniteScroll: false,
-                padEnds: true,
-                height: 100,
-                viewportFraction: 0.9,
-                onPageChanged: (index, reason) {
-                  _currentPassenger = index;
-                },
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              CarouselSlider.builder(
+                options: CarouselOptions(
+                  enableInfiniteScroll: false,
+                  padEnds: true,
+                  height: 100,
+                  viewportFraction: 0.9,
+                  onPageChanged: (index, reason) {
+                    _currentPassenger = index;
+                  },
+                ),
+                itemCount: widget.passengers.length,
+                itemBuilder: (context, index, _) => SeatPassengerCard(
+                  flight: widget.flight,
+                  passenger: widget.passengers[index],
+                ),
               ),
-              itemCount: widget.passengers.length,
-              itemBuilder: (context, index, _) => SeatPassengerCard(
-                flight: widget.flight,
-                passenger: widget.passengers[index],
+              _buildSeatLegend(context),
+              Expanded(child: _buildSeatGrid(context)),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: OutlinedButton(
+                  onPressed: () {
+                    bool allSeatSelected = true;
+
+                    for (var passenger in widget.passengers) {
+                      if (passenger.seat.isEmpty) {
+                        allSeatSelected = false;
+                        break;
+                      }
+                    }
+
+                    if (!allSeatSelected) {
+                      showMySnackBar(context, "allPassengerMustSelectASeat",
+                          SnackbarStatus.warning);
+                      return;
+                    }
+
+                    Navigator.push(
+                        context,
+                        slideInFromRight(FlightCheckoutPage(
+                          flight: widget.flight,
+                          passengers: widget.passengers,
+                        )));
+                  },
+                  child: Text('proceedToPayment'.getString(context),
+                      style: const TextStyle(fontSize: 16.0)),
+                ),
               ),
-            ),
-            _buildSeatLegend(context),
-            Expanded(child: _buildSeatGrid(context)),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: OutlinedButton(
-                onPressed: () {
-                  showSuccessDialog(
-                      context, "successfullyAddToCart".getString(context),
-                      onClose: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) => const DashboardPage()),
-                        (route) => false);
-                  });
-                },
-                child: Text('addToCart'.getString(context),
-                    style: const TextStyle(fontSize: 16.0)),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -200,25 +237,65 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
       child: AspectRatio(
         aspectRatio: 1, // Aspek rasio 1:1 untuk membuatnya persegi
         child: InkWell(
-          onTap: () {
+          onTap: () async {
             // Memperbarui state ketika item kursi ditekan
-            setState(() {
-              if (isOccupied) {
-                return; // Jangan lakukan apa pun jika kursi terisi
+
+            if (isOccupied) {
+              return; // Jangan lakukan apa pun jika kursi terisi
+            }
+
+            // When the selected seat, is already selected (either by the same passenger or another passenger)
+            if (selectedSeats.contains(seatNumber)) {
+              // When other passenger are selecting this seat
+              if (widget.passengers[_currentPassenger].seat != seatNumber) {
+                bool? switchSeat = await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const MyConfirmationDialog(
+                      label: "changeSeatConfirmation",
+                      subLabel: "changeSeatConfirmationContent",
+                    );
+                  },
+                );
+
+                if (switchSeat == null || !switchSeat) {
+                  return;
+                }
+
+                Passenger occupyingPassenger = widget.passengers
+                    .firstWhere((passenger) => passenger.seat == seatNumber);
+
+                String temporarySeat =
+                    widget.passengers[_currentPassenger].seat;
+
+                // Switch the seat
+                widget.passengers[_currentPassenger].seat =
+                    occupyingPassenger.seat;
+
+                if (temporarySeat.isNotEmpty) {
+                  occupyingPassenger.seat = temporarySeat;
+                } else {
+                  occupyingPassenger.seat = "";
+                }
               }
 
-              if (selectedSeats.contains(seatNumber)) {
+              // When the same passenger are deselecting the seat
+              else {
                 widget.passengers[_currentPassenger].seat = "";
                 selectedSeats.remove(seatNumber);
-              } else {
-                if (widget.passengers[_currentPassenger].seat.isNotEmpty) {
-                  selectedSeats
-                      .remove(widget.passengers[_currentPassenger].seat);
-                }
-                widget.passengers[_currentPassenger].seat = seatNumber;
-                selectedSeats.add(seatNumber);
               }
-            });
+            } else {
+              // Remove the current selected seat
+              if (widget.passengers[_currentPassenger].seat.isNotEmpty) {
+                selectedSeats.remove(widget.passengers[_currentPassenger].seat);
+              }
+
+              // Set the new selected seat
+              widget.passengers[_currentPassenger].seat = seatNumber;
+              selectedSeats.add(seatNumber);
+            }
+
+            setState(() {});
           },
           child: Icon(
             Icons.chair_rounded,
