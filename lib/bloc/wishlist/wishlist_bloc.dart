@@ -82,4 +82,34 @@ class WishlistBloc {
       _updateError(err);
     }
   }
+
+  Future addToWishlist(String id) async {
+    try {
+      _updateStream(WishlistState.loading());
+
+      final response = await dio.post("/wishlist/$id");
+
+      if (kDebugMode) print(response);
+
+      getWishlist();
+    } catch (err) {
+      printError(err: err, method: "addToWishlist");
+      _updateError(err);
+    }
+  }
+
+  Future removeFromWishlist(String id) async {
+    try {
+      _updateStream(WishlistState.loading());
+
+      final response = await dio.delete("/wishlist/$id");
+
+      if (kDebugMode) print(response);
+
+      getWishlist();
+    } catch (err) {
+      printError(err: err, method: "removeFromWishlist");
+      _updateError(err);
+    }
+  }
 }
