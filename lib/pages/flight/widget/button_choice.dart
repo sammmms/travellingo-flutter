@@ -16,7 +16,7 @@ class ButtonChoice extends StatelessWidget {
               foregroundColor: WidgetStatePropertyAll(
                   Theme.of(context).colorScheme.onSurface),
               backgroundColor: WidgetStatePropertyAll(
-                  Theme.of(context).colorScheme.surfaceTint),
+                  Theme.of(context).colorScheme.surfaceBright),
               surfaceTintColor:
                   const WidgetStatePropertyAll(Colors.transparent),
               elevation: const WidgetStatePropertyAll(0),

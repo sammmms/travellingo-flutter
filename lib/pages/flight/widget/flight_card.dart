@@ -15,7 +15,7 @@ class FlightCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6),
             side: BorderSide(color: Colors.grey.shade300)),
-        color: Theme.of(context).colorScheme.surfaceTint,
+        color: Theme.of(context).colorScheme.surfaceBright,
         child: Padding(
           padding: const EdgeInsets.all(18),
           child: Column(

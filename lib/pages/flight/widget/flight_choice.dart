@@ -25,9 +25,11 @@ class _FlightChoiceState extends State<FlightChoice> {
 
   @override
   void initState() {
-    _departureCity.add(indonesiaAirport.first["kodeBandara"]!);
-    _arrivalCity.add(indonesiaAirport.last["kodeBandara"]!);
+    // _departureCity.add(indonesiaAirport.first["kodeBandara"]!);
+    // _arrivalCity.add(indonesiaAirport.last["kodeBandara"]!);
 
+    _departureCity.add("KNO");
+    _arrivalCity.add("HLP");
     _arrivalCity.listen((event) {
       _departureCity.add(_departureCity.value);
     });
@@ -39,7 +41,7 @@ class _FlightChoiceState extends State<FlightChoice> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceTint,
+        color: Theme.of(context).colorScheme.surfaceBright,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
