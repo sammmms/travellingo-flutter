@@ -9,6 +9,7 @@ class ChooseImageSource extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       shrinkWrap: true,
+      padding: const EdgeInsets.only(bottom: 20),
       children: [
         ListTile(
           leading: const Icon(Icons.camera),
