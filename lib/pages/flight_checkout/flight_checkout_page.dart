@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/flight.dart';
 import 'package:travellingo/models/passenger.dart';
+import 'package:travellingo/pages/flight/select_seat/select_seat_page.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_card.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_passenger.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_protection.dart';
+import 'package:travellingo/utils/format_currency.dart';
 
 class FlightCheckoutPage extends StatefulWidget {
   final Flight flight;
@@ -21,6 +24,14 @@ class FlightCheckoutPage extends StatefulWidget {
 
 class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
   bool isChecked = false;
+  late int totalProtection;
+
+  @override
+  void initState() {
+    totalProtection =
+        (widget.flight.price * widget.passengers.length * 0.25).toInt();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +92,8 @@ class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
                         Passenger passenger = widget.passengers[index];
 
                         return FlightCheckoutPassengerCard(
-                          flight: flight,
-                          passenger: passenger,
+                            flight: flight,
+                            passenger: passenger,
                             onClickChangeSeat: () async {
                               await Navigator.push(
                                   context,
@@ -122,16 +133,16 @@ class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
                             activeColor: Colors.orange,
                           ),
                           const SizedBox(width: 8),
-                          const Text(
-                            'Protect Your Trip',
-                            style: TextStyle(
+                          Text(
+                            'protectYourTrip'.getString(context),
+                            style: const TextStyle(
                               fontSize: 16,
                             ),
                           ),
                         ],
                       ),
                       Text(
-                        '\$5 ${'perPerson'.getString(context).toUpperCase()}',
+                        '${formatToIndonesiaCurrency(totalProtection)} / ${'person'.getString(context).toUpperCase()}',
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.normal,
@@ -158,29 +169,32 @@ class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   Text(
-                    'Subtotal',
-                    style: TextStyle(
-                      color: Color(0xFF6B7B78),
+                    'subtotal'.getString(context),
+                    style: const TextStyle(
                       fontSize: 10,
                     ),
                   ),
-                  SizedBox(width: 8), // Spacing between text
-                  Icon(
+                  const SizedBox(width: 8), // Spacing between text
+                  const Icon(
                     Icons.keyboard_arrow_down,
                     size: 16,
                   ), // Info icon
                 ],
               ),
               Text(
-                '\$475.22',
-                style: TextStyle(
-                  color: Color(0xFF292F2E),
+                isChecked
+                    ? formatToIndonesiaCurrency(
+                        widget.flight.price * widget.passengers.length +
+                            totalProtection)
+                    : formatToIndonesiaCurrency(
+                        widget.flight.price * widget.passengers.length),
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight
                       .w600, // Inter doesn't have a 'semi-bold', w600 is 'semi-bold' equivalent
