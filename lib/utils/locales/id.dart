@@ -95,8 +95,9 @@ const Map<String, String> idLanguage = {
   "gallery": "Galeri",
   "fileSizeExceeds3MB": "Ukuran file melebihi 3MB",
   "cancel": "Batal",
-  "removeImage": "Hapus gambar",
   "saveImage": "Simpan gambar",
+  "saveImageConfirmation": "Simpan perubahan pada gambar profile anda?",
+  "succesfullyChangedImage": "Berhasil mengubah gambar",
 
   // Notification Settings
   "specialTipsAndOffers": "Penawaran Spesial dan Informasi",
@@ -121,6 +122,14 @@ const Map<String, String> idLanguage = {
   "termsNConditionApply": "Syarat dan Ketentuan berlaku",
   "fillPassengerData": "Isi data penumpang",
   "passengerAlreadyAdded": "Penumpang sudah ditambahkan ke daftar",
+  "allPassengerMustSelectASeat": "Semua penumpang harus memilih tempat duduk",
+  "seatWillBeReset": "Reset pilihan tempat duduk saat ini?",
+  "seatWillBeResetContent":
+      "Semua penumpang akan kehilangan tempat duduk yang sudah dipilih.",
+  "changeSeatConfirmation":
+      "Tukar tempat duduk saat ini dengan penumpang yang sudah duduk?",
+  "changeSeatConfirmationContent":
+      "Tempat duduk saat ini akan ditukar dengan penumpang yang sudah duduk di kursi ini.",
 
   // Ticket List
   "ticketList": "Daftar Tiket",

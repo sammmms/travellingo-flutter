@@ -95,8 +95,10 @@ const Map<String, String> usLanguage = {
   "gallery": "Gallery",
   "cancel": "Cancel",
   "fileSizeExceeds3MB": "File size exceeds 3MB",
-  "removeImage": "Remove Image",
-  "saveImage": "Save Image",
+  "saveImageConfirmation": "Save image changes?",
+  "saveImageConfirmationContent":
+      "Do you want to save the changes you've made to your profile picture?",
+  "succesfullyChangedImage": "Successfully changed image",
 
   // Notification Settings
   "specialTipsAndOffers": "Special Tips and Offers",
@@ -121,6 +123,14 @@ const Map<String, String> usLanguage = {
   "termsNConditionApply": "Terms and Condition apply",
   "fillPassengerData": "Please fill in the passenger data",
   "passengerAlreadyAdded": "Passenger already added to the list",
+  "allPassengerMustSelectASeat": "All passengers must select a seat",
+  "seatWillBeReset": "Reset your current seat selection?",
+  "seatWillBeResetContent":
+      "Your current seat selection will be reset upon quitting this section.",
+  "changeSeatConfirmation":
+      "Change your seat with the current seated passenger?",
+  "changeSeatConfirmationContent":
+      "Your current seat will be swapped with the current seated passenger.",
 
   // Ticket List
   "ticketList": "Ticket Lists",
