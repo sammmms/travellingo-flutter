@@ -110,7 +110,8 @@ ColorScheme colorScheme = ColorScheme(
     onError: Colors.white,
     surface: Colors.white,
     surfaceTint: const Color.fromARGB(255, 247, 247, 247),
+    surfaceContainer: const Color.fromARGB(255, 246, 248, 251),
     surfaceDim: const Color.fromARGB(255, 243, 243, 243),
     onSurface: const Color.fromRGBO(27, 20, 70, 1),
-    tertiary: Colors.cyan.shade400,
+    tertiary: const Color(0xFF57A3BB),
     tertiaryContainer: Colors.cyan.shade100);

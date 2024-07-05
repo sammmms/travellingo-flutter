@@ -114,6 +114,7 @@ ColorScheme colorSchemeDark = ColorScheme(
     surfaceTint: const Color.fromARGB(255, 59, 59, 59),
     surfaceDim: const Color.fromARGB(255, 63, 63, 63),
     surfaceBright: const Color(0xFF2C2C2C),
+    surfaceContainer: const Color(0xFF2C2C2C),
     onSurface: const Color(0xFFE0E0E0),
     tertiary: Colors.cyan.shade100,
     tertiaryContainer: Colors.cyan.shade600);
