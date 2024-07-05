@@ -120,6 +120,7 @@ const Map<String, String> usLanguage = {
   "noFlightAvailable": "No flight available",
   "termsNConditionApply": "Terms and Condition apply",
   "fillPassengerData": "Please fill in the passenger data",
+  "passengerAlreadyAdded": "Passenger already added to the list",
 
   // Ticket List
   "ticketList": "Ticket Lists",
@@ -230,6 +231,12 @@ const Map<String, String> usLanguage = {
   "payNow": "Pay Now",
   "transactionPage": "Transaction Page",
 
+  // Transaction Detail
+  "transactionDetail": "Transaction Detail",
+  "transactionComplete": "Transaction Complete",
+  "transactionPending": "Transaction Pending",
+  "pleaseCompleteYourPaymentBefore": "Please complete your payment before",
+
   // Place Detail
   "noReviewYet": "No review",
   "placeDetail": "Place Detail",
@@ -238,6 +245,9 @@ const Map<String, String> usLanguage = {
   "price": "Price",
   "quantity": "Quantity",
   "book": "Book",
+
+  // Wishlist
+  "noWishlistCurrently": "No wishlist found currently.",
 
   // Util
   "loginFirst": "Please login first",

@@ -120,6 +120,7 @@ const Map<String, String> idLanguage = {
   "noFlightAvailable": "Tidak ada penerbangan yang tersedia",
   "termsNConditionApply": "Syarat dan Ketentuan berlaku",
   "fillPassengerData": "Isi data penumpang",
+  "passengerAlreadyAdded": "Penumpang sudah ditambahkan ke daftar",
 
   // Ticket List
   "ticketList": "Daftar Tiket",
@@ -230,6 +231,12 @@ const Map<String, String> idLanguage = {
   "payNow": "Bayar Sekarang",
   "transactionPage": "Laman Transaksi",
 
+  // Transaction Detail
+  "transactionDetail": "Detail Transaksi",
+  "transactionComplete": "Transaksi Selesai",
+  "transactionPending": "Menunggu Pembayaran",
+  "pleaseCompleteYourPaymentBefore": "Harap selesaikan pembayaran sebelum",
+
   // Place Detail
   "noReviewYet": "Belum ada ulasan",
   "placeDetail": "Detail Tempat",
@@ -238,6 +245,9 @@ const Map<String, String> idLanguage = {
   "price": "Harga",
   "quantity": "Jumlah",
   "book": "Pesan",
+
+  // Wishlist
+  "noWishlistCurrently": "Tidak ada wishlist yang ditemukan saat ini.",
 
   // Util
   "loginFirst": "Harap login terlebih dahulu",
