@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:travellingo/component/my_image_loader.dart';
 import 'package:travellingo/models/place.dart';
