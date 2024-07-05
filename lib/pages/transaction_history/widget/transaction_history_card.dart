@@ -28,7 +28,7 @@ class PurchaseCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  Theme.of(context).colorScheme.surfaceBright,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -48,7 +48,7 @@ class PurchaseCard extends StatelessWidget {
               Text(
                 "Payment Successful",
                 style: GoogleFonts.inter(
-                  color: const Color(0xFF3E84A8),
+                  color: const Color(0xFF57A3BB),
                   fontSize: 14,
                 ),
               ),
@@ -76,7 +76,7 @@ class PurchaseCard extends StatelessWidget {
                   Text(
                     "Flight",
                     style: GoogleFonts.inter(
-                      color: const Color(0xFF8C8D89),
+                      color: Theme.of(context).colorScheme.tertiary,
                       fontSize: 14,
                     ),
                   ),
@@ -135,7 +135,7 @@ class PurchaseCard extends StatelessWidget {
               Text(
                 brand,
                 style: GoogleFonts.inter(
-                  color: const Color(0xFF141511),
+                  //  color: Theme.of(context).colorScheme.primary,
                   fontSize: 16,
                 ),
               ),
@@ -147,7 +147,7 @@ class PurchaseCard extends StatelessWidget {
               Text(
                 invoice,
                 style: GoogleFonts.inter(
-                  color: const Color(0xFF8C8D89),
+                   color: Theme.of(context).colorScheme.tertiary,
                   fontSize: 12,
                 ),
               ),

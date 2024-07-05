@@ -72,24 +72,24 @@ class _FlightPageState extends State<FlightPage> {
             ),
           ),
           CarouselSlider.builder(
-              options: CarouselOptions(
-                  aspectRatio: 16 / 9,
-                  autoPlay: true,
-                  enlargeCenterPage: true,
-                  initialPage: 0,
-                  padEnds: true,
-                  enableInfiniteScroll: true,
-                  pageSnapping: true,
-                  viewportFraction: 0.8),
-              itemCount: 5,
-              itemBuilder: (context, __, _) => FlightCardImage(
-                    heading: "50%",
-                    heading2: "discount".getString(context),
-                    subheading: "forNewUsers".getString(context),
-                    subheading2:
-                        "*${"termsNConditionApply".getString(context)}",
-                    image: "assets/flight/flight.jpg",
-                  ))
+            options: CarouselOptions(
+                aspectRatio: 16 / 9,
+                autoPlay: true,
+                enlargeCenterPage: true,
+                initialPage: 0,
+                padEnds: true,
+                enableInfiniteScroll: true,
+                pageSnapping: true,
+                viewportFraction: 0.8),
+            itemCount: 5,
+            itemBuilder: (context, __, _) => FlightCardImage(
+              heading: "50%",
+              heading2: "discount".getString(context),
+              subheading: "forNewUsers".getString(context),
+              subheading2: "*${"termsNConditionApply".getString(context)}",
+              image: "assets/flight/flight.jpg",
+            ),
+          )
         ],
       ),
     ));
