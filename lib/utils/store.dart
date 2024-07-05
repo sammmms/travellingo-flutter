@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travellingo/bloc/theme/theme_state.dart';
+import 'package:travellingo/models/recent_flight_search.dart';
 import 'package:travellingo/pages/profile/notifications/notifications_page.dart';
 
 class Store {
@@ -124,5 +126,48 @@ class Store {
   static Future<String?> getChoosenCity() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('city');
+  }
+
+  // RECENT FLIGHT
+  static Future<void> saveRecentFlightSearch(
+      RecentFlightSearch recentFlightSearch) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> recentFlightSearchesString =
+        prefs.getStringList('recentFlightSearches') ?? [];
+
+    List<RecentFlightSearch> recentFlightSearches = recentFlightSearchesString
+        .map((e) => RecentFlightSearch.fromJson(jsonDecode(e)))
+        .toList();
+
+    RecentFlightSearch? foundRecentFlight = recentFlightSearches
+        .firstWhereOrNull((element) => element.isEqual(recentFlightSearch));
+
+    if (foundRecentFlight != null) {
+      recentFlightSearches.remove(foundRecentFlight);
+    }
+
+    recentFlightSearches.insert(0, recentFlightSearch);
+
+    if (recentFlightSearches.length > 5) {
+      recentFlightSearches.removeLast();
+    }
+
+    prefs.setStringList('recentFlightSearches',
+        recentFlightSearches.map((e) => jsonEncode(e)).toList());
+  }
+
+  static Future<List<RecentFlightSearch>> getRecentFlightSearch() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> recentFlightSearches =
+        prefs.getStringList('recentFlightSearches') ?? [];
+
+    return recentFlightSearches
+        .map((e) => RecentFlightSearch.fromJson(jsonDecode(e)))
+        .toList();
+  }
+
+  static Future<void> clearRecentFlightSearch() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('recentFlightSearches');
   }
 }
