@@ -131,6 +131,11 @@ const Map<String, String> usLanguage = {
       "Change your seat with the current seated passenger?",
   "changeSeatConfirmationContent":
       "Your current seat will be swapped with the current seated passenger.",
+  "protectYourTrip": "Protect your trip",
+  "extraProtection": "Extra Protection",
+  "extraProtectionContent":
+      "Protect your trip to get insurance in the event of an accident. Accident compensation up to 800% of the total price.",
+  "backToCheckout": "Back to Checkout",
 
   // Ticket List
   "ticketList": "Ticket Lists",

@@ -130,6 +130,11 @@ const Map<String, String> idLanguage = {
       "Tukar tempat duduk saat ini dengan penumpang yang sudah duduk?",
   "changeSeatConfirmationContent":
       "Tempat duduk saat ini akan ditukar dengan penumpang yang sudah duduk di kursi ini.",
+  "protectYourTrip": "Proteksi perjalananmu",
+  "extraProtection": "Proteksi tambahan",
+  "extraProtectionContent":
+      "Proteksi perjalananmu akan melindungi kamu dari hal-hal yang tidak diinginkan. Kompensasi hingga 800% dari total harga.",
+  "backToCheckout": "Kembali ke pembayaran",
 
   // Ticket List
   "ticketList": "Daftar Tiket",
