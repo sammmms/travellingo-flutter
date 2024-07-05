@@ -62,7 +62,7 @@ class _CartCardState extends State<CartCard> {
         Card(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: SizedBox(
-              height: 100,
+              height: 120,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Row(
@@ -89,6 +89,8 @@ class _CartCardState extends State<CartCard> {
                             Text(
                               place.name,
                               style: Theme.of(context).textTheme.headlineMedium,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             Text("${place.country}, ${place.city}"),
                             const Spacer(),
@@ -102,9 +104,6 @@ class _CartCardState extends State<CartCard> {
                                           .colorScheme
                                           .onSurface,
                                       fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(
-                              height: 10,
                             ),
                           ],
                         ),
