@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
 class MyConfirmationDialog extends StatelessWidget {
   final String? title;
@@ -28,39 +29,53 @@ class MyConfirmationDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (title != null)
+            if (title != null) ...[
               Text(
-                title!,
+                title!.getString(context),
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
+              const SizedBox(
+                height: 10,
+              )
+            ],
             Text(
-              label,
+              label.getString(context),
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            if (subLabel != null) Text(subLabel!),
+            if (subLabel != null) ...[
+              const SizedBox(
+                height: 20,
+              ),
+              Text(subLabel!.getString(context))
+            ],
             const SizedBox(
               height: 30,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                OutlinedButton(
-                    onPressed:
-                        onClickNegative ?? () => Navigator.pop(context, false),
-                    child: Text(
-                      negativeLabel ?? "Cancel",
-                      style: Theme.of(context).textTheme.labelLarge,
-                    )),
-                const SizedBox(
-                  width: 10,
-                ),
                 ElevatedButton(
                     onPressed:
-                        onClickPositive ?? () => Navigator.pop(context, true),
+                        onClickNegative ?? () => Navigator.pop(context, true),
                     child: Text(
-                      positiveLabel ?? "Yes",
-                      style: Theme.of(context).textTheme.labelLarge,
+                      (negativeLabel ?? "cancel").getString(context),
+                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                     )),
+                const SizedBox(
+                  width: 20,
+                ),
+                OutlinedButton(
+                  onPressed:
+                      onClickPositive ?? () => Navigator.pop(context, false),
+                  child: Text(
+                    (positiveLabel ?? "yes").getString(context),
+                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                  ),
+                ),
               ],
             )
           ],
