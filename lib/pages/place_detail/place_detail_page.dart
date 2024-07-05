@@ -3,10 +3,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:svg_flutter/svg.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
 import 'package:travellingo/bloc/cart/cart_bloc.dart';
 import 'package:travellingo/bloc/place/place_bloc.dart';
 import 'package:travellingo/bloc/place/place_state.dart';
+import 'package:travellingo/bloc/wishlist/wishlist_bloc.dart';
+import 'package:travellingo/bloc/wishlist/wishlist_state.dart';
 import 'package:travellingo/component/my_loading_dialog.dart';
 import 'package:travellingo/component/my_no_data_component.dart';
 import 'package:travellingo/component/my_image_loader.dart';
@@ -37,13 +40,18 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
   final result = BoxHitTestResult();
   late CartBloc _cartBloc;
   late PlaceBloc _bloc;
+  late WishlistBloc _wishlistBloc;
   final _selectedQuantity = BehaviorSubject<int>.seeded(0);
 
   @override
   void initState() {
     _cartBloc = CartBloc(context.read<AuthBloc>());
     _bloc = PlaceBloc(context.read<AuthBloc>());
+    _wishlistBloc = WishlistBloc(context.read<AuthBloc>());
+
+    _wishlistBloc.getWishlist(id: widget.place.id);
     _bloc.getPlaceById(widget.place.id);
+
     super.initState();
   }
 
@@ -289,14 +297,48 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                     ],
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Icon(Icons.location_on_outlined),
-                      const SizedBox(
-                        width: 5,
+                      Row(
+                        children: [
+                          const Icon(Icons.location_on_outlined),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "${place.country}, ${place.city}",
+                          ),
+                        ],
                       ),
-                      Text(
-                        "${place.country}, ${place.city}",
-                      ),
+                      StreamBuilder<WishlistState>(
+                          stream: _wishlistBloc.controller,
+                          builder: (context, snapshot) {
+                            bool isAdded =
+                                snapshot.data?.places?.isNotEmpty ?? false;
+                            return IconButton(
+                                onPressed: () {
+                                  if (isAdded) {
+                                    _wishlistBloc.removeFromWishlist(place.id);
+                                    return;
+                                  }
+                                  _wishlistBloc.addToWishlist(place.id);
+                                },
+                                icon: isAdded
+                                    ? SvgPicture.asset(
+                                        "assets/svg/saved_icon.svg",
+                                        width: 25,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      )
+                                    : SvgPicture.asset(
+                                        "assets/svg/wishlist_icon.svg",
+                                        width: 25,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ));
+                          })
                     ],
                   ),
                   Divider(
