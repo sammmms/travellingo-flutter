@@ -28,7 +28,7 @@ class _TransactionPageState extends State<TransactionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("transactionPage".getString(context)),
+        title: Text("transaction".getString(context)),
       ),
       body: StreamBuilder<TransactionState>(
           stream: bloc.state,
