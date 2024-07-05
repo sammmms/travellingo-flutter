@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:intl/intl.dart';
 import 'package:travellingo/component/airplane_animation_component.dart';
 import 'package:travellingo/component/dotted_divider_component.dart';
 import 'package:travellingo/component/my_image_loader.dart';
-import 'package:travellingo/models/cart.dart';
+import 'package:travellingo/models/flight.dart';
+import 'package:travellingo/utils/flight_class_util.dart';
 
 class FlightCheckoutCard extends StatelessWidget {
-  final CartItems items;
-  const FlightCheckoutCard({super.key, required this.items});
+  final Flight flight;
+  const FlightCheckoutCard({super.key, required this.flight});
 
   @override
   Widget build(BuildContext context) {
@@ -33,100 +35,90 @@ class FlightCheckoutCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               MyImageLoader(
-                url: items.place.pictureLink,
-                pictureType: items.place.pictureType,
+                url: flight.pictureLink,
+                pictureType: flight.pictureType,
                 height: 32,
                 fit: BoxFit.cover,
               ),
-              Text(
-                'viewDetails'.getString(context),
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.tertiary,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          const DottedDivider(),
-          const SizedBox(height: 8), // Add space between elements
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Kobe',
-                style: TextStyle(
-                  color: Color(0xFF8C8D89),
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                'Himeji Castle',
-                style: TextStyle(
-                  color: Color(0xFF8C8D89),
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '19.00 PM',
-                style: TextStyle(
-                  color: Color(0xFF141511),
-                  fontSize: 16,
-                ),
-              ),
-              Row(
-                mainAxisSize:
-                    MainAxisSize.min, // Use the minimum amount of space
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Icon(
-                    Icons.circle,
-                    color: Color(0xFF3E84A8),
-                    size: 8,
+                  Text(
+                    "${flight.flightNumber} • ${flight.airline}",
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
-                  SizedBox(width: 8), // Add space between icons
-                  AirplaneAnimation(),
-                  SizedBox(width: 8), // Add space between icons
-                  Icon(
-                    Icons.lens,
-                    color: Color(0xFF3E84A8),
-                    size: 8,
+                  Text(
+                    FlightClassUtil.stringFromClass(flight.flightClass)
+                        .getString(context),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.tertiary,
+                      fontSize: 14,
+                    ),
                   ),
                 ],
               ),
+            ],
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const DottedDivider(),
+          const SizedBox(height: 8), // Add space between elements
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               Text(
-                '19.10 PM',
-                style: TextStyle(
-                  color: Color(0xFF141511),
+                flight.departure,
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                flight.arrival,
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                DateFormat('HH:mm').format(flight.departureTime),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              const AirplaneAnimation(),
+              Text(
+                DateFormat('HH:mm').format(flight.arrivalTime),
+                style: const TextStyle(
                   fontSize: 16,
                 ),
               ),
             ],
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '01 April 2024',
-                style: TextStyle(
-                  color: Color(0xFF8C8D89),
+                DateFormat('dd MMM yyyy').format(flight.departureTime),
+                style: const TextStyle(
                   fontSize: 12,
                 ),
               ),
               Text(
-                'Duration 10m',
-                style: TextStyle(
-                  color: Color(0xFF8C8D89),
+                '${flight.duration.inHours}h ${flight.duration.inMinutes.remainder(60)}m',
+                style: const TextStyle(
                   fontSize: 12,
                 ),
               ),
               Text(
-                '01 April 2024',
-                style: TextStyle(
-                  color: Color(0xFF8C8D89),
+                DateFormat('dd MMM yyyy').format(flight.arrivalTime),
+                style: const TextStyle(
                   fontSize: 12,
                 ),
               ),
