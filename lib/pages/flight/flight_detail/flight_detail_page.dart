@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
@@ -111,7 +112,30 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                       const SizedBox(
                           height: 8), // Add space between the containers
                       PassengerDetailCard(
-                        onAdd: () {},
+                        onAdd: (Passenger passenger) {
+                          Passenger? foundPassenger =
+                              _passengerControllers.firstWhereOrNull(
+                            (e) =>
+                                e.fullName == passenger.fullName &&
+                                e.identityNumber == passenger.identityNumber,
+                          );
+                          if (foundPassenger != null) {
+                            showMySnackBar(context, "passengerAlreadyAdded",
+                                SnackbarStatus.nothing);
+                            return;
+                          }
+                          Passenger? emptyPassenger =
+                              _passengerControllers.firstWhereOrNull((e) =>
+                                  e.fullName == "" && e.identityNumber == "");
+                          if (emptyPassenger == null) {
+                            _addNewPassengerPanel();
+                            emptyPassenger = _passengerControllers.last;
+                          }
+                          int index =
+                              _passengerControllers.indexOf(emptyPassenger);
+                          _passengerControllers[index] = passenger;
+                          setState(() {});
+                        },
                       )
                     ],
                   ),
@@ -322,6 +346,9 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                       Expanded(
                         flex: 2,
                         child: TextFormField(
+                          controller: TextEditingController()
+                            ..text =
+                                _passengerControllers[index].identityNumber,
                           decoration: InputDecoration(
                             labelText: 'identityNumber'.getString(context),
                             hintText: '',
@@ -336,6 +363,8 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
+                    controller: TextEditingController()
+                      ..text = _passengerControllers[index].fullName,
                     decoration: InputDecoration(
                       labelText: 'fullName'.getString(context),
                       hintText: '',

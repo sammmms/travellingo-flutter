@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
 import 'package:travellingo/models/user.dart';
+import 'package:travellingo/pages/flight/flight_detail/flight_detail_page.dart';
+import 'package:travellingo/utils/identity_util.dart';
 
 class PassengerDetailCard extends StatefulWidget {
-  final Function() onAdd;
+  final Function(Passenger passenger) onAdd;
   const PassengerDetailCard({super.key, required this.onAdd});
 
   @override
@@ -68,13 +70,19 @@ class _PassengerDetailCardState extends State<PassengerDetailCard> {
                 ),
                 const SizedBox(width: 16),
                 IconButton(
-                    onPressed: widget.onAdd,
+                    onPressed: () => widget.onAdd(
+                          Passenger(
+                            fullName: user.name,
+                            identityNumber: user.id ?? "",
+                            identityType: IdentityType.idCard,
+                          ),
+                        ),
                     style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(
                             Theme.of(context)
                                 .colorScheme
-                                .onSurface
-                                .withOpacity(0.5)),
+                                .surface
+                                .withOpacity(0.8)),
                         shape: WidgetStateProperty.all(const CircleBorder())),
                     icon: const Icon(Icons.person_add_alt_1_outlined))
               ],
