@@ -6,12 +6,8 @@ import 'package:travellingo/utils/flight_class_util.dart';
 class SeatPassengerCard extends StatelessWidget {
   final Flight flight;
   final Passenger passenger;
-  final String selectedSeat;
   const SeatPassengerCard(
-      {super.key,
-      required this.selectedSeat,
-      required this.passenger,
-      required this.flight});
+      {super.key, required this.passenger, required this.flight});
 
   @override
   Widget build(BuildContext context) {
@@ -50,17 +46,17 @@ class SeatPassengerCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        FlightClassUtil.stringFromClass(flight.flightClass),
+                        FlightClassUtil.readableStringFromClass(
+                            flight.flightClass),
                       ),
                       const SizedBox(width: 16),
                       Icon(Icons.circle,
                           color: Theme.of(context).colorScheme.onSurface,
                           size: 8),
                       const SizedBox(width: 16),
-                      Text("Seat $selectedSeat",
+                      Text("Seat ${passenger.seat}",
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onSurface,
-                            fontSize: 14,
                             fontWeight: FontWeight.w500,
                           )),
                     ],

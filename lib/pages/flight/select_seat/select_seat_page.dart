@@ -54,7 +54,6 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
               itemBuilder: (context, index, _) => SeatPassengerCard(
                 flight: widget.flight,
                 passenger: widget.passengers[index],
-                selectedSeat: "",
               ),
             ),
             _buildSeatLegend(context),
@@ -212,6 +211,10 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
                 widget.passengers[_currentPassenger].seat = "";
                 selectedSeats.remove(seatNumber);
               } else {
+                if (widget.passengers[_currentPassenger].seat.isNotEmpty) {
+                  selectedSeats
+                      .remove(widget.passengers[_currentPassenger].seat);
+                }
                 widget.passengers[_currentPassenger].seat = seatNumber;
                 selectedSeats.add(seatNumber);
               }
