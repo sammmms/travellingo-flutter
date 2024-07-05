@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/models/recent_flight_search.dart';
 import 'package:travellingo/pages/flight/flight_list/flight_list_page.dart';
 import 'package:travellingo/pages/flight/widget/button_choice.dart';
 import 'package:travellingo/pages/flight/widget/location_choice.dart';
 import 'package:travellingo/utils/flight_class_util.dart';
 import 'package:travellingo/utils/date_converter.dart';
 import 'package:travellingo/utils/dummy_data.dart';
+import 'package:travellingo/utils/store.dart';
 
 class FlightChoice extends StatefulWidget {
   const FlightChoice({super.key});
@@ -21,7 +23,9 @@ class _FlightChoiceState extends State<FlightChoice> {
   final _arrivalCity = BehaviorSubject<String>();
   final pickedDate = BehaviorSubject<DateTime>.seeded(DateTime.now());
   final passengerCount = BehaviorSubject<int>.seeded(1);
-  final flightClass = BehaviorSubject<FlightClass>.seeded(FlightClass.economy);
+  final flightClass = BehaviorSubject<FlightClass>.seeded(FlightClass.all);
+  final _passengerChoiceKey = GlobalKey();
+  final _classChoiceKey = GlobalKey();
 
   @override
   void initState() {
@@ -120,7 +124,11 @@ class _FlightChoiceState extends State<FlightChoice> {
                     ),
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
+                  await _saveFlight();
+
+                  if (!context.mounted) return;
+
                   Navigator.push(
                       context,
                       slideInFromBottom(FlightListPage(
@@ -150,6 +158,21 @@ class _FlightChoiceState extends State<FlightChoice> {
         ],
       ),
     );
+  }
+
+  Future<void> _saveFlight() async {
+    DateTime pickedDate = this.pickedDate.valueOrNull!;
+
+    RecentFlightSearch recentFlightSearch = RecentFlightSearch(
+        from: indonesiaAirport.firstWhere((element) =>
+            element["kodeBandara"] == _departureCity.valueOrNull!)["kota"]!,
+        to: indonesiaAirport.firstWhere((element) =>
+            element["kodeBandara"] == _arrivalCity.valueOrNull!)["kota"]!,
+        date: DateTime(pickedDate.year, pickedDate.month, pickedDate.day),
+        passengerCount: passengerCount.valueOrNull!,
+        flightClass: flightClass.valueOrNull!);
+
+    await Store.saveRecentFlightSearch(recentFlightSearch);
   }
 
   Widget _buildDropdownDatetime() {
@@ -183,42 +206,62 @@ class _FlightChoiceState extends State<FlightChoice> {
 
   Widget _buildDropdownPassenger(count) {
     return Expanded(
-      child: Container(
-        height: 56,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.asset("assets/flight/passenger.png"),
-            DropdownButtonHideUnderline(
-              child: DropdownButton<int>(
-                value: count,
-                iconSize: 0,
-                elevation: 16,
-                borderRadius: BorderRadius.circular(10),
-                dropdownColor: Theme.of(context).colorScheme.surfaceTint,
-                padding: EdgeInsets.zero,
-                menuMaxHeight: 300,
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontFamily: 'Poppins'),
-                onChanged: (int? newValue) {
-                  passengerCount.add(newValue!);
-                },
-                items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((int value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    child: Text(
-                      "$value ${'passenger'.getString(context)}",
-                    ),
-                  );
-                }).toList(),
+      child: GestureDetector(
+        onTap: () {
+          GestureDetector? detector;
+          void searchForGestureDetector(BuildContext element) {
+            element.visitChildElements((element) {
+              if (element.widget is GestureDetector) {
+                detector = element.widget as GestureDetector;
+              } else {
+                searchForGestureDetector(element);
+              }
+            });
+          }
+
+          searchForGestureDetector(_passengerChoiceKey.currentContext!);
+          if (detector != null) {
+            detector!.onTap!();
+          }
+        },
+        child: Container(
+          height: 56,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image.asset("assets/flight/passenger.png"),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<int>(
+                  key: _passengerChoiceKey,
+                  value: count,
+                  iconSize: 0,
+                  elevation: 16,
+                  borderRadius: BorderRadius.circular(10),
+                  dropdownColor: Theme.of(context).colorScheme.surfaceTint,
+                  padding: EdgeInsets.zero,
+                  menuMaxHeight: 300,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontFamily: 'Poppins'),
+                  onChanged: (int? newValue) {
+                    passengerCount.add(newValue!);
+                  },
+                  items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((int value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        "$value ${'passenger'.getString(context)}",
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -226,40 +269,60 @@ class _FlightChoiceState extends State<FlightChoice> {
 
   Widget _buildDropdownClass(FlightClass chosen) {
     return Expanded(
-      child: Container(
-        height: 56,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.asset("assets/flight/flight_class.png"),
-            DropdownButtonHideUnderline(
-              child: DropdownButton<FlightClass>(
-                value: chosen,
-                iconSize: 0,
-                elevation: 16,
-                borderRadius: BorderRadius.circular(10),
-                padding: EdgeInsets.zero,
-                menuMaxHeight: 300,
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontFamily: 'Poppins'),
-                onChanged: (FlightClass? newValue) {
-                  flightClass.add(newValue!);
-                },
-                items: FlightClass.values.map((FlightClass value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    child: Text(FlightClassUtil.stringFromClass(value)
-                        .getString(context)),
-                  );
-                }).toList(),
-              ),
-            )
-          ],
+      child: GestureDetector(
+        onTap: () {
+          GestureDetector? detector;
+          void searchForGestureDetector(BuildContext element) {
+            element.visitChildElements((element) {
+              if (element.widget is GestureDetector) {
+                detector = element.widget as GestureDetector;
+              } else {
+                searchForGestureDetector(element);
+              }
+            });
+          }
+
+          searchForGestureDetector(_classChoiceKey.currentContext!);
+          if (detector != null) {
+            detector!.onTap!();
+          }
+        },
+        child: Container(
+          height: 56,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Image.asset("assets/flight/flight_class.png"),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<FlightClass>(
+                  key: _classChoiceKey,
+                  value: chosen,
+                  iconSize: 0,
+                  elevation: 16,
+                  borderRadius: BorderRadius.circular(10),
+                  padding: EdgeInsets.zero,
+                  menuMaxHeight: 300,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontFamily: 'Poppins'),
+                  onChanged: (FlightClass? newValue) {
+                    flightClass.add(newValue!);
+                  },
+                  items: FlightClass.values.map((FlightClass value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(FlightClassUtil.stringFromClass(value)
+                          .getString(context)),
+                    );
+                  }).toList(),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
