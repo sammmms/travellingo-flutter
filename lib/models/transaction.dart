@@ -32,6 +32,7 @@ class Transaction {
   final DateTime transactionDate;
   final DateTime? expiredAt;
   final TransactionStatus status;
+  final int additionalPayment;
 
   Transaction({
     required this.id,
@@ -40,6 +41,7 @@ class Transaction {
     required this.transactionDate,
     required this.expiredAt,
     required this.status,
+    this.additionalPayment = 0,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -60,6 +62,7 @@ class Transaction {
           ? null
           : DateTime.parse(json['expiredAt']).toLocal(),
       status: TransactionStatusUtil.fromString(json['status']),
+      additionalPayment: json['additionalPayment'] ?? 0,
     );
   }
 
@@ -71,6 +74,7 @@ class Transaction {
       'transactionDate': transactionDate.toIso8601String(),
       'expiredAt': expiredAt?.toIso8601String(),
       'status': TransactionStatusUtil.textOf(status),
+      'additionalPayment': additionalPayment,
     };
   }
 
@@ -82,6 +86,7 @@ class Transaction {
     DateTime? transactionDate,
     DateTime? expiredAt,
     TransactionStatus? status,
+    int? additionalPayment,
   }) {
     return Transaction(
       id: id ?? this.id,
@@ -90,6 +95,7 @@ class Transaction {
       transactionDate: transactionDate ?? this.transactionDate,
       expiredAt: expiredAt ?? this.expiredAt,
       status: status ?? this.status,
+      additionalPayment: additionalPayment ?? this.additionalPayment,
     );
   }
 }
