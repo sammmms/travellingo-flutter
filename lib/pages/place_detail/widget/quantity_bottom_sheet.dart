@@ -164,33 +164,55 @@ class _QuantityBottomSheetState extends State<QuantityBottomSheet> {
             ),
 
             // BOOK BUTTON
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                    minHeight: 56, minWidth: double.infinity),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  style: ButtonStyle(
-                    elevation: const WidgetStatePropertyAll(10),
-                    padding: WidgetStateProperty.all(
-                        const EdgeInsets.symmetric(horizontal: 20)),
-                    backgroundColor: WidgetStateProperty.all(
-                        Theme.of(context).colorScheme.primary),
-                    foregroundColor: WidgetStateProperty.all(
-                        Theme.of(context).colorScheme.onPrimary),
-                    shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+            StreamBuilder<int>(
+                stream: widget.selectedQuantity,
+                builder: (context, snapshot) {
+                  bool isQuantityValid =
+                      snapshot.data != null && snapshot.data! > 0;
+                  return Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                          minHeight: 56, minWidth: double.infinity),
+                      child: ElevatedButton(
+                        onPressed: isQuantityValid
+                            ? () {
+                                Navigator.pop(context, true);
+                              }
+                            : null,
+                        style: ButtonStyle(
+                          elevation: const WidgetStatePropertyAll(10),
+                          padding: WidgetStateProperty.all(
+                              const EdgeInsets.symmetric(horizontal: 20)),
+                          backgroundColor: WidgetStateProperty.all(
+                              isQuantityValid
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .onPrimary
+                                      .withOpacity(0.2)),
+                          foregroundColor: WidgetStateProperty.all(
+                              Theme.of(context).colorScheme.onPrimary),
+                          shape: WidgetStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          "book".getString(context),
+                          style: TextStyle(
+                              color: isQuantityValid
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface
+                                      .withOpacity(0.2)),
+                        ),
                       ),
                     ),
-                  ),
-                  child: Text("book".getString(context)),
-                ),
-              ),
-            ),
+                  );
+                }),
           ],
         ),
       ),
