@@ -17,8 +17,8 @@ class PrivacyButton extends StatelessWidget {
         onPressed: () => onClickFunction(),
         style: ButtonStyle(
             padding: const WidgetStatePropertyAll(EdgeInsets.all(15)),
-            backgroundColor: const WidgetStatePropertyAll(Colors.white),
-            foregroundColor: const WidgetStatePropertyAll(Color(0xAA1B1446)),
+            backgroundColor: WidgetStatePropertyAll(
+                Theme.of(context).colorScheme.surfaceBright),
             side: WidgetStatePropertyAll(
                 BorderSide(color: Colors.grey.shade300, width: 1)),
             shape: WidgetStatePropertyAll(RoundedRectangleBorder(
@@ -33,19 +33,20 @@ class PrivacyButton extends StatelessWidget {
                 children: [
                   Text(
                     title.getString(context),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 27, 20, 70)),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                   const SizedBox(
                     height: 5,
                   ),
                   SizedBox(
                       width: MediaQuery.of(context).size.width * 0.6,
-                      child: Text(
-                        description.getString(context),
-                        style: TextStyle(color: Colors.grey.shade700),
-                      ))
+                      child: Text(description.getString(context),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          )))
                 ],
               ),
               const Icon(Icons.arrow_forward_ios, color: Color(0xFFF5D161))

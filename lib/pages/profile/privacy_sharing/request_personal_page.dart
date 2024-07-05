@@ -35,9 +35,7 @@ class _RequestPersonalPageState extends State<RequestPersonalPage> {
               children: [
                 Text(
                   "requestPersonalDataDetail".getString(context),
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 128, 128, 128),
-                      fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
                   height: 15,
@@ -46,7 +44,7 @@ class _RequestPersonalPageState extends State<RequestPersonalPage> {
                   padding: const EdgeInsets.all(8),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 246, 248, 251),
+                      color: Theme.of(context).colorScheme.surfaceContainer,
                       border: Border.all(
                           color: const Color.fromARGB(15, 1, 34, 118),
                           width: 2),
@@ -70,7 +68,7 @@ class _RequestPersonalPageState extends State<RequestPersonalPage> {
                             isExpanded: true,
                             menuMaxHeight: 400,
                             dropdownColor:
-                                const Color.fromARGB(255, 246, 248, 251),
+                                Theme.of(context).colorScheme.surfaceContainer,
                             isDense: true,
                             borderRadius: BorderRadius.circular(16),
                             value: livingLocation,
@@ -80,7 +78,6 @@ class _RequestPersonalPageState extends State<RequestPersonalPage> {
                                     child: Text(
                                       country,
                                       style: const TextStyle(
-                                        color: Color.fromARGB(255, 27, 20, 70),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
                                       ),
@@ -131,7 +128,6 @@ class _RequestPersonalPageState extends State<RequestPersonalPage> {
                                     width: 2))),
                         style: const TextStyle(
                           fontSize: 14,
-                          color: Color.fromARGB(255, 128, 128, 128),
                         ),
                         maxLength: 150,
                         textAlignVertical: TextAlignVertical.top,

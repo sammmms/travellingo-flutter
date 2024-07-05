@@ -27,16 +27,22 @@ class TextFieldPersonalInfo extends StatelessWidget {
           enabled: isEnabled,
           filled: false,
           focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Color(0xFFF6F8FB), width: 2),
+              borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                  width: 2),
               borderRadius: BorderRadius.circular(20)),
           errorBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: Colors.redAccent, width: 2),
               borderRadius: BorderRadius.circular(20)),
           enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Color(0xFFF6F8FB), width: 2),
+              borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                  width: 2),
               borderRadius: BorderRadius.circular(20)),
           disabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Color(0xFFF6F8FB), width: 2),
+              borderSide: BorderSide(
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                  width: 2),
               borderRadius: BorderRadius.circular(20)),
           labelText: content.getString(context).toUpperCase()),
     );

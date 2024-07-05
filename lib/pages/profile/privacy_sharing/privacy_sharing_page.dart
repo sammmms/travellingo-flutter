@@ -36,7 +36,8 @@ class PrivacySharingPage extends StatelessWidget {
               Text(
                 "manageYourAccountData".getString(context),
                 style: const TextStyle(
-                    color: Colors.black, fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,
+                ),
                 textScaler: const TextScaler.linear(1.5),
               ),
               const SizedBox(
@@ -44,7 +45,6 @@ class PrivacySharingPage extends StatelessWidget {
               ),
               Text(
                 "manageYourAccountDataDetail".getString(context),
-                style: TextStyle(color: Colors.grey.shade700),
               ),
               const SizedBox(
                 height: 20,
