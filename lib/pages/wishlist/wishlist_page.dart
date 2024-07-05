@@ -11,6 +11,7 @@ import 'package:travellingo/models/place.dart';
 import 'package:travellingo/pages/home/widget/home_filter_chip.dart';
 import 'package:travellingo/pages/home/widget/my_search_bar.dart';
 import 'package:travellingo/pages/wishlist/widget/wishlist_card.dart';
+import 'package:travellingo/pages/wishlist/widget/wishlist_loading.dart';
 import 'package:travellingo/utils/place_category_util.dart';
 
 class WishlistPages extends StatefulWidget {
@@ -92,9 +93,7 @@ class _WishlistPagesState extends State<WishlistPages> {
                       snapshot.data?.isLoading ?? false || !snapshot.hasData;
 
                   if (isLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return WishlistLoading(isLoading: isLoading);
                   }
 
                   if (snapshot.data?.hasError ?? false) {
