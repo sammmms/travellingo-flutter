@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:travellingo/models/cart.dart';
+import 'package:travellingo/models/flight.dart';
+import 'package:travellingo/models/passenger.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_card.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_passenger.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_protection.dart';
 
-class CheckoutPage extends StatefulWidget {
-  final List<CartItems> cartItems;
-  const CheckoutPage({super.key, required this.cartItems});
+class FlightCheckoutPage extends StatefulWidget {
+  final Flight flight;
+  final List<Passenger> passengers;
+  const FlightCheckoutPage({
+    super.key,
+    required this.flight,
+    required this.passengers,
+  });
 
   @override
-  State<CheckoutPage> createState() => _CheckoutPageState();
+  State<FlightCheckoutPage> createState() => _FlightCheckoutPageState();
 }
 
-class _CheckoutPageState extends State<CheckoutPage> {
+class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
   bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
           onPressed: () => Navigator.of(context).pop(),
@@ -46,17 +51,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: widget.cartItems.length,
-                    itemBuilder: (context, index) => FlightCheckoutCard(
-                      items: widget.cartItems[index],
-                    ),
+                  FlightCheckoutCard(
+                    flight: widget.flight,
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 40,
                   ),
                   Text(
                     'passengerList'.getString(context),
@@ -66,9 +67,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
-                  const FlightCheckoutPassengerCard(),
+                  ListView.separated(
+                      shrinkWrap: true,
+                      separatorBuilder: (context, index) => const SizedBox(
+                            height: 16,
+                          ),
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: widget.passengers.length,
+                      itemBuilder: (context, index) {
+                        Flight flight = widget.flight;
+                        Passenger passenger = widget.passengers[index];
+
+                        return FlightCheckoutPassengerCard(
+                          flight: flight,
+                          passenger: passenger,
+                        );
+                      }),
+                  const SizedBox(
+                    height: 40,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -175,9 +194,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
             onPressed: () {
               // Navigator.push(context, slideInFromRight(const PaymentPage()));
             },
-            child: const Text(
-              'Proceed to Payment',
-              style: TextStyle(
+            child: Text(
+              'proceedToPayment'.getString(context),
+              style: const TextStyle(
                 fontSize: 16,
               ),
             ),

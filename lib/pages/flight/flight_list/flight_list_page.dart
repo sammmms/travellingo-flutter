@@ -59,7 +59,6 @@ class _FlightListPageState extends State<FlightListPage> {
       length: dates.length,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.surfaceBright,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
             onPressed: () => Navigator.of(context).pop(),

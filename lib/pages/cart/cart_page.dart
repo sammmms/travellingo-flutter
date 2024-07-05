@@ -73,7 +73,6 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
         title: Text("cart".getString(context)),
         scrolledUnderElevation: 0,
       ),

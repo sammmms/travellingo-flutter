@@ -33,7 +33,6 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surfaceTint,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
           onPressed: () => Navigator.of(context).pop(),
