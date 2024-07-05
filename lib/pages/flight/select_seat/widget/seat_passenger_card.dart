@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/models/flight.dart';
 import 'package:travellingo/models/passenger.dart';
 import 'package:travellingo/utils/flight_class_util.dart';
@@ -46,8 +47,8 @@ class SeatPassengerCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        FlightClassUtil.readableStringFromClass(
-                            flight.flightClass),
+                        FlightClassUtil.stringFromClass(flight.flightClass)
+                            .getString(context),
                       ),
                       const SizedBox(width: 16),
                       Icon(Icons.circle,
