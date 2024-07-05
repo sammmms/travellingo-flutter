@@ -58,4 +58,23 @@ class Flight {
       pictureType: PictureTypeUtil.typeOf(json['pictureType']),
     );
   }
+
+  factory Flight.generateDummy() {
+    return Flight(
+      id: "1",
+      airline: "Airline",
+      flightNumber: "123",
+      departure: "Departure",
+      arrival: "Arrival",
+      price: 100,
+      departureTime: DateTime.now(),
+      arrivalTime: DateTime.now().add(const Duration(hours: 2)),
+      duration: const Duration(hours: 2),
+      seats: 100,
+      availableSeats: 100,
+      flightClass: FlightClass.economy,
+      pictureLink: "https://picsum.photos/250?image=9",
+      pictureType: PictureType.link,
+    );
+  }
 }

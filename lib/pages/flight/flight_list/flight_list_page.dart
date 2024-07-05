@@ -7,6 +7,7 @@ import 'package:travellingo/bloc/flight/flight_bloc.dart';
 import 'package:travellingo/bloc/flight/flight_state.dart';
 import 'package:travellingo/models/flight.dart';
 import 'package:travellingo/pages/flight/flight_list/flight_list_card.dart';
+import 'package:travellingo/pages/flight/flight_list/flight_list_loading.dart';
 import 'package:travellingo/utils/flight_class_util.dart';
 
 class FlightListPage extends StatefulWidget {
@@ -145,9 +146,7 @@ class _FlightListPageState extends State<FlightListPage> {
 
                   if (isLoading) {
                     return const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      child: FlightListLoading(),
                     );
                   }
 
