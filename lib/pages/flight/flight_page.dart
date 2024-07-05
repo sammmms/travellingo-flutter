@@ -7,7 +7,7 @@ import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/recent_flight_search.dart';
 import 'package:travellingo/pages/flight/flight_list/flight_list_page.dart';
 import 'package:travellingo/pages/flight/widget/app_bar_stack.dart';
-import 'package:travellingo/pages/flight/widget/flight_card.dart';
+import 'package:travellingo/pages/flight/widget/recent_flight_card.dart';
 import 'package:travellingo/pages/flight/widget/flight_card_image.dart';
 import 'package:travellingo/pages/home/widget/label_heading.dart';
 import 'package:travellingo/pages/home/widget/see_all.dart';
