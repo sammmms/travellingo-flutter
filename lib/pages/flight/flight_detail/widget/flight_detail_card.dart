@@ -36,7 +36,7 @@ class FlightDetailCard extends StatelessWidget {
                 MyImageLoader(
                   url: flight.pictureLink,
                   fit: BoxFit.cover,
-                  width: 30,
+                  height: 32,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,

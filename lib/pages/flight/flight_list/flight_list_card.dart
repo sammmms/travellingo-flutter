@@ -44,14 +44,12 @@ class FlightListCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(
-                          height: 32,
-                          width: 52,
-                          child: MyImageLoader(
-                            url: flight.pictureLink,
-                            fit: BoxFit.cover,
-                            pictureType: flight.pictureType,
-                          )),
+                      MyImageLoader(
+                        url: flight.pictureLink,
+                        fit: BoxFit.cover,
+                        pictureType: flight.pictureType,
+                        height: 32,
+                      ),
                       // Harga dan ketersediaan di sisi kanan
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
