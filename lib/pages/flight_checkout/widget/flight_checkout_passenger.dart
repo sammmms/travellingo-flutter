@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:travellingo/models/flight.dart';
+import 'package:travellingo/models/passenger.dart';
+import 'package:travellingo/utils/flight_class_util.dart';
 
 class FlightCheckoutPassengerCard extends StatelessWidget {
-  const FlightCheckoutPassengerCard({super.key});
+  final Flight flight;
+  final Passenger passenger;
+  const FlightCheckoutPassengerCard(
+      {super.key, required this.flight, required this.passenger});
 
   @override
   Widget build(BuildContext context) {
@@ -10,11 +17,11 @@ class FlightCheckoutPassengerCard extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
             color: Colors.grey.withOpacity(0.3), width: 1.0), // Garis outline
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surfaceBright,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -23,31 +30,34 @@ class FlightCheckoutPassengerCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Luaman Guaamin',
-                    style: TextStyle(
-                      color: Colors.black,
+                    passenger.fullName,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500, // Medium weight
-                      fontFamily: 'Inter', // Pastikan font Inter tersedia
                     ),
                   ),
-                  SizedBox(height: 4.0),
+                  const SizedBox(height: 4.0),
                   Row(
                     children: [
                       Text(
-                        "Economy",
-                        style: TextStyle(
-                          color: Color(0xFF8C8D89),
+                        FlightClassUtil.stringFromClass(flight.flightClass)
+                            .getString(context),
+                        style: const TextStyle(
                           fontSize: 14,
                         ),
                       ),
-                      SizedBox(width: 16),
-                      Icon(Icons.circle, color: Color(0xFF8C8D89), size: 8),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
+                      Icon(
+                        Icons.circle,
+                        color: Theme.of(context).colorScheme.onSurface,
+                        size: 8,
+                      ),
+                      const SizedBox(width: 16),
                       Text(
-                        "8D",
-                        style: TextStyle(
-                          color: Color(0xFF8C8D89),
+                        passenger.seat,
+                        style: const TextStyle(
                           fontSize: 14,
                         ),
                       ),
@@ -56,11 +66,13 @@ class FlightCheckoutPassengerCard extends StatelessWidget {
                 ],
               ),
             ),
-            Text("Change Seat",
-                style: TextStyle(
-                  color: Color(0xFF3E84A8),
-                  fontSize: 14,
-                )),
+            TextButton(
+                onPressed: () {},
+                child: Text("Change Seat",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.tertiary,
+                      fontSize: 14,
+                    ))),
           ],
         ),
       ),
