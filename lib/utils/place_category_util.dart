@@ -1,4 +1,10 @@
-enum PlaceCategory { hotel, restaurant, attraction, zoo, all }
+enum PlaceCategory {
+  all,
+  attraction,
+  hotel,
+  restaurant,
+  zoo,
+}
 
 class PlaceCategoryUtil {
   static const Map<PlaceCategory, String> _placeCategoryMap = {
