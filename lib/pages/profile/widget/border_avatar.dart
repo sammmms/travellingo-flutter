@@ -11,6 +11,7 @@ import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
 import 'package:travellingo/component/choose_image_source.dart';
 import 'package:travellingo/component/my_confirmation_dialog.dart';
 import 'package:travellingo/component/snackbar_component.dart';
+import 'package:travellingo/utils/app_error.dart';
 import 'package:travellingo/utils/theme_data/light_theme.dart';
 
 class BorderedAvatar extends StatefulWidget {
@@ -44,10 +45,10 @@ class _BorderedAvatarState extends State<BorderedAvatar> {
                   ? () async {
                       bool? showConfirmationDialog = await showDialog(
                         context: context,
-                        builder: (context) => MyConfirmationDialog(
-                            label: "${"saveImage".getString(context)}?",
-                            positiveLabel: "Yes",
-                            negativeLabel: "Cancel"),
+                        builder: (context) => const MyConfirmationDialog(
+                          label: "saveImageConfirmation",
+                          subLabel: "saveImageConfirmationContent",
+                        ),
                       );
 
                       if (showConfirmationDialog == null ||
@@ -55,7 +56,19 @@ class _BorderedAvatarState extends State<BorderedAvatar> {
 
                       String base64Image =
                           base64Encode(snapshot.data!.readAsBytesSync());
-                      await _bloc.changePicture(base64Image);
+
+                      AppError? error = await _bloc.changePicture(base64Image);
+
+                      if (!context.mounted) return;
+
+                      if (error != null) {
+                        showMySnackBar(
+                            context, error.message, SnackbarStatus.failed);
+                        return;
+                      }
+
+                      showMySnackBar(context, "succesfullyChangedImage",
+                          SnackbarStatus.success);
                     }
                   : _pickImage,
               borderRadius: BorderRadius.circular(90),
@@ -93,14 +106,14 @@ class _BorderedAvatarState extends State<BorderedAvatar> {
                         width: 30,
                         height: 30,
                         child: hasImage
-                            ? const Icon(
+                            ? Icon(
                                 Icons.check_rounded,
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onPrimary,
                                 size: 20,
                               )
                             : SvgPicture.asset(
                                 "assets/svg/edit_icon.svg",
-                                color: Colors.white,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               )),
                   )
                 ],
@@ -112,6 +125,7 @@ class _BorderedAvatarState extends State<BorderedAvatar> {
 
   void _pickImage() async {
     ImageSource? source = await showModalBottomSheet(
+        showDragHandle: true,
         backgroundColor: Theme.of(context).colorScheme.surface,
         useSafeArea: true,
         context: context,
