@@ -23,19 +23,4 @@ class FlightClassUtil {
   static String stringFromClass(FlightClass value) {
     return _airplaneClass[value]!;
   }
-
-  static String readableStringFromClass(FlightClass value) {
-    switch (value) {
-      case FlightClass.economy:
-        return "Economy";
-      case FlightClass.business:
-        return "Business";
-      case FlightClass.first:
-        return "First";
-      case FlightClass.executive:
-        return "Executive";
-      case FlightClass.all:
-        return "All";
-    }
-  }
 }
