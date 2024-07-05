@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travellingo/bloc/user_bloc/user_bloc.dart';
 import 'package:travellingo/bloc/user_bloc/user_state.dart';
+import 'package:travellingo/models/passenger.dart';
 import 'package:travellingo/models/user.dart';
-import 'package:travellingo/pages/flight/flight_detail/flight_detail_page.dart';
 import 'package:travellingo/utils/identity_util.dart';
 
 class PassengerDetailCard extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travellingo/models/flight.dart';
-import 'package:travellingo/pages/flight/flight_detail/flight_detail_page.dart';
+import 'package:travellingo/models/passenger.dart';
 import 'package:travellingo/utils/flight_class_util.dart';
 
 class SeatPassengerCard extends StatelessWidget {

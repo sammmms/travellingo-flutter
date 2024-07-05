@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:travellingo/component/success_dialog_component.dart';
 import 'package:travellingo/models/flight.dart';
-import 'package:travellingo/pages/flight/flight_detail/flight_detail_page.dart';
+import 'package:travellingo/models/passenger.dart';
 import 'package:travellingo/pages/flight/select_seat/widget/seat_passenger_card.dart';
 import 'package:travellingo/pages/dashboard_page.dart';
 import 'package:travellingo/utils/dummy_data.dart';

@@ -7,26 +7,13 @@ import 'package:travellingo/bloc/auth/auth_state.dart';
 import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/flight.dart';
+import 'package:travellingo/models/passenger.dart';
 import 'package:travellingo/pages/flight/select_seat/select_seat_page.dart';
 import 'package:travellingo/pages/flight/flight_detail/widget/passenger_detail_card.dart';
 import 'package:travellingo/pages/flight/flight_detail/widget/flight_detail_card.dart';
 import 'package:travellingo/pages/login/login_page.dart';
 import 'package:travellingo/utils/format_currency.dart';
 import 'package:travellingo/utils/identity_util.dart';
-
-class Passenger {
-  String identityNumber;
-  String fullName;
-  IdentityType identityType;
-  String seat;
-
-  Passenger({
-    this.identityNumber = "",
-    this.fullName = "",
-    this.identityType = IdentityType.idCard,
-    this.seat = "",
-  });
-}
 
 class FlightDetailPage extends StatefulWidget {
   final Flight flight;
