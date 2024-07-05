@@ -56,7 +56,7 @@ class MyConfirmationDialog extends StatelessWidget {
               children: [
                 ElevatedButton(
                     onPressed:
-                        onClickNegative ?? () => Navigator.pop(context, true),
+                        onClickNegative ?? () => Navigator.pop(context, false),
                     child: Text(
                       (negativeLabel ?? "cancel").getString(context),
                       style: Theme.of(context).textTheme.labelLarge!.copyWith(
@@ -68,7 +68,7 @@ class MyConfirmationDialog extends StatelessWidget {
                 ),
                 OutlinedButton(
                   onPressed:
-                      onClickPositive ?? () => Navigator.pop(context, false),
+                      onClickPositive ?? () => Navigator.pop(context, true),
                   child: Text(
                     (positiveLabel ?? "yes").getString(context),
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
