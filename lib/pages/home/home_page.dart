@@ -24,6 +24,7 @@ import 'package:travellingo/pages/home/widget/see_all.dart';
 import 'package:travellingo/pages/home/widget/transport_button.dart';
 import 'package:travellingo/pages/flight/flight_page.dart';
 import 'package:travellingo/pages/login/login_page.dart';
+import 'package:travellingo/pages/no_feature_page.dart';
 import 'package:travellingo/pages/place_detail/place_detail_page.dart';
 import 'package:travellingo/utils/dummy_data.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
@@ -181,7 +182,10 @@ class _HomePageState extends State<HomePage> {
               backgroundColor: const Color(0xFFF5D161),
               elevation: 2,
               shape: const CircleBorder(),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context, slideInFromBottom(const NoFeaturePage()));
+              },
               child: const Icon(
                 Icons.map,
                 color: Colors.white,
@@ -310,9 +314,21 @@ class _HomePageState extends State<HomePage> {
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              TransportButton(icon: "assets/images/Bus.png", label: "bus"),
-              TransportButton(icon: "assets/images/Car.png", label: "car"),
-              TransportButton(icon: "assets/images/Train.png", label: "train"),
+              TransportButton(
+                icon: "assets/images/Bus.png",
+                label: "bus",
+                routeTo: NoFeaturePage(),
+              ),
+              TransportButton(
+                icon: "assets/images/Car.png",
+                label: "car",
+                routeTo: NoFeaturePage(),
+              ),
+              TransportButton(
+                icon: "assets/images/Train.png",
+                label: "train",
+                routeTo: NoFeaturePage(),
+              ),
               TransportButton(
                 icon: "assets/images/Airplane.png",
                 label: "airplane",
