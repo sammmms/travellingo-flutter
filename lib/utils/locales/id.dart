@@ -280,6 +280,8 @@ const Map<String, String> idLanguage = {
   "pleaseRefreshpage": "Harap muat ulang halaman ini",
   "tokenInvalid": "Token sudah kadaluarsa, kamu harus login kembali",
   "noRecentSearch": "Tidak ada pencarian terbaru",
+  "noFeatureYet":
+      "Fitur ini belum tersedia, harap tunggu pembaruan selanjutnya",
 
   // Mopay
   "userNotFound": "User mopay tidak ditemukan",

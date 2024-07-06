@@ -281,6 +281,8 @@ const Map<String, String> usLanguage = {
   "pleaseRefreshpage": "Please refresh this page",
   "tokenInvalid": "Token invalid, you need to log back in",
   "noRecentSearch": "No recent search",
+  "noFeatureYet":
+      "We're sorry to let you know, but this feature is yet to be available.",
 
   // Mopay
   "userNotFound": "Mopay user not found",
