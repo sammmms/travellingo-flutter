@@ -116,8 +116,8 @@ class TransactionPageLoading extends StatelessWidget {
                     children: [
                       // Transaction Status
                       Text(
-                        TransactionStatusUtil.readableTextOf(
-                            TransactionStatus.paid),
+                        TransactionStatusUtil.textOf(TransactionStatus.paid)
+                            .getString(context),
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

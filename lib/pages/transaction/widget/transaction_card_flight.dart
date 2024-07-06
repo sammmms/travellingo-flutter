@@ -4,10 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:travellingo/component/my_image_loader.dart';
 import 'package:travellingo/component/transition_animation.dart';
-import 'package:travellingo/models/book_flight.dart';
 import 'package:travellingo/models/flight.dart';
 import 'package:travellingo/models/transaction.dart';
-import 'package:travellingo/pages/flight/flight_detail/flight_detail_page.dart';
 import 'package:travellingo/pages/transaction/transaction_detail/flight_transaction_detail_page.dart';
 import 'package:travellingo/utils/flight_class_util.dart';
 import 'package:travellingo/utils/format_currency.dart';
@@ -25,7 +23,6 @@ class TransactionFlightCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Flight flight = transactionItems.bookFlight!.flight;
-    BookFlight bookFlight = transactionItems.bookFlight!;
 
     return Container(
       height: 194,
