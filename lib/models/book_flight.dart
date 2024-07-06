@@ -6,7 +6,6 @@ class BookFlight {
   final Flight flight;
   final List<Passenger> passengers;
   final int total;
-  final DateTime date;
   final DateTime? expiredAt;
   final DateTime createdAt;
 
@@ -15,7 +14,6 @@ class BookFlight {
     required this.flight,
     required this.passengers,
     required this.total,
-    required this.date,
     required this.expiredAt,
     required this.createdAt,
   });
@@ -34,11 +32,21 @@ class BookFlight {
       flight: Flight.fromJson(json['flight']),
       passengers: passengers,
       total: json['total'],
-      date: DateTime.parse(json['date']).toLocal(),
       expiredAt: json['expiredAt'] == null
           ? null
           : DateTime.parse(json['expiredAt']).toLocal(),
       createdAt: DateTime.parse(json['createdAt']).toLocal(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'flight': flight.toJson(),
+      'passengers': passengers.map((e) => e.toJson()).toList(),
+      'total': total,
+      'expiredAt': expiredAt?.toUtc().toIso8601String(),
+      'createdAt': createdAt.toUtc().toIso8601String(),
+    };
   }
 }
