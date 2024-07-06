@@ -112,4 +112,8 @@ class UserBloc {
       return _updateError(err);
     }
   }
+
+  Future<void> resetStream() async {
+    _updateStream(UserState());
+  }
 }
