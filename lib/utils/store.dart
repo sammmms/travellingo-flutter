@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travellingo/bloc/theme/theme_state.dart';
 import 'package:travellingo/models/recent_flight_search.dart';
-import 'package:travellingo/pages/profile/notifications/notifications_page.dart';
+import 'package:travellingo/pages/profile/notifications/notification_preferences_page.dart';
 
 class Store {
   static Future saveLoginPreferences(
