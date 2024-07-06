@@ -38,12 +38,9 @@ class ReviewCard extends StatelessWidget {
                 const SizedBox(height: 5),
                 Text("edited".getString(context))
               ],
-              const SizedBox(
-                height: 10,
-              ),
-              const Divider(),
-              const SizedBox(
-                height: 10,
+              const Divider(
+                height: 30,
+                thickness: 0.5,
               ),
               Text(review.review, maxLines: 2, overflow: TextOverflow.ellipsis)
             ],
