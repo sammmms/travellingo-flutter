@@ -147,9 +147,8 @@ class _FlightChoiceState extends State<FlightChoice> {
                   padding: const EdgeInsets.all(18),
                   child: Text(
                     'search'.getString(context),
-                    style: const TextStyle(fontWeight: FontWeight.bold)
-                        .copyWith(
-                            color: Theme.of(context).colorScheme.onPrimary),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary),
                     textScaler: const TextScaler.linear(1.2),
                   ),
                 ),

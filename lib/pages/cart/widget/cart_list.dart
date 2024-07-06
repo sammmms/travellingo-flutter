@@ -28,8 +28,8 @@ class _CartListState extends State<CartList> {
           onTap: () {
             Navigator.push(
                 context,
-                slideInFromBottom(
-                    PlaceDetailPage(place: widget.cart.items[index].place)));
+                slideInFromBottom(PlaceDetailPage(
+                    placeId: widget.cart.items[index].place.id)));
           },
           child: CartCard(
             onTap: widget.onCheckmarkTap,
