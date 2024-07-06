@@ -280,6 +280,7 @@ const Map<String, String> usLanguage = {
   "clickToRefresh": "Click to refresh",
   "pleaseRefreshpage": "Please refresh this page",
   "tokenInvalid": "Token invalid, you need to log back in",
+  "noRecentSearch": "No recent search",
 
   // Mopay
   "userNotFound": "Mopay user not found",
