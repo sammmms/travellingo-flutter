@@ -13,21 +13,24 @@ import 'package:travellingo/pages/transaction/widget/stacking_place_quantity.dar
 import 'package:travellingo/utils/format_currency.dart';
 import 'package:travellingo/utils/transaction_status_util.dart';
 
-class TransactionDetailPage extends StatefulWidget {
+/// A PAGE TO RENDER (ONLY PLACE TRANSACTION)
+class PlaceTransactionDetailPage extends StatefulWidget {
   final String transactionId;
-  const TransactionDetailPage({super.key, required this.transactionId});
+  const PlaceTransactionDetailPage({super.key, required this.transactionId});
 
   @override
-  State<TransactionDetailPage> createState() => _TransactionDetailPageState();
+  State<PlaceTransactionDetailPage> createState() =>
+      _PlaceTransactionDetailPageState();
 }
 
-class _TransactionDetailPageState extends State<TransactionDetailPage> {
+class _PlaceTransactionDetailPageState
+    extends State<PlaceTransactionDetailPage> {
   late TransactionBloc bloc;
 
   @override
   void initState() {
     bloc = TransactionBloc(context.read<AuthBloc>());
-    bloc.getTransaction();
+    bloc.getTransactionById(widget.transactionId);
     super.initState();
   }
 
@@ -180,8 +183,8 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
                         ),
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
-                          int quantity = transaction.items[index].quantity;
-                          Place place = transaction.items[index].place;
+                          int quantity = transaction.items[index].quantity!;
+                          Place place = transaction.items[index].place!;
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -191,7 +194,7 @@ class _TransactionDetailPageState extends State<TransactionDetailPage> {
                                 height: 10,
                               ),
                               Text(
-                                  "Total : ${formatToIndonesiaCurrency(transaction.items[index].place.price * quantity)}",
+                                  "Total : ${formatToIndonesiaCurrency(transaction.items[index].place!.price * quantity)}",
                                   style: Theme.of(context).textTheme.bodyLarge),
                             ],
                           );

@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/models/place.dart';
 import 'package:travellingo/models/transaction.dart';
-import 'package:travellingo/pages/transaction/transaction_detail_page.dart';
+import 'package:travellingo/pages/transaction/transaction_detail/place_transaction_detail_page.dart';
 import 'package:travellingo/utils/picture_type_util.dart';
 import 'package:travellingo/utils/transaction_status_util.dart';
 
-class TransactionCard extends StatelessWidget {
+class TransactionPlaceCard extends StatelessWidget {
   final Transaction transactionData;
   final List<TransactionItems> items;
 
-  const TransactionCard(
+  const TransactionPlaceCard(
       {super.key, required this.items, required this.transactionData});
 
   @override
@@ -43,6 +44,7 @@ class TransactionCard extends StatelessWidget {
                     ),
                 itemBuilder: (context, index) {
                   TransactionItems item = items[index];
+                  Place place = item.place!;
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -55,12 +57,11 @@ class TransactionCard extends StatelessWidget {
                             height: 56,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image:
-                                    item.place.pictureType == PictureType.link
-                                        ? NetworkImage(item.place.pictureLink)
-                                        : MemoryImage(base64Decode(
-                                                item.place.pictureLink))
-                                            as ImageProvider,
+                                image: place.pictureType == PictureType.link
+                                    ? NetworkImage(place.pictureLink)
+                                    : MemoryImage(
+                                            base64Decode(place.pictureLink))
+                                        as ImageProvider,
                                 fit: BoxFit.cover,
                               ),
                               borderRadius: BorderRadius.circular(28),
@@ -74,7 +75,7 @@ class TransactionCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Place Name
-                            Text(item.place.name,
+                            Text(place.name,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineSmall!
@@ -100,7 +101,7 @@ class TransactionCard extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.secondary,
                                     size: 16),
-                                Text(" ${item.place.reviewAverage} "),
+                                Text(" ${place.reviewAverage} "),
                               ],
                             ),
                           ],
@@ -117,7 +118,8 @@ class TransactionCard extends StatelessWidget {
               children: [
                 // Transaction Status
                 Text(
-                  TransactionStatusUtil.readableTextOf(transactionData.status),
+                  TransactionStatusUtil.textOf(transactionData.status)
+                      .getString(context),
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -143,7 +145,7 @@ class TransactionCard extends StatelessWidget {
                   Navigator.push(
                       context,
                       slideInFromBottom(
-                        TransactionDetailPage(
+                        PlaceTransactionDetailPage(
                           transactionId: transactionData.id,
                         ),
                       ));

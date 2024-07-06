@@ -1,34 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:travellingo/component/my_image_loader.dart';
+import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/models/book_flight.dart';
+import 'package:travellingo/models/flight.dart';
+import 'package:travellingo/models/transaction.dart';
+import 'package:travellingo/pages/flight/flight_detail/flight_detail_page.dart';
+import 'package:travellingo/pages/transaction/transaction_detail/flight_transaction_detail_page.dart';
+import 'package:travellingo/utils/flight_class_util.dart';
+import 'package:travellingo/utils/format_currency.dart';
+import 'package:travellingo/utils/transaction_status_util.dart';
 
-class PurchaseCard extends StatelessWidget {
-  final String status;
-  final String type;
-  final String date;
-  final double price;
-  final String invoice;
-  final String imageUrl;
-  final String brand;
-
-  const PurchaseCard({
+class TransactionFlightCard extends StatelessWidget {
+  final Transaction transaction;
+  final TransactionItems transactionItems;
+  const TransactionFlightCard({
     super.key,
-    required this.status,
-    required this.type,
-    required this.date,
-    required this.price,
-    required this.invoice,
-    required this.imageUrl,
-    required this.brand,
+    required this.transactionItems,
+    required this.transaction,
   });
 
   @override
   Widget build(BuildContext context) {
+    Flight flight = transactionItems.bookFlight!.flight;
+    BookFlight bookFlight = transactionItems.bookFlight!;
+
     return Container(
       height: 194,
       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color:  Theme.of(context).colorScheme.surfaceBright,
+        color: Theme.of(context).colorScheme.surfaceBright,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -46,10 +50,11 @@ class PurchaseCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Payment Successful",
+                TransactionStatusUtil.textOf(transaction.status)
+                    .getString(context),
                 style: GoogleFonts.inter(
-                  color: const Color(0xFF57A3BB),
-                  fontSize: 14,
+                  color: TransactionStatusUtil.colorOf(transaction.status),
+                  fontSize: 16,
                 ),
               ),
               // Harga dan ketersediaan di sisi kanan
@@ -57,7 +62,8 @@ class PurchaseCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    date,
+                    DateFormat('dd MMMM yyyy')
+                        .format(transaction.transactionDate),
                     style: GoogleFonts.inter(
                       color: const Color(0xFF8C8D89),
                       fontSize: 14,
@@ -74,14 +80,15 @@ class PurchaseCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Flight",
+                    "${"flight".getString(context)} • ${FlightClassUtil.stringFromClass(flight.flightClass).getString(context)}",
                     style: GoogleFonts.inter(
                       color: Theme.of(context).colorScheme.tertiary,
                       fontSize: 14,
                     ),
                   ),
                   Text(
-                    '\$${price.toStringAsFixed(2)}', // Menampilkan harga
+                    formatToIndonesiaCurrency(
+                        transaction.total), // Menampilkan harga
                     style: GoogleFonts.inter(
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
@@ -92,24 +99,28 @@ class PurchaseCard extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  // Handle your on-press action here
+                  Navigator.push(
+                      context,
+                      slideInFromRight(FlightTransactionDetailPage(
+                        transactionId: transaction.id,
+                      )));
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize
                       .min, // Use MainAxisSize.min so that the Row only takes up as much space as needed
                   children: <Widget>[
                     Text(
-                      'Details',
-                      style: GoogleFonts.poppins(
-                        color: const Color(0xFF57A3BB),
+                      'details'.getString(context),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.arrow_forward_ios, // Use the appropriate arrow icon
                       size: 13.0, // Adjust the size to match your design
-                      color: Color(0xFF57A3BB),
+                      color: Theme.of(context).colorScheme.tertiary,
                     ),
                   ],
                 ),
@@ -119,22 +130,23 @@ class PurchaseCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
+              MyImageLoader(
+                url: flight.pictureLink,
+                pictureType: flight.pictureType,
                 height: 32,
-                width: 52,
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                width: 5,
+                height: 5,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.cover,
-                  ),
+                  color: Theme.of(context).colorScheme.tertiary,
+                  shape: BoxShape.circle,
                 ),
               ),
-              const SizedBox(
-                width: 30,
-              ),
               Text(
-                brand,
-                style: GoogleFonts.inter(
+                flight.airline,
+                style: const TextStyle(
                   //  color: Theme.of(context).colorScheme.primary,
                   fontSize: 16,
                 ),
@@ -145,9 +157,9 @@ class PurchaseCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                invoice,
-                style: GoogleFonts.inter(
-                   color: Theme.of(context).colorScheme.tertiary,
+                "${flight.departure} - ${flight.arrival}",
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.tertiary,
                   fontSize: 12,
                 ),
               ),
