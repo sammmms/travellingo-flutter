@@ -77,16 +77,23 @@ class TransactionBloc {
     }
   }
 
-  Future getMopayId(String phoneNumber) async {
+  Future<void> getTransactionById(String id) async {
+    _updateStream(TransactionState.isLoading());
     try {
-      _updateStream(TransactionState.isLoading());
-      final response = await Dio().get(
-          "https://travellingo-backend.netlify.app/api/mopay/profile/public?phoneNumber=$phoneNumber");
+      final response = await dio.get('/transaction/$id');
 
-      return response.data["_id"];
+      var data = response.data;
+
+      if (kDebugMode) {
+        print(data);
+      }
+
+      Transaction transaction = Transaction.fromJson(data);
+
+      _updateStream(TransactionState(transactions: [transaction]));
     } catch (err) {
-      printError(err: err, method: "getMopayId");
-      return _updateError(err);
+      printError(err: err, method: "getTransactionById");
+      _updateError(err);
     }
   }
 
