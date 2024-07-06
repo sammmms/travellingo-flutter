@@ -1,27 +1,38 @@
+import 'package:travellingo/models/book_flight.dart';
 import 'package:travellingo/models/place.dart';
 import 'package:travellingo/utils/transaction_status_util.dart';
 
 class TransactionItems {
   final String id;
-  final Place place;
-  final int quantity;
+  final Place? place;
+  final int? quantity;
+  final BookFlight? bookFlight;
 
   TransactionItems({
     required this.id,
-    required this.place,
-    required this.quantity,
+    this.place,
+    this.quantity,
+    this.bookFlight,
   });
 
   factory TransactionItems.fromJson(Map<String, dynamic> json) {
     return TransactionItems(
       id: json['_id'],
-      place: Place.fromJson(json['place']),
+      place: json['place'] == null ? null : Place.fromJson(json['place']),
       quantity: json['quantity'],
+      bookFlight: json['bookFlight'] == null
+          ? null
+          : BookFlight.fromJson(json['bookFlight']),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'place': place.toJson(), 'quantity': quantity};
+    return {
+      '_id': id,
+      'place': place?.toJson(),
+      'quantity': quantity,
+      'bookFlight': bookFlight?.toJson(),
+    };
   }
 }
 
@@ -97,5 +108,11 @@ class Transaction {
       status: status ?? this.status,
       additionalPayment: additionalPayment ?? this.additionalPayment,
     );
+  }
+
+  // TO STRING
+  @override
+  String toString() {
+    return 'Transaction(id: $id, items: $items, total: $total, transactionDate: $transactionDate, expiredAt: $expiredAt, status: $status, additionalPayment: $additionalPayment)';
   }
 }
