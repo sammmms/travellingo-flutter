@@ -1,5 +1,5 @@
 <p>
-  <img src="https://github.com/sammmms/travellingo-flutter/blob/main/assets/readme.png">
+  <img src="https://github.com/sammmms/travellingo-flutter/blob/main/assets/images/readme.png">
 </p>
 
 # ✈️ Travellingo
