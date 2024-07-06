@@ -5,11 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:travellingo/bloc/auth/auth_bloc.dart';
+import 'package:travellingo/bloc/mopay/mopay_bloc.dart';
 import 'package:travellingo/bloc/transaction/transaction_state.dart';
 import 'package:travellingo/interceptors/token_interceptor.dart';
 import 'package:travellingo/models/transaction.dart';
 import 'package:travellingo/utils/app_error.dart';
 import 'package:travellingo/utils/error_print.dart';
+import 'package:travellingo/utils/transaction_type_util.dart';
 
 class TransactionBloc {
   final dio = Dio(BaseOptions(baseUrl: dotenv.env['BASE_URL']!));
@@ -99,13 +101,16 @@ class TransactionBloc {
 
   Future checkoutCart(
       {required List<String> itemsId,
-      required String mopayId,
+      required String phoneNumber,
       int? additionalPayment}) async {
     try {
       _updateStream(TransactionState.isLoading());
+
+      var mopayUserId = await MopayBloc().getMopayIdByPhoneNumber(phoneNumber);
+
       Map<String, dynamic> payloadData = {
         "checkoutItem": jsonEncode(itemsId),
-        "mopayUserId": mopayId,
+        "mopayUserId": mopayUserId,
         if (additionalPayment != null) "additionalPayment": additionalPayment,
       };
       var response = await dio.post("/cart/checkout", data: payloadData);
