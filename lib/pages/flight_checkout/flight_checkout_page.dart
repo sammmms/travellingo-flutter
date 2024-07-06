@@ -4,6 +4,7 @@ import 'package:travellingo/component/transition_animation.dart';
 import 'package:travellingo/models/flight.dart';
 import 'package:travellingo/models/passenger.dart';
 import 'package:travellingo/pages/flight/select_seat/select_seat_page.dart';
+import 'package:travellingo/pages/flight_checkout/flight_payment_page.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_card.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_passenger.dart';
 import 'package:travellingo/pages/flight_checkout/widget/flight_checkout_protection.dart';
@@ -217,7 +218,13 @@ class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
                   const Size(95, 48)), // Set the button's size
             ),
             onPressed: () {
-              // Navigator.push(context, slideInFromRight(const PaymentPage()));
+              Navigator.push(
+                  context,
+                  slideInFromRight(FlightPaymentPage(
+                    flight: widget.flight,
+                    passengers: widget.passengers,
+                    additionalPayment: isChecked ? totalProtection : 0,
+                  )));
             },
             child: Text(
               'proceedToPayment'.getString(context),
