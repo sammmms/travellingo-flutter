@@ -49,10 +49,16 @@ class TransactionBloc {
     return appError;
   }
 
-  Future<void> getTransaction() async {
-    controller.add(TransactionState.isLoading());
+  Future<void> getTransaction([TransactionType? type]) async {
+    _updateStream(TransactionState.isLoading());
     try {
-      final response = await dio.get('/transaction');
+      String url = '/transaction';
+
+      if (type != null && type != TransactionType.all) {
+        url += '?type=${TransactionTypeUtil.textOf(type)}';
+      }
+
+      final response = await dio.get(url);
 
       var data = response.data;
 
