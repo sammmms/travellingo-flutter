@@ -18,7 +18,6 @@ import 'package:travellingo/pages/profile/personal_info_page.dart';
 import 'package:travellingo/pages/profile/privacy_sharing/privacy_sharing_page.dart';
 import 'package:travellingo/pages/profile/widget/border_avatar.dart';
 import 'package:travellingo/pages/profile/widget/text_navigator.dart';
-import 'package:travellingo/pages/transaction_history/transaction_history_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -150,7 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             text: "privacyNSharing",
                           ),
                           const Divider(
-                            height: 1,
+                            height: 40,
                             color: Color(0xFFF6F8FB),
                             indent: 20,
                             endIndent: 20,
@@ -183,13 +182,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           TextNavigator(
                             onTapFunction: () {
-                              Navigator.of(context)
-                                  .push(slideInFromRight(const PurchasePage()));
-                            },
-                            text: "purchaseHistory",
-                          ),
-                          TextNavigator(
-                            onTapFunction: () {
                               Navigator.push(context,
                                   slideInFromRight(const ReviewPage()));
                             },
@@ -198,6 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           TextNavigator(
                             onTapFunction: () async {
                               await context.read<AuthBloc>().logout();
+                              await context.read<UserBloc>().resetStream();
                               if (!context.mounted) return;
                               context.read<PageController>().jumpToPage(0);
                             },
