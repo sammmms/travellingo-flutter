@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class Review {
   String id;
   String user;
@@ -42,5 +44,17 @@ class Review {
       "haveUpdated": haveUpdated,
       "createdAt": createdAt,
     };
+  }
+
+  factory Review.generateDummy() {
+    return Review(
+      id: "123123",
+      user: "User",
+      place: "Place",
+      rating: Random().nextDouble() * 4 + 1,
+      review: "Review",
+      haveUpdated: false,
+      createdAt: DateTime.now(),
+    );
   }
 }
