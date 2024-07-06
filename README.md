@@ -1,5 +1,5 @@
 <p>
-  <img src="https://github.com/sammmms/travellingo-flutter/blob/main/assets/readme.png">
+  <img src="https://github.com/sammmms/travellingo-flutter/blob/main/assets/images/readme.png">
 </p>
 
 # ✈️ Travellingo
@@ -10,9 +10,9 @@ A mobile-platformed application that allows users to safely and remotely get tic
 - **Frontend**: Dart, Flutter
 - **Backend**: Node.js, Express
 - **Deployment**: Netlify
-- **Payment Integration**: Mopay (an collaborated e-wallet app)
+- **Payment Integration**: MoPay (an collaborated e-wallet app)
     ```
-    link to mopay github
+    https://github.com/Vania-221110551/project_ewallet
     ```
 
 ## 🛬 How It Works
