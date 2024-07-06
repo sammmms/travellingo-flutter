@@ -97,7 +97,7 @@ const Map<String, String> usLanguage = {
   "fileSizeExceeds3MB": "File size exceeds 3MB",
   "saveImageConfirmation": "Save image changes?",
   "saveImageConfirmationContent":
-      "Do you want to save the changes you've made to your profile picture?",
+      "Do you want to save the changes you've made to your profile picture",
   "succesfullyChangedImage": "Successfully changed image",
 
   // Notification Settings
@@ -136,6 +136,12 @@ const Map<String, String> usLanguage = {
   "extraProtectionContent":
       "Protect your trip to get insurance in the event of an accident. Accident compensation up to 800% of the total price.",
   "backToCheckout": "Back to Checkout",
+  "details": "Details",
+  "transactionId": "Transaction ID",
+  'insurance': "Insurance",
+  "downloadInvoice": "Download Invoice",
+  "timeRemaining": "Time Remaining to Pay",
+  "transactionSuccess": "Transaction Success",
 
   // Ticket List
   "ticketList": "Ticket Lists",
@@ -245,6 +251,8 @@ const Map<String, String> usLanguage = {
   "viewDetail": "View Detail",
   "payNow": "Pay Now",
   "transactionPage": "Transaction Page",
+  "paid": "Paid",
+  "pending": "Pending",
 
   // Transaction Detail
   "transactionDetail": "Transaction Detail",
@@ -260,6 +268,7 @@ const Map<String, String> usLanguage = {
   "price": "Price",
   "quantity": "Quantity",
   "book": "Book",
+  "place": "Place",
 
   // Wishlist
   "noWishlistCurrently": "No wishlist found currently.",

@@ -135,6 +135,12 @@ const Map<String, String> idLanguage = {
   "extraProtectionContent":
       "Proteksi perjalananmu akan melindungi kamu dari hal-hal yang tidak diinginkan. Kompensasi hingga 800% dari total harga.",
   "backToCheckout": "Kembali ke pembayaran",
+  "details": "Detail",
+  "transactionId": "ID Transaksi",
+  'insurance': "Asuransi",
+  "downloadInvoice": "Unduh Invoice",
+  "timeRemaining": "Waktu tersisa untuk membayar",
+  "transactionSuccess": "Transaksi berhasil",
 
   // Ticket List
   "ticketList": "Daftar Tiket",
@@ -244,6 +250,8 @@ const Map<String, String> idLanguage = {
   "viewDetail": "Lihat Detail",
   "payNow": "Bayar Sekarang",
   "transactionPage": "Laman Transaksi",
+  "paid": "Lunas",
+  "pending": "Tertunda",
 
   // Transaction Detail
   "transactionDetail": "Detail Transaksi",
@@ -259,6 +267,7 @@ const Map<String, String> idLanguage = {
   "price": "Harga",
   "quantity": "Jumlah",
   "book": "Pesan",
+  "place": "Tempat",
 
   // Wishlist
   "noWishlistCurrently": "Tidak ada wishlist yang ditemukan saat ini.",
