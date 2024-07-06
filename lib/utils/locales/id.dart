@@ -50,6 +50,7 @@ const Map<String, String> idLanguage = {
   "appearance": "Tampilan",
   "review": "Penilaian",
   "logout": "Keluar",
+  "pleaseRefreshPage": "Harap muat ulang halaman ini",
 
   // Home page
   "goodMorning": "Selamat Pagi",

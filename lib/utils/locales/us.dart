@@ -50,6 +50,7 @@ const Map<String, String> usLanguage = {
   "appearance": "Appearance",
   "review": "Review",
   "logout": "Logout",
+  "pleaseRefreshPage": "Please refresh this page",
 
   // Home page
   "goodMorning": "Good Morning",
