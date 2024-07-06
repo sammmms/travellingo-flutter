@@ -24,61 +24,58 @@ class FlightCheckoutPassengerCard extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceBright,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    passenger.fullName,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500, // Medium weight
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  passenger.fullName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500, // Medium weight
+                  ),
+                ),
+                const SizedBox(height: 4.0),
+                Row(
+                  children: [
+                    Text(
+                      FlightClassUtil.stringFromClass(flight.flightClass)
+                          .getString(context),
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4.0),
-                  Row(
-                    children: [
-                      Text(
-                        FlightClassUtil.stringFromClass(flight.flightClass)
-                            .getString(context),
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
+                    const SizedBox(width: 16),
+                    Icon(
+                      Icons.circle,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      size: 8,
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      passenger.seat,
+                      style: const TextStyle(
+                        fontSize: 14,
                       ),
-                      const SizedBox(width: 16),
-                      Icon(
-                        Icons.circle,
-                        color: Theme.of(context).colorScheme.onSurface,
-                        size: 8,
-                      ),
-                      const SizedBox(width: 16),
-                      Text(
-                        passenger.seat,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            TextButton(
-                onPressed: onClickChangeSeat,
-                child: Text("changeSeat".getString(context),
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.tertiary,
-                      fontSize: 14,
-                    ))),
-          ],
-        ),
+          ),
+          InkWell(
+              onTap: onClickChangeSeat,
+              child: Text("changeSeat".getString(context),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    fontSize: 14,
+                  ))),
+        ],
       ),
     );
   }

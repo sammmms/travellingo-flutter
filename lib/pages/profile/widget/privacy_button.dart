@@ -28,26 +28,29 @@ class PrivacyButton extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title.getString(context),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title.getString(context),
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      child: Text(description.getString(context),
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface,
-                          )))
-                ],
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: Text(description.getString(context),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            )))
+                  ],
+                ),
               ),
               const Icon(Icons.arrow_forward_ios, color: Color(0xFFF5D161))
             ],

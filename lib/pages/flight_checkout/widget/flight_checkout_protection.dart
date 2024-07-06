@@ -34,14 +34,14 @@ class FlightExtraProtection extends StatelessWidget {
                   Text(
                     'extraProtection'.getString(context),
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
                     'extraProtectionContent'.getString(context),
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.normal,
                       color: Colors.grey
                           .withOpacity(0.85), // Set text color for description
@@ -53,7 +53,7 @@ class FlightExtraProtection extends StatelessWidget {
                     child: Text(
                       "moreInfo".getString(context),
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 12,
                         fontWeight: FontWeight.normal,
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
