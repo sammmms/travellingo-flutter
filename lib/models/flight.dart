@@ -77,4 +77,22 @@ class Flight {
       pictureType: PictureType.link,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'airline': airline,
+      'flightNumber': flightNumber,
+      'departure': departure,
+      'arrival': arrival,
+      'price': price,
+      'departureTime': departureTime.toUtc().toIso8601String(),
+      'arrivalTime': arrivalTime.toUtc().toIso8601String(),
+      'seats': seats,
+      'availableSeats': availableSeats,
+      'flightClass': FlightClassUtil.stringFromClass(flightClass),
+      'pictureLink': pictureLink,
+      'pictureType': PictureTypeUtil.stringOf(pictureType),
+    };
+  }
 }
