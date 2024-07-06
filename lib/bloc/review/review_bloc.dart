@@ -42,6 +42,7 @@ class ReviewBloc {
   }
 
   Future<void> getReview() async {
+    _updateStream(ReviewState.loading());
     try {
       var response = await dio.get("/review");
       var responseData = response.data;
