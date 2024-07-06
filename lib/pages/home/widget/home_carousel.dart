@@ -49,7 +49,7 @@ class _HomeCarouselState extends State<HomeCarousel> {
         return _CarouselItems(
             place: place,
             onTap: () => Navigator.push(
-                context, slideInFromRight(PlaceDetailPage(place: place))));
+                context, slideInFromRight(PlaceDetailPage(placeId: place.id))));
       },
     );
   }

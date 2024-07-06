@@ -245,8 +245,8 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (context, index) {
                 Place place = places[index];
                 return GestureDetector(
-                  onTap: () => Navigator.push(
-                      context, slideInFromRight(PlaceDetailPage(place: place))),
+                  onTap: () => Navigator.push(context,
+                      slideInFromRight(PlaceDetailPage(placeId: place.id))),
                   child: Card(
                     key: const ValueKey(""),
                     color: Theme.of(context).colorScheme.surfaceTint,
@@ -433,8 +433,10 @@ class _HomePageState extends State<HomePage> {
                     children: filteredPlace
                         .map((e) => HomeNearby(
                               place: e,
-                              onTap: () => Navigator.push(context,
-                                  slideInFromRight(PlaceDetailPage(place: e))),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  slideInFromRight(
+                                      PlaceDetailPage(placeId: e.id))),
                             ))
                         .toList(),
                   ),

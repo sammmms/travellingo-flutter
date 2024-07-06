@@ -27,8 +27,8 @@ import 'package:travellingo/utils/picture_type_util.dart';
 import 'package:travellingo/utils/place_category_util.dart';
 
 class PlaceDetailPage extends StatefulWidget {
-  final Place place;
-  const PlaceDetailPage({super.key, required this.place});
+  final String placeId;
+  const PlaceDetailPage({super.key, required this.placeId});
 
   @override
   State<PlaceDetailPage> createState() => _PlaceDetailPageState();
@@ -49,8 +49,8 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
     _bloc = PlaceBloc(context.read<AuthBloc>());
     _wishlistBloc = WishlistBloc(context.read<AuthBloc>());
 
-    _wishlistBloc.getWishlist(id: widget.place.id);
-    _bloc.getPlaceById(widget.place.id);
+    _wishlistBloc.getWishlist(id: widget.placeId);
+    _bloc.getPlaceById(widget.placeId);
 
     super.initState();
   }
@@ -86,7 +86,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                   : hasError
                       ? MyErrorComponent(
                           onRefresh: () {
-                            _bloc.getPlaceById(widget.place.id);
+                            _bloc.getPlaceById(widget.placeId);
                           },
                         )
                       : doNotLoadBody
@@ -256,7 +256,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
   Widget _buildPlaceDetail(Place place) {
     return RefreshIndicator(
       onRefresh: () async {
-        _bloc.getPlaceById(widget.place.id);
+        _bloc.getPlaceById(widget.placeId);
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
