@@ -5,11 +5,11 @@ import 'package:travellingo/utils/theme_data/light_theme.dart';
 enum SnackbarStatus { failed, nothing, success, warning }
 
 void showMySnackBar(BuildContext context, String text,
-    [SnackbarStatus? status]) {
+    [SnackbarStatus status = SnackbarStatus.nothing, bool isLong = false]) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: _getSnackBarColor(status ?? SnackbarStatus.nothing),
-        duration: const Duration(milliseconds: 500),
+        backgroundColor: _getSnackBarColor(status),
+        duration: Duration(milliseconds: isLong ? 500 : 2000),
         content: Text(
           text.getString(context),
           style: Theme.of(context)
