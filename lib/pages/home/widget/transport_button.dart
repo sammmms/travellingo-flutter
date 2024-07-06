@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:travellingo/component/transition_animation.dart';
 
 class TransportButton extends StatelessWidget {
   final String icon;
@@ -14,8 +15,7 @@ class TransportButton extends StatelessWidget {
       onTap: routeTo == null
           ? null
           : () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => routeTo!));
+              Navigator.of(context).push(slideInFromBottom(routeTo!));
             },
       child: Column(
         children: [

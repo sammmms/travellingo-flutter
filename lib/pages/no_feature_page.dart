@@ -11,16 +11,21 @@ class NoFeaturePage extends StatelessWidget {
       child: SizedBox(
         width: 500,
         child: Scaffold(
+            appBar: AppBar(),
             body: Center(
-          child: Column(
-            children: [
-              Lottie.asset('assets/lottie/warning_animation.json', width: 200),
-              const SizedBox(height: 16),
-              Text("noFeatureYet".getString(context),
-                  style: const TextStyle(fontSize: 16))
-            ],
-          ),
-        )),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    Lottie.asset('assets/lottie/warning_animation.json',
+                        width: 200, height: 200),
+                    const SizedBox(height: 16),
+                    Text("noFeatureYet".getString(context),
+                        style: const TextStyle(fontSize: 16))
+                  ],
+                ),
+              ),
+            )),
       ),
     );
   }
