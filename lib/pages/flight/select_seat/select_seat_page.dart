@@ -67,74 +67,79 @@ class _SelectSeatPageState extends State<SelectSeatPage> {
 
         Navigator.of(context).pop();
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'selectSeat'.getString(context),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              CarouselSlider.builder(
-                options: CarouselOptions(
-                  enableInfiniteScroll: false,
-                  padEnds: true,
-                  height: 100,
-                  viewportFraction: 0.9,
-                  onPageChanged: (index, reason) {
-                    _currentPassenger = index;
-                  },
-                ),
-                itemCount: widget.passengers.length,
-                itemBuilder: (context, index, _) => SeatPassengerCard(
-                  flight: widget.flight,
-                  passenger: widget.passengers[index],
-                ),
+      child: Center(
+        child: SizedBox(
+          width: 500,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'selectSeat'.getString(context),
               ),
-              _buildSeatLegend(context),
-              Expanded(child: _buildSeatGrid(context)),
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: OutlinedButton(
-                  onPressed: () {
-                    bool allSeatSelected = true;
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  CarouselSlider.builder(
+                    options: CarouselOptions(
+                      enableInfiniteScroll: false,
+                      padEnds: true,
+                      height: 100,
+                      viewportFraction: 0.9,
+                      onPageChanged: (index, reason) {
+                        _currentPassenger = index;
+                      },
+                    ),
+                    itemCount: widget.passengers.length,
+                    itemBuilder: (context, index, _) => SeatPassengerCard(
+                      flight: widget.flight,
+                      passenger: widget.passengers[index],
+                    ),
+                  ),
+                  _buildSeatLegend(context),
+                  Expanded(child: _buildSeatGrid(context)),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 56,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        bool allSeatSelected = true;
 
-                    for (var passenger in widget.passengers) {
-                      if (passenger.seat.isEmpty) {
-                        allSeatSelected = false;
-                        break;
-                      }
-                    }
+                        for (var passenger in widget.passengers) {
+                          if (passenger.seat.isEmpty) {
+                            allSeatSelected = false;
+                            break;
+                          }
+                        }
 
-                    if (!allSeatSelected) {
-                      showMySnackBar(context, "allPassengerMustSelectASeat",
-                          SnackbarStatus.warning);
-                      return;
-                    }
+                        if (!allSeatSelected) {
+                          showMySnackBar(context, "allPassengerMustSelectASeat",
+                              SnackbarStatus.warning);
+                          return;
+                        }
 
-                    if (widget.isChangingSeat) {
-                      Navigator.of(context).pop();
-                      return;
-                    }
+                        if (widget.isChangingSeat) {
+                          Navigator.of(context).pop();
+                          return;
+                        }
 
-                    Navigator.push(
-                        context,
-                        slideInFromRight(FlightCheckoutPage(
-                          flight: widget.flight,
-                          passengers: widget.passengers,
-                        )));
-                  },
-                  child: Text(
-                      widget.isChangingSeat
-                          ? 'backToCheckout'.getString(context)
-                          : 'proceedToPayment'.getString(context),
-                      style: const TextStyle(fontSize: 16.0)),
-                ),
+                        Navigator.push(
+                            context,
+                            slideInFromRight(FlightCheckoutPage(
+                              flight: widget.flight,
+                              passengers: widget.passengers,
+                            )));
+                      },
+                      child: Text(
+                          widget.isChangingSeat
+                              ? 'backToCheckout'.getString(context)
+                              : 'proceedToPayment'.getString(context),
+                          style: const TextStyle(fontSize: 16.0)),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

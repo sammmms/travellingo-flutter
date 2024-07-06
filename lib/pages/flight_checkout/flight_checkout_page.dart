@@ -36,130 +36,134 @@ class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          'checkout'.getString(context),
-        ),
-        scrolledUnderElevation: 0,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'yourTrip'.getString(context),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  FlightCheckoutCard(
-                    flight: widget.flight,
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Text(
-                    'passengerList'.getString(context),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ListView.separated(
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) => const SizedBox(
-                            height: 16,
-                          ),
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: widget.passengers.length,
-                      itemBuilder: (context, index) {
-                        Flight flight = widget.flight;
-                        Passenger passenger = widget.passengers[index];
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            title: Text(
+              'checkout'.getString(context),
+            ),
+            scrolledUnderElevation: 0,
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'yourTrip'.getString(context),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      FlightCheckoutCard(
+                        flight: widget.flight,
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      Text(
+                        'passengerList'.getString(context),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ListView.separated(
+                          shrinkWrap: true,
+                          separatorBuilder: (context, index) => const SizedBox(
+                                height: 16,
+                              ),
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: widget.passengers.length,
+                          itemBuilder: (context, index) {
+                            Flight flight = widget.flight;
+                            Passenger passenger = widget.passengers[index];
 
-                        return FlightCheckoutPassengerCard(
-                            flight: flight,
-                            passenger: passenger,
-                            onClickChangeSeat: () async {
-                              await Navigator.push(
-                                  context,
-                                  slideInFromBottom(
-                                    SelectSeatPage(
-                                      passengers: widget.passengers,
-                                      flight: flight,
-                                      isChangingSeat: true,
-                                    ),
-                                  ));
-                              setState(() {});
-                            });
-                      }),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
+                            return FlightCheckoutPassengerCard(
+                                flight: flight,
+                                passenger: passenger,
+                                onClickChangeSeat: () async {
+                                  await Navigator.push(
+                                      context,
+                                      slideInFromBottom(
+                                        SelectSeatPage(
+                                          passengers: widget.passengers,
+                                          flight: flight,
+                                          isChangingSeat: true,
+                                        ),
+                                      ));
+                                  setState(() {});
+                                });
+                          }),
+                      const SizedBox(
+                        height: 40,
+                      ),
                       Row(
-                        children: [
-                          Checkbox(
-                            value: isChecked,
-                            side: WidgetStateBorderSide.resolveWith(
-                              (states) => BorderSide(
-                                  width: 1.0,
-                                  color: Colors.grey.withOpacity(0.7)),
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            onChanged: (bool? value) {
-                              setState(() {
-                                isChecked = value!;
-                              });
-                            },
-                            activeColor: Colors.orange,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: isChecked,
+                                visualDensity: VisualDensity.compact,
+                                side: WidgetStateBorderSide.resolveWith(
+                                  (states) => BorderSide(
+                                      width: 1.0,
+                                      color: Colors.grey.withOpacity(0.7)),
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    isChecked = value!;
+                                  });
+                                },
+                                activeColor: Colors.orange,
+                              ),
+                              Text(
+                                'protectYourTrip'.getString(context),
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 8),
                           Text(
-                            'protectYourTrip'.getString(context),
+                            '${formatToIndonesiaCurrency(totalProtection)} / ${'person'.getString(context).toUpperCase()}',
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              color: Color(0xFF3E84A8),
                             ),
                           ),
                         ],
                       ),
-                      Text(
-                        '${formatToIndonesiaCurrency(totalProtection)} / ${'person'.getString(context).toUpperCase()}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.normal,
-                          color: Color(0xFF3E84A8),
-                        ),
-                      ),
+                      const SizedBox(height: 8),
+                      const FlightExtraProtection(),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  const FlightExtraProtection(),
-                ],
+                ),
               ),
-            ),
+              _buildBottomAppBar()
+            ],
           ),
-          _buildBottomAppBar()
-        ],
+        ),
       ),
     );
   }
@@ -175,12 +179,8 @@ class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
             children: [
               Row(
                 children: [
-                  Text(
-                    'subtotal'.getString(context),
-                    style: const TextStyle(
-                      fontSize: 10,
-                    ),
-                  ),
+                  Text('subtotal'.getString(context),
+                      style: Theme.of(context).textTheme.bodyMedium),
                   const SizedBox(width: 8), // Spacing between text
                   const Icon(
                     Icons.keyboard_arrow_down,
@@ -196,7 +196,7 @@ class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
                     : formatToIndonesiaCurrency(
                         widget.flight.price * widget.passengers.length),
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 12,
                   fontWeight: FontWeight
                       .w600, // Inter doesn't have a 'semi-bold', w600 is 'semi-bold' equivalent
                 ),
@@ -228,8 +228,9 @@ class _FlightCheckoutPageState extends State<FlightCheckoutPage> {
             },
             child: Text(
               'proceedToPayment'.getString(context),
-              style: const TextStyle(
-                fontSize: 16,
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
           ),

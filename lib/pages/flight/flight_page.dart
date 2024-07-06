@@ -34,133 +34,143 @@ class _FlightPageState extends State<FlightPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: RefreshIndicator(
-      onRefresh: () async {
-        List<RecentFlightSearch> recentFlightSearch =
-            await Store.getRecentFlightSearch();
-        _recentFlightSearch.add(recentFlightSearch);
-      },
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 20),
-        child: Column(
-          children: [
-            const AppBarStack(),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const LabelHeading(
-                      icon: Icon(Icons.history), content: "yourLastSearch"),
-                  const Spacer(),
-                  SeeAllButton(
-                    onTap: () {
-                      Store.clearRecentFlightSearch();
-                    },
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+            body: RefreshIndicator(
+          onRefresh: () async {
+            List<RecentFlightSearch> recentFlightSearch =
+                await Store.getRecentFlightSearch();
+            _recentFlightSearch.add(recentFlightSearch);
+          },
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Column(
+              children: [
+                const AppBarStack(),
+                const SizedBox(height: 12),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const LabelHeading(
+                          icon: Icon(Icons.history), content: "yourLastSearch"),
+                      const Spacer(),
+                      SeeAllButton(
+                        onTap: () {
+                          Store.clearRecentFlightSearch();
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ), // Menambah jarak antar card
-            StreamBuilder<List<RecentFlightSearch>>(
-                stream: _recentFlightSearch,
-                builder: (context, snapshot) {
-                  List<RecentFlightSearch> recentFlightSearch =
-                      snapshot.data ?? [];
+                ), // Menambah jarak antar card
+                StreamBuilder<List<RecentFlightSearch>>(
+                    stream: _recentFlightSearch,
+                    builder: (context, snapshot) {
+                      List<RecentFlightSearch> recentFlightSearch =
+                          snapshot.data ?? [];
 
-                  bool isEmpty = recentFlightSearch.isEmpty;
+                      bool isEmpty = recentFlightSearch.isEmpty;
 
-                  if (isEmpty) {
-                    return const MyNoDataComponent(
-                      label: "noRecentSearch",
-                    );
-                  }
-
-                  return SizedBox(
-                    height: 130,
-                    width: double.infinity,
-                    child: CarouselSlider.builder(
-                      options: CarouselOptions(
-                          autoPlay: false,
-                          enlargeCenterPage: false,
-                          initialPage: 0,
-                          enableInfiniteScroll: false,
-                          pageSnapping: true,
-                          animateToClosest: true,
-                          viewportFraction: 0.8),
-                      itemCount: recentFlightSearch.length,
-                      itemBuilder: (context, index, _) {
-                        RecentFlightSearch recentFlight =
-                            recentFlightSearch[index];
-                        return RecentFlightCard(
-                          recentFlight: recentFlight,
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                slideInFromRight(FlightListPage(
-                                  from: recentFlight.from,
-                                  to: recentFlight.to,
-                                  startDate: recentFlight.date,
-                                  passengerCount: recentFlight.passengerCount,
-                                  flightClass: recentFlight.flightClass,
-                                )));
-                          },
+                      if (isEmpty) {
+                        return const MyNoDataComponent(
+                          label: "noRecentSearch",
                         );
-                      },
-                    ),
-                  );
-                }),
-            const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'getAttractivePromo'.getString(context),
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                      }
+
+                      return SizedBox(
+                        height: 130,
+                        width: double.infinity,
+                        child: CarouselSlider.builder(
+                          options: CarouselOptions(
+                              autoPlay: false,
+                              enlargeCenterPage: false,
+                              initialPage: 0,
+                              enableInfiniteScroll: false,
+                              pageSnapping: true,
+                              animateToClosest: true,
+                              viewportFraction: 0.8),
+                          itemCount: recentFlightSearch.length,
+                          itemBuilder: (context, index, _) {
+                            RecentFlightSearch recentFlight =
+                                recentFlightSearch[index];
+                            return RecentFlightCard(
+                              recentFlight: recentFlight,
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    slideInFromRight(FlightListPage(
+                                      from: recentFlight.from,
+                                      to: recentFlight.to,
+                                      startDate: recentFlight.date,
+                                      passengerCount:
+                                          recentFlight.passengerCount,
+                                      flightClass: recentFlight.flightClass,
+                                    )));
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    }),
+                const SizedBox(height: 12),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(left: 24, right: 24, bottom: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'getAttractivePromo'.getString(context),
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      OutlinedButton(
+                        style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                                Theme.of(context).colorScheme.surfaceTint),
+                            shape:
+                                const WidgetStatePropertyAll(CircleBorder())),
+                        onPressed: () {
+                          // Tambahkan aksi untuk tombol "See all" jika diperlukan
+                        },
+                        child: const Icon(
+                          Icons.arrow_forward,
+                          size: 18,
+                          color: Color.fromRGBO(62, 132, 168, 1),
+                        ),
+                      ),
+                    ],
                   ),
-                  OutlinedButton(
-                    style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                            Theme.of(context).colorScheme.surfaceTint),
-                        shape: const WidgetStatePropertyAll(CircleBorder())),
-                    onPressed: () {
-                      // Tambahkan aksi untuk tombol "See all" jika diperlukan
-                    },
-                    child: const Icon(
-                      Icons.arrow_forward,
-                      size: 18,
-                      color: Color.fromRGBO(62, 132, 168, 1),
-                    ),
+                ),
+                CarouselSlider.builder(
+                  options: CarouselOptions(
+                      aspectRatio: 16 / 9,
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      initialPage: 0,
+                      padEnds: true,
+                      enableInfiniteScroll: true,
+                      pageSnapping: true,
+                      viewportFraction: 0.8),
+                  itemCount: 5,
+                  itemBuilder: (context, __, _) => FlightCardImage(
+                    heading: "50%",
+                    heading2: "discount".getString(context),
+                    subheading: "forNewUsers".getString(context),
+                    subheading2:
+                        "*${"termsNConditionApply".getString(context)}",
+                    image: "assets/flight/flight.jpg",
                   ),
-                ],
-              ),
+                )
+              ],
             ),
-            CarouselSlider.builder(
-              options: CarouselOptions(
-                  aspectRatio: 16 / 9,
-                  autoPlay: true,
-                  enlargeCenterPage: true,
-                  initialPage: 0,
-                  padEnds: true,
-                  enableInfiniteScroll: true,
-                  pageSnapping: true,
-                  viewportFraction: 0.8),
-              itemCount: 5,
-              itemBuilder: (context, __, _) => FlightCardImage(
-                heading: "50%",
-                heading2: "discount".getString(context),
-                subheading: "forNewUsers".getString(context),
-                subheading2: "*${"termsNConditionApply".getString(context)}",
-                image: "assets/flight/flight.jpg",
-              ),
-            )
-          ],
-        ),
+          ),
+        )),
       ),
-    ));
+    );
   }
 }

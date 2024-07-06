@@ -31,92 +31,103 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          'checkout'.getString(context),
-        ),
-        scrolledUnderElevation: 0,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'yourTrip'.getString(context),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    separatorBuilder: (context, index) {
-                      return const Divider(
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            title: Text(
+              'checkout'.getString(context),
+            ),
+            scrolledUnderElevation: 0,
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'yourTrip'.getString(context),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
                         height: 20,
-                      );
-                    },
-                    itemCount: widget.cartItems.length,
-                    itemBuilder: (context, index) => CartCheckoutCard(
-                      item: widget.cartItems[index],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
+                      ),
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        separatorBuilder: (context, index) {
+                          return const Divider(
+                            height: 20,
+                          );
+                        },
+                        itemCount: widget.cartItems.length,
+                        itemBuilder: (context, index) => CartCheckoutCard(
+                          item: widget.cartItems[index],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       Row(
-                        children: [
-                          Checkbox(
-                            visualDensity: VisualDensity.compact,
-                            value: isChecked,
-                            side: WidgetStateBorderSide.resolveWith((states) =>
-                                BorderSide(
-                                  color: Theme.of(context).colorScheme.tertiary,
-                                )),
-                            fillColor: WidgetStateColor.transparent,
-                            checkColor: Theme.of(context).colorScheme.tertiary,
-                            shape: const CircleBorder(),
-                            onChanged: (bool? value) {
-                              setState(() {
-                                isChecked = value!;
-                              });
-                            },
-                            activeColor: Theme.of(context).colorScheme.tertiary,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Checkbox(
+                                visualDensity: VisualDensity.compact,
+                                value: isChecked,
+                                side: WidgetStateBorderSide.resolveWith(
+                                    (states) => BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .tertiary,
+                                        )),
+                                fillColor: WidgetStateColor.transparent,
+                                checkColor:
+                                    Theme.of(context).colorScheme.tertiary,
+                                shape: const CircleBorder(),
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    isChecked = value!;
+                                  });
+                                },
+                                activeColor:
+                                    Theme.of(context).colorScheme.tertiary,
+                              ),
+                              const SizedBox(width: 8),
+                              Text('refundProtection'.getString(context),
+                                  style:
+                                      Theme.of(context).textTheme.labelLarge),
+                            ],
                           ),
-                          const SizedBox(width: 8),
-                          Text('refundProtection'.getString(context),
-                              style: Theme.of(context).textTheme.labelLarge),
+                          Text(
+                            formatToIndonesiaCurrency(protectionPrice),
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
                         ],
                       ),
-                      Text(
-                        formatToIndonesiaCurrency(protectionPrice),
-                        style: Theme.of(context).textTheme.labelMedium,
-                      ),
+                      const SizedBox(height: 8),
+                      const CheckoutExtraProtectionCard(),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  const CheckoutExtraProtectionCard(),
-                ],
+                ),
               ),
-            ),
+              _buildBottomAppBar()
+            ],
           ),
-          _buildBottomAppBar()
-        ],
+        ),
       ),
     );
   }

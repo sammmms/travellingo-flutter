@@ -65,64 +65,71 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<PlaceState>(
-        stream: _bloc.controller,
-        builder: (context, snapshot) {
-          bool isLoading =
-              snapshot.data?.isLoading ?? false || !snapshot.hasData;
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: StreamBuilder<PlaceState>(
+            stream: _bloc.controller,
+            builder: (context, snapshot) {
+              bool isLoading =
+                  snapshot.data?.isLoading ?? false || !snapshot.hasData;
 
-          bool hasError = snapshot.data?.hasError ?? false;
+              bool hasError = snapshot.data?.hasError ?? false;
 
-          Place? place = snapshot.data?.data?.first;
-          bool doNotLoadBody = isLoading || hasError || place == null;
-          return Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: doNotLoadBody ? AppBar() : null,
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              body: isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : hasError
-                      ? MyErrorComponent(
-                          onRefresh: () {
-                            _bloc.getPlaceById(widget.placeId);
-                          },
+              Place? place = snapshot.data?.data?.first;
+              bool doNotLoadBody = isLoading || hasError || place == null;
+              return Scaffold(
+                  resizeToAvoidBottomInset: false,
+                  appBar: doNotLoadBody ? AppBar() : null,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  body: isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
                         )
-                      : doNotLoadBody
-                          ? const MyNoDataComponent()
-                          : Listener(
-                              onPointerUp: (event) {
-                                RenderBox? box = _backKey.currentContext
-                                    ?.findRenderObject() as RenderBox;
-                                Offset boxOffset =
-                                    box.globalToLocal(event.position);
-
-                                // Detect if box has been hit
-                                if (box.hitTest(result, position: boxOffset)) {
-                                  RenderBox? notBackBox = _notBackKey
-                                      .currentContext
-                                      ?.findRenderObject() as RenderBox;
-
-                                  Offset notBackBoxOffset =
-                                      notBackBox.globalToLocal(event.position);
-
-                                  if (!notBackBox.hitTest(result,
-                                      position: notBackBoxOffset)) {
-                                    Navigator.pop(context);
-                                  }
-                                  // Detect if container is on top of the back button
-                                }
+                      : hasError
+                          ? MyErrorComponent(
+                              onRefresh: () {
+                                _bloc.getPlaceById(widget.placeId);
                               },
-                              child: Stack(
-                                children: [
-                                  _buildPlacePicture(place),
-                                  _buildPlaceDetail(place),
-                                ],
-                              ),
-                            ),
-              bottomSheet: doNotLoadBody ? null : _buildBottomAppBar(place));
-        });
+                            )
+                          : doNotLoadBody
+                              ? const MyNoDataComponent()
+                              : Listener(
+                                  onPointerUp: (event) {
+                                    RenderBox? box = _backKey.currentContext
+                                        ?.findRenderObject() as RenderBox;
+                                    Offset boxOffset =
+                                        box.globalToLocal(event.position);
+
+                                    // Detect if box has been hit
+                                    if (box.hitTest(result,
+                                        position: boxOffset)) {
+                                      RenderBox? notBackBox = _notBackKey
+                                          .currentContext
+                                          ?.findRenderObject() as RenderBox;
+
+                                      Offset notBackBoxOffset = notBackBox
+                                          .globalToLocal(event.position);
+
+                                      if (!notBackBox.hitTest(result,
+                                          position: notBackBoxOffset)) {
+                                        Navigator.pop(context);
+                                      }
+                                      // Detect if container is on top of the back button
+                                    }
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      _buildPlacePicture(place),
+                                      _buildPlaceDetail(place),
+                                    ],
+                                  ),
+                                ),
+                  bottomSheet:
+                      doNotLoadBody ? null : _buildBottomAppBar(place));
+            }),
+      ),
+    );
   }
 
   Widget _buildBottomAppBar(Place place) {
@@ -223,12 +230,14 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
         MyImageLoader(
           url: place.pictureLink,
           height: 300,
+          width: 500,
           fit: BoxFit.cover,
           pictureType: PictureType.link,
         ),
         Container(
           color: Colors.black.withAlpha(50),
           height: 300,
+          width: 500,
         ),
         Positioned(
           top: 28,

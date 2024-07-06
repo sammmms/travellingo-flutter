@@ -28,40 +28,46 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("review".getString(context)),
-        ),
-        body: StreamBuilder(
-          stream: reviewBloc.controller,
-          builder: (context, snapshot) {
-            bool isLoading =
-                snapshot.data?.isLoading ?? false || !snapshot.hasData;
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text("review".getString(context)),
+            ),
+            body: StreamBuilder(
+              stream: reviewBloc.controller,
+              builder: (context, snapshot) {
+                bool isLoading =
+                    snapshot.data?.isLoading ?? false || !snapshot.hasData;
 
-            if (isLoading) {
-              return const ReviewListLoading();
-            }
+                if (isLoading) {
+                  return const ReviewListLoading();
+                }
 
-            bool hasError = snapshot.data?.hasError ?? false;
+                bool hasError = snapshot.data?.hasError ?? false;
 
-            if (hasError) {
-              return MyErrorComponent(onRefresh: () {
-                reviewBloc.getReview();
-              });
-            }
+                if (hasError) {
+                  return MyErrorComponent(onRefresh: () {
+                    reviewBloc.getReview();
+                  });
+                }
 
-            List<Review> reviews = snapshot.data?.reviews ?? [];
+                List<Review> reviews = snapshot.data?.reviews ?? [];
 
-            return ListView.separated(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              itemCount: reviews.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                Review review = reviews[index];
-                return ReviewCard(review: review);
+                return ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  itemCount: reviews.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 10),
+                  itemBuilder: (context, index) {
+                    Review review = reviews[index];
+                    return ReviewCard(review: review);
+                  },
+                );
               },
-            );
-          },
-        ));
+            )),
+      ),
+    );
   }
 }

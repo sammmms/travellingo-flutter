@@ -99,89 +99,94 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: RefreshIndicator(
-          onRefresh: () async {
-            await _bloc.getPlace(
-                filter: _filterStream.value, search: _searchStream.value);
-          },
-          color: colorScheme.primary,
-          backgroundColor: colorScheme.surface,
-          edgeOffset: 100,
-          displacement: 10,
-          child: CustomScrollView(
-            scrollDirection: Axis.vertical,
-            slivers: [
-              SliverAppBar(
-                expandedHeight: 80,
-                flexibleSpace: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              currentTime.getString(context).toUpperCase(),
-                              style: TextStyle(
-                                color: Colors.grey.shade500,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
+      child: Center(
+        child: SizedBox(
+          width: 500,
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: RefreshIndicator(
+              onRefresh: () async {
+                await _bloc.getPlace(
+                    filter: _filterStream.value, search: _searchStream.value);
+              },
+              color: colorScheme.primary,
+              backgroundColor: colorScheme.surface,
+              edgeOffset: 100,
+              displacement: 10,
+              child: CustomScrollView(
+                scrollDirection: Axis.vertical,
+                slivers: [
+                  SliverAppBar(
+                    expandedHeight: 80,
+                    flexibleSpace: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  currentTime.getString(context).toUpperCase(),
+                                  style: TextStyle(
+                                    color: Colors.grey.shade500,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                _buildCityDropdown()
+                              ],
                             ),
-                            _buildCityDropdown()
+                          ),
+                          _buildCartIcon(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate.fixed([
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 20),
+                        child: Column(
+                          children: [
+                            MySearchBar(
+                              label: "exploreSomethingFun",
+                              controller: _searchController,
+                              onChanged: (value) {
+                                _searchStream.add(value);
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            StreamBuilder<String>(
+                                stream: _searchStream,
+                                builder: (context, search) =>
+                                    search.data?.isNotEmpty ?? false
+                                        ? _buildSearchBody()
+                                        : _buildHomeBody()),
                           ],
                         ),
                       ),
-                      _buildCartIcon(),
-                    ],
-                  ),
-                ),
+                    ]),
+                  )
+                ],
               ),
-              SliverList(
-                delegate: SliverChildListDelegate.fixed([
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 20),
-                    child: Column(
-                      children: [
-                        MySearchBar(
-                          label: "exploreSomethingFun",
-                          controller: _searchController,
-                          onChanged: (value) {
-                            _searchStream.add(value);
-                          },
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        StreamBuilder<String>(
-                            stream: _searchStream,
-                            builder: (context, search) =>
-                                search.data?.isNotEmpty ?? false
-                                    ? _buildSearchBody()
-                                    : _buildHomeBody()),
-                      ],
-                    ),
-                  ),
-                ]),
-              )
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color(0xFFF5D161),
-          elevation: 2,
-          shape: const CircleBorder(),
-          onPressed: () {},
-          child: const Icon(
-            Icons.map,
-            color: Colors.white,
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: const Color(0xFFF5D161),
+              elevation: 2,
+              shape: const CircleBorder(),
+              onPressed: () {},
+              child: const Icon(
+                Icons.map,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),

@@ -24,50 +24,58 @@ class PrivacySharingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("privacyNSharing".getString(context)),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "manageYourAccountData".getString(context),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text("privacyNSharing".getString(context)),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SizedBox(
+                width: 500,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "manageYourAccountData".getString(context),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textScaler: const TextScaler.linear(1.5),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "manageYourAccountDataDetail".getString(context),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    PrivacyButton(
+                        onClickFunction: () {
+                          Navigator.of(context)
+                              .push(_createRoute(const RequestPersonalPage()));
+                        },
+                        title: "requestYourPersonalData",
+                        description: "requestYourPersonalDataDetail"),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    PrivacyButton(
+                        onClickFunction: () {
+                          Navigator.of(context)
+                              .push(_createRoute(const DeleteAccountPage()));
+                        },
+                        title: "deleteYourAccount",
+                        description: "deleteYourAccountDetail"),
+                  ],
                 ),
-                textScaler: const TextScaler.linear(1.5),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                "manageYourAccountDataDetail".getString(context),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              PrivacyButton(
-                  onClickFunction: () {
-                    Navigator.of(context)
-                        .push(_createRoute(const RequestPersonalPage()));
-                  },
-                  title: "requestYourPersonalData",
-                  description: "requestYourPersonalDataDetail"),
-              const SizedBox(
-                height: 10,
-              ),
-              PrivacyButton(
-                  onClickFunction: () {
-                    Navigator.of(context)
-                        .push(_createRoute(const DeleteAccountPage()));
-                  },
-                  title: "deleteYourAccount",
-                  description: "deleteYourAccountDetail"),
-            ],
-          ),
-        ));
+            )),
+      ),
+    );
   }
 }

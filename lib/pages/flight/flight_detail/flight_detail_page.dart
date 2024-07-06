@@ -48,207 +48,222 @@ class _FlightDetailPageState extends State<FlightDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          'ticketDetails'.getString(context),
-        ),
-        scrolledUnderElevation: 0,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(children: [
-                  FlightDetailCard(
-                    flight: widget.flight,
-                  ),
-                  const SizedBox(height: 20),
-                  Column(
-                    children: [
-                      StreamBuilder<AuthState>(
-                          stream: authBloc.controller,
-                          builder: (context, snapshot) {
-                            if (!(snapshot.data?.isAuthenticated ?? false)) {
-                              return const SizedBox();
-                            }
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(Icons.favorite,
-                                    color:
-                                        Theme.of(context).colorScheme.tertiary),
-                                const SizedBox(width: 8),
-                                Text(
-                                  "passengers".getString(context),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color:
-                                        Theme.of(context).colorScheme.tertiary,
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
-                      const SizedBox(
-                          height: 8), // Add space between the containers
-                      PassengerDetailCard(
-                        onAdd: (Passenger passenger) {
-                          Passenger? foundPassenger =
-                              _passengerControllers.firstWhereOrNull(
-                            (e) =>
-                                e.fullName == passenger.fullName &&
-                                e.identityNumber == passenger.identityNumber,
-                          );
-                          if (foundPassenger != null) {
-                            showMySnackBar(context, "passengerAlreadyAdded",
-                                SnackbarStatus.nothing);
-                            return;
-                          }
-                          Passenger? emptyPassenger =
-                              _passengerControllers.firstWhereOrNull((e) =>
-                                  e.fullName == "" && e.identityNumber == "");
-                          if (emptyPassenger == null) {
-                            _addNewPassengerPanel();
-                            emptyPassenger = _passengerControllers.last;
-                          }
-                          int index =
-                              _passengerControllers.indexOf(emptyPassenger);
-                          _passengerControllers[index] = passenger;
-                          setState(() {});
-                        },
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            title: Text(
+              'ticketDetails'.getString(context),
+            ),
+            scrolledUnderElevation: 0,
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(children: [
+                      FlightDetailCard(
+                        flight: widget.flight,
+                      ),
+                      const SizedBox(height: 20),
+                      Column(
+                        children: [
+                          StreamBuilder<AuthState>(
+                              stream: authBloc.controller,
+                              builder: (context, snapshot) {
+                                if (!(snapshot.data?.isAuthenticated ??
+                                    false)) {
+                                  return const SizedBox();
+                                }
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.favorite,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiary),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      "passengers".getString(context),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .tertiary,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                          const SizedBox(
+                              height: 8), // Add space between the containers
+                          PassengerDetailCard(
+                            onAdd: (Passenger passenger) {
+                              Passenger? foundPassenger =
+                                  _passengerControllers.firstWhereOrNull(
+                                (e) =>
+                                    e.fullName == passenger.fullName &&
+                                    e.identityNumber ==
+                                        passenger.identityNumber,
+                              );
+                              if (foundPassenger != null) {
+                                showMySnackBar(context, "passengerAlreadyAdded",
+                                    SnackbarStatus.nothing);
+                                return;
+                              }
+                              Passenger? emptyPassenger =
+                                  _passengerControllers.firstWhereOrNull((e) =>
+                                      e.fullName == "" &&
+                                      e.identityNumber == "");
+                              if (emptyPassenger == null) {
+                                _addNewPassengerPanel();
+                                emptyPassenger = _passengerControllers.last;
+                              }
+                              int index =
+                                  _passengerControllers.indexOf(emptyPassenger);
+                              _passengerControllers[index] = passenger;
+                              setState(() {});
+                            },
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Column(
                         children: [
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Icon(Icons.people,
-                                  color:
-                                      Theme.of(context).colorScheme.tertiary),
-                              const SizedBox(width: 8),
-                              Text(
-                                "passengersDetails".getString(context),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: Theme.of(context).colorScheme.tertiary,
+                              Row(
+                                children: [
+                                  Icon(Icons.people,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    "passengersDetails".getString(context),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              TextButton(
+                                onPressed: _addNewPassengerPanel,
+                                child: Text(
+                                  "+ ${'addPassenger'.getString(context)}",
+                                  style: const TextStyle(
+                                    color: Color(0xFFF5D161),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          TextButton(
-                            onPressed: _addNewPassengerPanel,
-                            child: Text(
-                              "+ ${'addPassenger'.getString(context)}",
-                              style: const TextStyle(
-                                color: Color(0xFFF5D161),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                          const SizedBox(
+                              height: 10), // Add space between the containers
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _isExpanded.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return _buildPassengerPanel(index);
+                            },
                           ),
                         ],
                       ),
-                      const SizedBox(
-                          height: 10), // Add space between the containers
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _isExpanded.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return _buildPassengerPanel(index);
-                        },
-                      ),
-                    ],
+                    ]),
                   ),
-                ]),
+                ),
               ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              Container(
+                margin: const EdgeInsets.all(24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '${'price'.getString(context)} / ${'person'.getString(context)}',
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${'price'.getString(context)} / ${'person'.getString(context)}',
+                        ),
+                        Text(
+                          formatToIndonesiaCurrency(widget.flight.price),
+                        ),
+                      ],
                     ),
-                    Text(
-                      formatToIndonesiaCurrency(widget.flight.price),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all<Color>(
+                            const Color(0xFFF5D161)), // Button background color
+                        foregroundColor: WidgetStateProperty.all<Color>(
+                            const Color(0xFFFFFFFF)), // Text color
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        minimumSize: WidgetStateProperty.all<Size>(
+                            const Size(171, 48)), // Set the button's size
+                      ),
+                      onPressed: () {
+                        if (!(authBloc
+                                .controller.valueOrNull?.isAuthenticated ??
+                            false)) {
+                          showMySnackBar(
+                              context, "loginFirst", SnackbarStatus.nothing);
+                          Navigator.push(
+                              context, slideInFromBottom(const LoginPage()));
+                          return;
+                        }
+
+                        if (_passengerControllers.first.fullName.isEmpty ||
+                            _passengerControllers
+                                .first.identityNumber.isEmpty) {
+                          showMySnackBar(context, "fillPassengerData",
+                              SnackbarStatus.nothing);
+                          return;
+                        }
+
+                        Navigator.push(
+                          context,
+                          slideInFromBottom(
+                            SelectSeatPage(
+                              flight: widget.flight,
+                              passengers: _passengerControllers
+                                  .where((element) =>
+                                      element.fullName.isNotEmpty ||
+                                      element.identityNumber.isNotEmpty)
+                                  .toList(),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'selectSeat'.getString(context),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
                     ),
                   ],
                 ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                        const Color(0xFFF5D161)), // Button background color
-                    foregroundColor: WidgetStateProperty.all<Color>(
-                        const Color(0xFFFFFFFF)), // Text color
-                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    minimumSize: WidgetStateProperty.all<Size>(
-                        const Size(171, 48)), // Set the button's size
-                  ),
-                  onPressed: () {
-                    if (!(authBloc.controller.valueOrNull?.isAuthenticated ??
-                        false)) {
-                      showMySnackBar(
-                          context, "loginFirst", SnackbarStatus.nothing);
-                      Navigator.push(
-                          context, slideInFromBottom(const LoginPage()));
-                      return;
-                    }
-
-                    if (_passengerControllers.first.fullName.isEmpty ||
-                        _passengerControllers.first.identityNumber.isEmpty) {
-                      showMySnackBar(
-                          context, "fillPassengerData", SnackbarStatus.nothing);
-                      return;
-                    }
-
-                    Navigator.push(
-                      context,
-                      slideInFromBottom(
-                        SelectSeatPage(
-                          flight: widget.flight,
-                          passengers: _passengerControllers
-                              .where((element) =>
-                                  element.fullName.isNotEmpty ||
-                                  element.identityNumber.isNotEmpty)
-                              .toList(),
-                        ),
-                      ),
-                    );
-                  },
-                  child: Text(
-                    'selectSeat'.getString(context),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

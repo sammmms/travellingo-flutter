@@ -49,81 +49,89 @@ class _WishlistPagesState extends State<WishlistPages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
-        edgeOffset: 100,
-        onRefresh: () async {
-          await bloc.getWishlist();
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            _buildAppBar(),
-            if (filterState) ...[
-              const SizedBox(
-                height: 10,
-              ),
-              StreamBuilder<PlaceCategory>(
-                  stream: _selecting,
-                  builder: (context, snapshot) {
-                    PlaceCategory selection =
-                        snapshot.data ?? PlaceCategory.all;
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          for (var category in PlaceCategory.values) ...[
-                            const SizedBox(width: 10),
-                            HomeFilterChip(
-                                selection: category,
-                                isSelected: selection == category,
-                                onSelected: (value) {
-                                  _selecting.add(category);
-                                }),
-                          ]
-                        ],
-                      ),
-                    );
-                  }),
-            ],
-            Expanded(
-              child: StreamBuilder<WishlistState>(
-                stream: bloc.controller,
-                builder: (context, snapshot) {
-                  bool isLoading =
-                      snapshot.data?.isLoading ?? false || !snapshot.hasData;
-
-                  if (isLoading) {
-                    return WishlistLoading(isLoading: isLoading);
-                  }
-
-                  if (snapshot.data?.hasError ?? false) {
-                    return MyErrorComponent(
-                      onRefresh: () {
-                        bloc.getWishlist();
-                      },
-                    );
-                  }
-
-                  List<Place> places = snapshot.data!.places ?? [];
-                  if (places.isEmpty) {
-                    return const MyNoDataComponent(
-                      label: "noWishlistCurrently",
-                    );
-                  }
-
-                  return ListView.separated(
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return WishlistCard(place: places[index]);
-                      },
-                      separatorBuilder: (context, index) => const SizedBox(
-                            height: 10,
+      body: Center(
+        child: SizedBox(
+          width: 500,
+          child: RefreshIndicator(
+            edgeOffset: 100,
+            onRefresh: () async {
+              await bloc.getWishlist();
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _buildAppBar(),
+                if (filterState) ...[
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  StreamBuilder<PlaceCategory>(
+                      stream: _selecting,
+                      builder: (context, snapshot) {
+                        PlaceCategory selection =
+                            snapshot.data ?? PlaceCategory.all;
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for (var category in PlaceCategory.values) ...[
+                                const SizedBox(width: 10),
+                                HomeFilterChip(
+                                    selection: category,
+                                    isSelected: selection == category,
+                                    onSelected: (value) {
+                                      _selecting.add(category);
+                                    }),
+                              ]
+                            ],
                           ),
-                      itemCount: places.length);
-                },
-              ),
+                        );
+                      }),
+                ],
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: StreamBuilder<WishlistState>(
+                    stream: bloc.controller,
+                    builder: (context, snapshot) {
+                      bool isLoading = snapshot.data?.isLoading ??
+                          false || !snapshot.hasData;
+
+                      if (isLoading) {
+                        return WishlistLoading(isLoading: isLoading);
+                      }
+
+                      if (snapshot.data?.hasError ?? false) {
+                        return MyErrorComponent(
+                          onRefresh: () {
+                            bloc.getWishlist();
+                          },
+                        );
+                      }
+
+                      List<Place> places = snapshot.data!.places ?? [];
+                      if (places.isEmpty) {
+                        return const MyNoDataComponent(
+                          label: "noWishlistCurrently",
+                        );
+                      }
+
+                      return ListView.separated(
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return WishlistCard(place: places[index]);
+                          },
+                          separatorBuilder: (context, index) => const SizedBox(
+                                height: 10,
+                              ),
+                          itemCount: places.length);
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

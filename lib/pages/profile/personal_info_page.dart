@@ -60,136 +60,147 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "personalInfo".getString(context),
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          iconTheme: const IconThemeData(),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: StreamBuilder<UserState>(
-                  stream: bloc.controller,
-                  builder: (context, snapshot) {
-                    bool isLoading = snapshot.data?.isLoading ?? false;
-                    return GestureDetector(
-                        onTap: isLoading
-                            ? null
-                            : () async {
-                                if (isEditing) {
-                                  if (formKey.currentState?.validate() ??
-                                      false) {
-                                    _updatingUser();
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                "personalInfo".getString(context),
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              iconTheme: const IconThemeData(),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: StreamBuilder<UserState>(
+                      stream: bloc.controller,
+                      builder: (context, snapshot) {
+                        bool isLoading = snapshot.data?.isLoading ?? false;
+                        return GestureDetector(
+                            onTap: isLoading
+                                ? null
+                                : () async {
+                                    if (isEditing) {
+                                      if (formKey.currentState?.validate() ??
+                                          false) {
+                                        _updatingUser();
+                                      }
+                                    }
+                                    isEditing = !isEditing;
+                                    setState(() {});
+                                  },
+                            child: isLoading
+                                ? const CircularProgressIndicator()
+                                : Text(
+                                    isEditing
+                                        ? "save".getString(context)
+                                        : "edit".getString(context),
+                                    style: const TextStyle(
+                                        color: Color(0xFFF5D161),
+                                        fontWeight: FontWeight.bold),
+                                  ));
+                      }),
+                )
+              ],
+            ),
+            body: StreamBuilder(
+                stream: null,
+                builder: (context, snapshot) {
+                  return Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Form(
+                      key: formKey,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextFieldPersonalInfo(
+                                content: "name",
+                                controller: name,
+                                validator: (value) {
+                                  if (value == "") {
+                                    return "fieldmustbefilled"
+                                        .getString(context);
                                   }
-                                }
-                                isEditing = !isEditing;
-                                setState(() {});
-                              },
-                        child: isLoading
-                            ? const CircularProgressIndicator()
-                            : Text(
-                                isEditing
-                                    ? "save".getString(context)
-                                    : "edit".getString(context),
-                                style: const TextStyle(
-                                    color: Color(0xFFF5D161),
-                                    fontWeight: FontWeight.bold),
-                              ));
-                  }),
-            )
-          ],
-        ),
-        body: StreamBuilder(
-            stream: null,
-            builder: (context, snapshot) {
-              return Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  key: formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextFieldPersonalInfo(
-                            content: "name",
-                            controller: name,
-                            validator: (value) {
-                              if (value == "") {
-                                return "fieldmustbefilled".getString(context);
-                              }
-                              return null;
-                            },
-                            isEnabled: isEditing),
-                        const SizedBox(
-                          height: 10,
+                                  return null;
+                                },
+                                isEnabled: isEditing),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextFieldPersonalInfo(
+                                content: "email",
+                                controller: email,
+                                validator: (value) {
+                                  if (value == "") {
+                                    return "fieldmustbefilled"
+                                        .getString(context);
+                                  }
+                                  if (!emailRegex.hasMatch(value!)) {
+                                    return "emailformatwrong"
+                                        .getString(context);
+                                  }
+                                  return null;
+                                },
+                                isEnabled: isEditing),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextFieldPersonalInfo(
+                                content: "phoneNumber",
+                                controller: phone,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                validator: (value) {
+                                  if (value == "") {
+                                    return "fieldmustbefilled"
+                                        .getString(context);
+                                  }
+                                  if (!RegExp(r'\d{5,}').hasMatch(value!)) {
+                                    return "phoneformatwrong"
+                                        .getString(context);
+                                  }
+                                  return null;
+                                },
+                                isEnabled: isEditing),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextFieldPersonalInfo(
+                                content: "govId",
+                                controller: govId,
+                                validator: (value) {
+                                  if (value == "") {
+                                    return "fieldmustbefilled"
+                                        .getString(context);
+                                  }
+                                  return null;
+                                },
+                                isEnabled: isEditing),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 12.0),
+                              child: Text(
+                                "gender".getString(context).toUpperCase(),
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ),
+                            GenderRadio(
+                              gender: gender,
+                              isEditing: isEditing,
+                            )
+                          ],
                         ),
-                        TextFieldPersonalInfo(
-                            content: "email",
-                            controller: email,
-                            validator: (value) {
-                              if (value == "") {
-                                return "fieldmustbefilled".getString(context);
-                              }
-                              if (!emailRegex.hasMatch(value!)) {
-                                return "emailformatwrong".getString(context);
-                              }
-                              return null;
-                            },
-                            isEnabled: isEditing),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFieldPersonalInfo(
-                            content: "phoneNumber",
-                            controller: phone,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            validator: (value) {
-                              if (value == "") {
-                                return "fieldmustbefilled".getString(context);
-                              }
-                              if (!RegExp(r'\d{5,}').hasMatch(value!)) {
-                                return "phoneformatwrong".getString(context);
-                              }
-                              return null;
-                            },
-                            isEnabled: isEditing),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFieldPersonalInfo(
-                            content: "govId",
-                            controller: govId,
-                            validator: (value) {
-                              if (value == "") {
-                                return "fieldmustbefilled".getString(context);
-                              }
-                              return null;
-                            },
-                            isEnabled: isEditing),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Text(
-                            "gender".getString(context).toUpperCase(),
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ),
-                        GenderRadio(
-                          gender: gender,
-                          isEditing: isEditing,
-                        )
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }));
+                  );
+                })),
+      ),
+    );
   }
 
   void _updatingUser() async {

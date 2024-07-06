@@ -57,24 +57,32 @@ class _NotificationPreferencesPageState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("notification".getString(context)),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const MyTitle(title: "specialTipsAndOffers"),
-              ..._buildNotificationTile(specialTipsAndOffers),
-              const MyTitle(title: "activity"),
-              ..._buildNotificationTile(activity),
-              const MyTitle(title: "reminders"),
-              ..._buildNotificationTile(reminders),
-            ],
-          ),
-        ));
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text("notification".getString(context)),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 500,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const MyTitle(title: "specialTipsAndOffers"),
+                    ..._buildNotificationTile(specialTipsAndOffers),
+                    const MyTitle(title: "activity"),
+                    ..._buildNotificationTile(activity),
+                    const MyTitle(title: "reminders"),
+                    ..._buildNotificationTile(reminders),
+                  ],
+                ),
+              ),
+            )),
+      ),
+    );
   }
 
   List<Widget> _buildNotificationTile(UserNotificationPreference notification) {

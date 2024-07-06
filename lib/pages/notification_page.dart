@@ -12,11 +12,16 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("notification".getString(context)),
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("notification".getString(context)),
+          ),
+          body: const MyNoDataComponent(),
+        ),
       ),
-      body: const MyNoDataComponent(),
     );
   }
 }

@@ -71,120 +71,125 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("cart".getString(context)),
-        scrolledUnderElevation: 0,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<CartState>(
-                stream: bloc.controller,
-                builder: (context, snapshot) {
-                  bool isLoading = snapshot.data?.isLoading ?? false;
-                  if (!snapshot.hasData || isLoading) {
-                    return CartListSkeletonizer(isLoading: isLoading);
-                  }
-
-                  CartState state = snapshot.data!;
-
-                  bool hasError = state.hasError;
-
-                  if (hasError) {
-                    return MyErrorComponent(onRefresh: () async {
-                      bloc.getCart();
-                    });
-                  }
-
-                  bool noItemAvailable = state.data?.items.isEmpty ?? true;
-                  if (noItemAvailable) {
-                    return MyNoDataComponent(
-                      label: "noItemInCart",
-                      onRefresh: () {
-                        bloc.getCart();
-                      },
-                    );
-                  }
-
-                  Cart cart = state.data!;
-                  return MultiProvider(
-                    providers: [
-                      Provider<CartBloc>.value(value: bloc),
-                      StreamProvider<List<String>>.value(
-                        value: _isCheckedId,
-                        initialData: const [],
-                        updateShouldNotify: (_, __) => true,
-                      )
-                    ],
-                    child: RefreshIndicator(
-                      onRefresh: () async {
-                        await bloc.getCart();
-                      },
-                      child: CartList(
-                        cart: cart,
-                        onCheckmarkTap: (String value) {
-                          List<String> currentArray =
-                              _isCheckedId.valueOrNull ?? [];
-                          if (currentArray.remove(value)) {
-                            _isCheckedId.add(currentArray);
-                            return;
-                          }
-                          _isCheckedId.add([...currentArray, value]);
-                        },
-                      ),
-                    ),
-                  );
-                }),
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("cart".getString(context)),
+            scrolledUnderElevation: 0,
           ),
-          StreamBuilder<int>(
-              stream: _totalController,
-              initialData: 0,
-              builder: (context, snapshot) {
-                int totals = snapshot.data ?? 0;
-                if (totals == 0) {
-                  return const SizedBox();
-                }
-                return Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceBright,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'subtotal'.getString(context).toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 10,
-                            ),
+          body: Column(
+            children: [
+              Expanded(
+                child: StreamBuilder<CartState>(
+                    stream: bloc.controller,
+                    builder: (context, snapshot) {
+                      bool isLoading = snapshot.data?.isLoading ?? false;
+                      if (!snapshot.hasData || isLoading) {
+                        return CartListSkeletonizer(isLoading: isLoading);
+                      }
+
+                      CartState state = snapshot.data!;
+
+                      bool hasError = state.hasError;
+
+                      if (hasError) {
+                        return MyErrorComponent(onRefresh: () async {
+                          bloc.getCart();
+                        });
+                      }
+
+                      bool noItemAvailable = state.data?.items.isEmpty ?? true;
+                      if (noItemAvailable) {
+                        return MyNoDataComponent(
+                          label: "noItemInCart",
+                          onRefresh: () {
+                            bloc.getCart();
+                          },
+                        );
+                      }
+
+                      Cart cart = state.data!;
+                      return MultiProvider(
+                        providers: [
+                          Provider<CartBloc>.value(value: bloc),
+                          StreamProvider<List<String>>.value(
+                            value: _isCheckedId,
+                            initialData: const [],
+                            updateShouldNotify: (_, __) => true,
+                          )
+                        ],
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            await bloc.getCart();
+                          },
+                          child: CartList(
+                            cart: cart,
+                            onCheckmarkTap: (String value) {
+                              List<String> currentArray =
+                                  _isCheckedId.valueOrNull ?? [];
+                              if (currentArray.remove(value)) {
+                                _isCheckedId.add(currentArray);
+                                return;
+                              }
+                              _isCheckedId.add([...currentArray, value]);
+                            },
                           ),
-                          Text(
-                            formatToIndonesiaCurrency(totals),
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        ),
+                      );
+                    }),
+              ),
+              StreamBuilder<int>(
+                  stream: _totalController,
+                  initialData: 0,
+                  builder: (context, snapshot) {
+                    int totals = snapshot.data ?? 0;
+                    if (totals == 0) {
+                      return const SizedBox();
+                    }
+                    return Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceBright,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
-                      _checkoutButton(),
-                    ],
-                  ),
-                );
-              }),
-        ],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'subtotal'.getString(context).toUpperCase(),
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                ),
+                              ),
+                              Text(
+                                formatToIndonesiaCurrency(totals),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          _checkoutButton(),
+                        ],
+                      ),
+                    );
+                  }),
+            ],
+          ),
+        ),
       ),
     );
   }

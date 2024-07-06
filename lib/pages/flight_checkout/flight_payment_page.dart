@@ -49,53 +49,59 @@ class _FlightPaymentPageState extends State<FlightPaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          'payment'.getString(context),
-        ),
-        scrolledUnderElevation: 0,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'yourTrip'.getString(context),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  FlightCheckoutCard(
-                    flight: widget.flight,
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Form(
-                    key: _formKey,
-                    child: MopayPaymentCard(
-                      controller: _phoneNumberTEC,
-                    ),
-                  )
-                ],
-              ),
+    return Center(
+      child: SizedBox(
+        width: 500,
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Color(0xFFF5D161)),
+              onPressed: () => Navigator.of(context).pop(),
             ),
+            title: Text(
+              'payment'.getString(context),
+            ),
+            scrolledUnderElevation: 0,
           ),
-          _buildBottomAppBar()
-        ],
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'yourTrip'.getString(context),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      FlightCheckoutCard(
+                        flight: widget.flight,
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      Form(
+                        key: _formKey,
+                        child: MopayPaymentCard(
+                          controller: _phoneNumberTEC,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              _buildBottomAppBar()
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -111,12 +117,8 @@ class _FlightPaymentPageState extends State<FlightPaymentPage> {
             children: [
               Row(
                 children: [
-                  Text(
-                    'subtotal'.getString(context),
-                    style: const TextStyle(
-                      fontSize: 10,
-                    ),
-                  ),
+                  Text('subtotal'.getString(context),
+                      style: Theme.of(context).textTheme.bodyMedium),
                   const SizedBox(width: 8), // Spacing between text
                   const Icon(
                     Icons.keyboard_arrow_down,
@@ -129,7 +131,7 @@ class _FlightPaymentPageState extends State<FlightPaymentPage> {
                     widget.flight.price * widget.passengers.length +
                         widget.additionalPayment),
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 12,
                   fontWeight: FontWeight
                       .w600, // Inter doesn't have a 'semi-bold', w600 is 'semi-bold' equivalent
                 ),
@@ -160,9 +162,9 @@ class _FlightPaymentPageState extends State<FlightPaymentPage> {
                           width: 100, child: LinearProgressIndicator())
                       : Text(
                           'payNow'.getString(context),
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).colorScheme.onPrimary),
                         ),
                 );
               }),

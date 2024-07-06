@@ -75,6 +75,7 @@ class _DashboardPageState extends State<DashboardPage> {
               }),
           resizeToAvoidBottomInset: false,
           bottomSheet: Container(
+            width: 500,
             decoration: BoxDecoration(
               color: colorScheme.surface,
               boxShadow: [

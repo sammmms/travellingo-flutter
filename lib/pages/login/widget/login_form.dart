@@ -70,10 +70,8 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        width: 500,
-        height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.all(20),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Form(
           key: globalKey,
           child: Column(

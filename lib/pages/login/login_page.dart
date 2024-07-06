@@ -17,27 +17,32 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      return const Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                scrolledUnderElevation: 0,
-                centerTitle: true,
-                actions: [
-                  ChangeThemeSwitchComponent(),
-                  SizedBox(
-                    width: 10,
+      return const Center(
+        child: SizedBox(
+          width: 500,
+          child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              body: CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    scrolledUnderElevation: 0,
+                    centerTitle: true,
+                    actions: [
+                      ChangeThemeSwitchComponent(),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      ChangeLanguageComponent(),
+                    ],
                   ),
-                  ChangeLanguageComponent(),
+                  SliverList(
+                      delegate: SliverChildListDelegate.fixed([
+                    LoginForm(),
+                  ]))
                 ],
-              ),
-              SliverList(
-                  delegate: SliverChildListDelegate.fixed([
-                LoginForm(),
-              ]))
-            ],
-          ));
+              )),
+        ),
+      );
     });
   }
 }
