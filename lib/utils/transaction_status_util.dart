@@ -27,13 +27,4 @@ class TransactionStatusUtil {
         return Colors.green.shade400;
     }
   }
-
-  static String readableTextOf(TransactionStatus status) {
-    switch (status) {
-      case TransactionStatus.pending:
-        return "Pending";
-      case TransactionStatus.paid:
-        return "Paid";
-    }
-  }
 }
