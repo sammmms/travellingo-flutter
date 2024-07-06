@@ -20,6 +20,9 @@ class _PassengerDetailCardState extends State<PassengerDetailCard> {
   @override
   void initState() {
     userBloc = context.read<UserBloc>();
+    if (userBloc.controller.valueOrNull?.receivedProfile == null) {
+      userBloc.getUser();
+    }
     super.initState();
   }
 
