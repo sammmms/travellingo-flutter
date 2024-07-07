@@ -187,10 +187,7 @@ class _QuantityBottomSheetState extends State<QuantityBottomSheet> {
                           backgroundColor: WidgetStateProperty.all(
                               isQuantityValid
                                   ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context)
-                                      .colorScheme
-                                      .onPrimary
-                                      .withOpacity(0.2)),
+                                  : Colors.grey.shade600),
                           foregroundColor: WidgetStateProperty.all(
                               Theme.of(context).colorScheme.onPrimary),
                           shape: WidgetStatePropertyAll(
