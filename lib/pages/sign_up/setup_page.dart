@@ -7,6 +7,7 @@ import 'package:travellingo/bloc/auth/auth_state.dart';
 import 'package:travellingo/component/my_loading_dialog.dart';
 import 'package:travellingo/component/snackbar_component.dart';
 import 'package:travellingo/component/transition_animation.dart';
+import 'package:travellingo/main.dart';
 import 'package:travellingo/pages/login/login_page.dart';
 import 'package:travellingo/pages/sign_up/widgets/password_text_field.dart';
 import 'package:travellingo/pages/sign_up/widgets/text_label.dart';
@@ -476,6 +477,7 @@ class _SetUpPageState extends State<SetUpPage> {
 
                                             if (!context.mounted) return;
                                             Navigator.pop(context);
+
                                             if (error != null) {
                                               showMySnackBar(
                                                   context,
@@ -488,10 +490,14 @@ class _SetUpPageState extends State<SetUpPage> {
                                                 context,
                                                 "signupSuccess",
                                                 SnackbarStatus.success);
-                                            Navigator.pushReplacement(
-                                                context,
-                                                slideInFromLeft(
-                                                    const LoginPage()));
+                                            // Pop from setup page
+                                            Navigator.pop(context);
+
+                                            // Push to login page remove register page
+                                            navigatorKey.currentState
+                                                ?.pushReplacement(
+                                                    slideInFromLeft(
+                                                        const LoginPage()));
                                           },
                                     child: Text(
                                         isAuthenticating
