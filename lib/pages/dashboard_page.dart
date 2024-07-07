@@ -41,8 +41,15 @@ class _DashboardPageState extends State<DashboardPage> {
     if (kDebugMode) {
       print("Add listener to page controller");
     }
-    _pageController.addListener(
-        () => _dashboardPage.add(_pageController.page?.round() ?? 0));
+    _pageController.addListener(() {
+      _dashboardPage.add(_pageController.page?.round() ?? 0);
+      if (authBloc.controller.valueOrNull?.isAuthenticated == false &&
+          _pageController.page?.round() != 0) {
+        _pageController.jumpToPage(0);
+        return;
+      }
+      return;
+    });
     super.initState();
   }
 
