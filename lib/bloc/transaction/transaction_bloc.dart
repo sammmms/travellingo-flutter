@@ -106,7 +106,8 @@ class TransactionBloc {
     try {
       _updateStream(TransactionState.isLoading());
 
-      var mopayUserId = await MopayBloc().getMopayIdByPhoneNumber(phoneNumber);
+      var mopayUserId =
+          await MopayBloc().getMopayIdByPhoneNumber("0$phoneNumber");
 
       Map<String, dynamic> payloadData = {
         "checkoutItem": jsonEncode(itemsId),
