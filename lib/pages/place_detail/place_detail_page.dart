@@ -41,13 +41,15 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
   late CartBloc _cartBloc;
   late PlaceBloc _bloc;
   late WishlistBloc _wishlistBloc;
+  late AuthBloc _authBloc;
   final _selectedQuantity = BehaviorSubject<int>.seeded(0);
 
   @override
   void initState() {
-    _cartBloc = CartBloc(context.read<AuthBloc>());
-    _bloc = PlaceBloc(context.read<AuthBloc>());
-    _wishlistBloc = WishlistBloc(context.read<AuthBloc>());
+    _authBloc = context.read<AuthBloc>();
+    _cartBloc = CartBloc(_authBloc);
+    _bloc = PlaceBloc(_authBloc);
+    _wishlistBloc = WishlistBloc(_authBloc);
 
     _wishlistBloc.getWishlist(id: widget.placeId);
     _bloc.getPlaceById(widget.placeId);
@@ -324,6 +326,12 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                           builder: (context, snapshot) {
                             bool isAdded =
                                 snapshot.data?.places?.isNotEmpty ?? false;
+                            if (_authBloc.controller.valueOrNull
+                                        ?.isAuthenticated ==
+                                    false ||
+                                !_authBloc.controller.hasValue) {
+                              return const SizedBox();
+                            }
                             return IconButton(
                                 onPressed: () {
                                   if (isAdded) {
